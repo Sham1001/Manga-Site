@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-gray-300 py-10 mt-12">
+    <footer className="navbar text-gray-300 py-5 mt-25">
       <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
         
         {/* Logo / Brand */}
@@ -41,7 +41,7 @@ const Footer = () => {
       </div>
 
       {/* Bottom Line */}
-      <div className="border-t border-gray-700 mt-8 pt-4 text-center text-sm text-gray-500">
+      <div className="border-t border-gray-700 mt-8 text-center text-sm font-semibold text-white">
         © {new Date().getFullYear()} MyWebsite. All rights reserved.
       </div>
     </footer>

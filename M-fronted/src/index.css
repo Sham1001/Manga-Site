@@ -1,14 +1,91 @@
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+
 @import "tailwindcss";
 
-/* @import "slick-carousel/slick/slick.css";
-@import "slick-carousel/slick/slick-theme.css"; */
+
 
 .slick-slide > div {
-    margin: 0 10px;
+    margin: 20px 10px;
 }
 
 .slick-prev:before,
 .slick-next:before {
   color:  black !important;
   font-size: 30px;           
+}
+
+
+.slick-prev, .slick-next {
+  z-index: 50 !important;
+}
+
+.slick-prev:before, .slick-next:before {
+  color: black !important;
+  font-size: 28px !important;
+  
+}
+
+.slick-dots {
+  bottom: -35px !important;
+}
+
+.slick-dots li button:before {
+  font-size: 12px !important;
+  color: black !important;
+}
+
+/* style numbered dots */
+.custom-dots li {
+  width: auto !important;
+  margin: 0 5px;
+}
+
+.custom-dots li button {
+  width: auto;
+  height: auto;
+}
+
+.custom-dots li div {
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: #f1f1f1;
+  transition: all 0.3s ease;
+}
+
+.custom-dots li.slick-active div {
+  background: #000;
+  color: #fff;
+}
+
+
+.navbar {
+  background-color: DarkOliveGreen;
+}
+
+body{
+  background: #C6D870;
+}
+
+::-webkit-scrollbar{
+  display: none;
+}
+
+.card{
+  /* background: #8FA31E; */
+  background-color: #EFF5D2;
+}
+
+
+.slick-prev, .slick-next {
+  z-index: 5 !important;
+  transition: transform 0.2s ease-in-out; /* smooth transition */
+}
+
+.slick-prev:hover, .slick-next:hover {
+  transform: scale(1.8); /* grow slightly on hover */
+}
+
+.slick-prev:hover:before, .slick-next:hover:before {
+  color: #000000 !important; /* optional: change color on hover */
 }

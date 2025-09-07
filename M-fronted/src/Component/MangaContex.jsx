@@ -1,19 +1,21 @@
 import React from "react";
+import { assets  } from "../assets/fronted/assets";
 
 const MangaContex = ({ title, chapters, coverImage }) => {
   return (
-    <div className="max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white hover:shadow-xl transition-shadow duration-300">
+    <div className="max-w-sm hover:scale-105 transition ease-in-out rounded-2xl overflow-hidden shadow-lg bg-white hover:shadow-2xl transition-shadow duration-300">
       {/* Cover Image */}
       <div>
         <img
+          
           src={coverImage || "https://picsum.photos/400/250?random=1"}
           alt={title}
-          className="w-full h-48 object-cover"
+          className="w-full h-48 object-cover "
         />
       </div>
 
       {/* Content */}
-      <div className="p-4">
+      <div className="p-4 card">
         {/* Title */}
         <p className="text-lg font-semibold text-gray-800 mb-2">{title}</p>
 

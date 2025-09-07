@@ -1,4 +1,15 @@
+import arrow from './arrow2.svg'
+
+
+export const assets={
+  arrow
+}
+
+
+
 export const info = [
+
+
     
   {
     "id": 1,
@@ -9,6 +20,7 @@ export const info = [
     "coverImage": "https://picsum.photos/200/300?random=1",
     "status": "Ongoing",
     "popular": true,
+    "recommended": true,
     "latest": true,
     "releaseYear": 2021,
     "chapters": 142,
@@ -39,6 +51,7 @@ export const info = [
     "coverImage": "https://picsum.photos/200/300?random=3",
     "status": "Ongoing",
     "popular": true,
+    "recommended": true,
     "latest": true,
     "releaseYear": 2022,
     "chapters": 57,
@@ -70,6 +83,7 @@ export const info = [
     "status": "Completed",
     "popular": false,
     "latest": false,
+    "recommended": true,
     "releaseYear": 2017,
     "chapters": 65,
     "rating": 4.1,
@@ -96,6 +110,7 @@ export const info = [
     "author": "Im Hye-Rin",
     "genre": "Romance, Slice of Life",
     "type": "Manga",
+    "recommended": true,
     "coverImage": "https://picsum.photos/200/300?random=7",
     "status": "Completed",
     "popular": false,
@@ -129,6 +144,7 @@ export const info = [
     "coverImage": "https://picsum.photos/200/300?random=9",
     "status": "Ongoing",
     "popular": false,
+    "recommended": true,
     "latest": true,
     "releaseYear": 2020,
     "chapters": 120,
@@ -144,6 +160,7 @@ export const info = [
     "coverImage": "https://picsum.photos/200/300?random=10",
     "status": "Completed",
     "popular": true,
+    "recommended": true,
     "latest": false,
     "releaseYear": 2018,
     "chapters": 150,
@@ -174,6 +191,7 @@ export const info = [
     "coverImage": "https://picsum.photos/200/300?random=12",
     "status": "Completed",
     "popular": true,
+    "recommended": true,
     "latest": false,
     "releaseYear": 2019,
     "chapters": 88,
@@ -189,6 +207,7 @@ export const info = [
     "coverImage": "https://picsum.photos/200/300?random=13",
     "status": "Ongoing",
     "popular": true,
+    "recommended": true,
     "latest": true,
     "releaseYear": 2021,
     "chapters": 77,
@@ -204,6 +223,7 @@ export const info = [
     "coverImage": "https://picsum.photos/200/300?random=14",
     "status": "Completed",
     "popular": false,
+    "recommended": true,
     "latest": false,
     "releaseYear": 2015,
     "chapters": 62,
@@ -234,6 +254,7 @@ export const info = [
     "coverImage": "https://picsum.photos/200/300?random=16",
     "status": "Completed",
     "popular": true,
+    "recommended": true,
     "latest": false,
     "releaseYear": 2017,
     "chapters": 72,
@@ -294,6 +315,7 @@ export const info = [
     "coverImage": "https://picsum.photos/200/300?random=20",
     "status": "Ongoing",
     "popular": false,
+    "recommended": true,
     "latest": true,
     "releaseYear": 2021,
     "chapters": 91,

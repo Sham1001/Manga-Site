@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import  {info}  from "../assets/fronted/asset";
+import  {info}  from "../assets/fronted/assets";
 
 export const MangaCon = createContext()
 
