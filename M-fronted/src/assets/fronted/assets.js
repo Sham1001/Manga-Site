@@ -1,8 +1,18 @@
 import arrow from './arrow2.svg'
+import search from './search.svg'
+import user from './user.svg'
+import search2 from './search2.svg'
+import cross from './cross.svg'
+import luffy from './luffy.png'
 
 
 export const assets={
-  arrow
+  arrow,
+  search,
+  user,
+  search2,
+  cross,
+  luffy
 }
 
 
@@ -322,5 +332,351 @@ export const info = [
     "rating": 4.0,
     "description": "Two souls connected across time must unite to prevent a tragic future."
   }
+
+]
+
+// export const user = [
+//   {
+//     id: 1,
+//     username: "otaku123",
+//     email: "otaku123@example.com",
+//     joinedAt: "2023-05-14",
+//     role: "member",
+//     favorites: [
+//       {
+//         mangaId: 1,
+//         title: "Shadow Chronicles",
+//         coverImage: "https://picsum.photos/200/300?random=11"
+//       },
+//       {
+//         mangaId: 4,
+//         title: "Blade of Destiny",
+//         coverImage: "https://picsum.photos/200/300?random=12"
+//       }
+//     ]
+//   },
+//   {
+//     id: 2,
+//     username: "mangaQueen",
+//     email: "queen@example.com",
+//     joinedAt: "2022-11-02",
+//     role: "member",
+//     favorites: [
+//       {
+//         mangaId: 3,
+//         title: "Eternal Night",
+//         coverImage: "https://picsum.photos/200/300?random=13"
+//       },
+//       {
+//         mangaId: 5,
+//         title: "Mystic Academy",
+//         coverImage: "https://picsum.photos/200/300?random=14"
+//       }
+//     ]
+//   },
+//   {
+//     id: 3,
+//     username: "adminMaster",
+//     email: "admin@example.com",
+//     joinedAt: "2021-01-20",
+//     role: "admin",
+//     favorites: [
+//       {
+//         mangaId: 2,
+//         title: "Crimson Reign",
+//         coverImage: "https://picsum.photos/200/300?random=15"
+//       },
+//       {
+//         mangaId: 6,
+//         title: "Silent Oath",
+//         coverImage: "https://picsum.photos/200/300?random=16"
+//       }
+//     ]
+//   }
+// ];
+
+
+export const favorites =[
+  {
+    "id": 13,
+    "title": "Iron Heart",
+    "author": "Cho Sang-Hoon",
+    "genre": "Sci-Fi, Action",
+    "type": "Manga",
+    "coverImage": "https://picsum.photos/200/300?random=13",
+    "status": "Ongoing",
+    "popular": true,
+    "recommended": true,
+    "latest": true,
+    "releaseYear": 2021,
+    "chapters": 77,
+    "rating": 4.4,
+    "description": "A cyborg soldier struggles to protect humanity from rogue machines."
+  },
+  {
+    "id": 14,
+    "title": "Scarlet Petals",
+    "author": "Moon Ha-Na",
+    "genre": "Romance, Historical",
+    "type": "Manhua",
+    "coverImage": "https://picsum.photos/200/300?random=14",
+    "status": "Completed",
+    "popular": false,
+    "recommended": true,
+    "latest": false,
+    "releaseYear": 2015,
+    "chapters": 62,
+    "rating": 3.8,
+    "description": "A romance set in ancient times, blooming amidst a backdrop of war."
+  },
+  {
+    "id": 15,
+    "title": "The Forgotten Hero",
+    "author": "Hwang Joon-Suk",
+    "genre": "Action, Fantasy",
+    "type": "Manhwa",
+    "coverImage": "https://picsum.photos/200/300?random=15",
+    "status": "Ongoing",
+    "popular": true,
+    "latest": true,
+    "releaseYear": 2020,
+    "chapters": 103,
+    "rating": 4.7,
+    "description": "A once-revered hero is erased from history and fights to reclaim his legacy."
+  },
+  {
+    "id": 16,
+    "title": "Winter Sonata",
+    "author": "Lee Ji-Won",
+    "genre": "Drama, Romance",
+    "type": "Manhwa",
+    "coverImage": "https://picsum.photos/200/300?random=16",
+    "status": "Completed",
+    "popular": true,
+    "recommended": true,
+    "latest": false,
+    "releaseYear": 2017,
+    "chapters": 72,
+    "rating": 4.3,
+    "description": "A heartwarming romance that unfolds during a long, snowy winter."
+  },
+  {
+    "id": 17,
+    "title": "Rise of the Hunter",
+    "author": "Kwon Dae-Hyun",
+    "genre": "Fantasy, Action",
+    "type": "Manhua",
+    "coverImage": "https://picsum.photos/200/300?random=17",
+    "status": "Ongoing",
+    "popular": true,
+    "latest": true,
+    "releaseYear": 2021,
+    "chapters": 118,
+    "rating": 4.8,
+    "description": "A hunter rises to challenge the gods after discovering forbidden power."
+  },
+  {
+    "id": 18,
+    "title": "Maidens of the Abyss",
+    "author": "Oh Soo-Min",
+    "genre": "Dark Fantasy, Horror",
+    "type": "Manga",
+    "coverImage": "https://picsum.photos/200/300?random=18",
+    "status": "Ongoing",
+    "popular": false,
+    "latest": true,
+    "releaseYear": 2022,
+    "chapters": 42,
+    "rating": 4.1,
+    "description": "Young maidens descend into an abyss where nightmarish creatures dwell."
+  },
+  {
+    "id": 19,
+    "title": "Cradle of Time",
+    "author": "Nam Yu-Ri",
+    "genre": "Isekai, Adventure",
+    "type": "Manhwa",
+    "coverImage": "https://picsum.photos/200/300?random=19",
+    "status": "Completed",
+    "popular": true,
+    "latest": false,
+    "releaseYear": 2018,
+    "chapters": 140,
+    "rating": 4.6,
+    "description": "A modern student reincarnates in a fantasy world to alter the flow of history."
+  },
+  {
+    "id": 20,
+    "title": "Echoes of Destiny",
+    "author": "Jin Ho-Young",
+    "genre": "Fantasy, Romance",
+    "type": "Manhwa",
+    "coverImage": "https://picsum.photos/200/300?random=20",
+    "status": "Ongoing",
+    "popular": false,
+    "recommended": true,
+    "latest": true,
+    "releaseYear": 2021,
+    "chapters": 91,
+    "rating": 4.0,
+    "description": "Two souls connected across time must unite to prevent a tragic future."
+  },
+  {
+    "id": 1,
+    "title": "Shadow Chronicles",
+    "author": "Kim Jae-Ho",
+    "genre": "Action, Fantasy",
+    "type": "Manhwa",
+    "coverImage": "https://picsum.photos/200/300?random=1",
+    "status": "Ongoing",
+    "popular": true,
+    "recommended": true,
+    "latest": true,
+    "releaseYear": 2021,
+    "chapters": 142,
+    "rating": 4.6,
+    "description": "A young warrior discovers a hidden power within him as he fights against dark forces threatening his kingdom."
+  },
+  {
+    "id": 2,
+    "title": "Crimson Reign",
+    "author": "Lee Min-Soo",
+    "genre": "Drama, Romance",
+    "type": "Manhwa",
+    "coverImage": "https://picsum.photos/200/300?random=2",
+    "status": "Completed",
+    "popular": false,
+    "latest": false,
+    "releaseYear": 2018,
+    "chapters": 86,
+    "rating": 4.2,
+    "description": "A forbidden love blooms amidst political conspiracies in the royal court."
+  },
+  {
+    "id": 3,
+    "title": "Eternal Night",
+    "author": "Park Soo-Yeon",
+    "genre": "Horror, Thriller",
+    "type": "Manhwa",
+    "coverImage": "https://picsum.photos/200/300?random=3",
+    "status": "Ongoing",
+    "popular": true,
+    "recommended": true,
+    "latest": true,
+    "releaseYear": 2022,
+    "chapters": 57,
+    "rating": 4.8,
+    "description": "A cursed town where the sun never rises hides a terrifying truth behind its shadows."
+  },
+  {
+    "id": 4,
+    "title": "Heavenly Sword",
+    "author": "Choi Ji-Hoon",
+    "genre": "Martial Arts, Adventure",
+    "type": "Manhua",
+    "coverImage": "https://picsum.photos/200/300?random=4",
+    "status": "Ongoing",
+    "popular": true,
+    "latest": true,
+    "releaseYear": 2019,
+    "chapters": 210,
+    "rating": 4.7,
+    "description": "A martial artist sets out on a journey to recover the legendary Heavenly Sword."
+  },
+  {
+    "id": 5,
+    "title": "Moonlight Bride",
+    "author": "Han Ji-Eun",
+    "genre": "Romance, Fantasy",
+    "type": "Manhwa",
+    "coverImage": "https://picsum.photos/200/300?random=5",
+    "status": "Completed",
+    "popular": false,
+    "latest": false,
+    "recommended": true,
+    "releaseYear": 2017,
+    "chapters": 65,
+    "rating": 4.1,
+    "description": "A mysterious bride with a secret past enters the royal palace under moonlight."
+  },
+  {
+    "id": 6,
+    "title": "The Last Monarch",
+    "author": "Seo Kyung-Tae",
+    "genre": "Fantasy, Action",
+    "type": "Manhwa",
+    "coverImage": "https://picsum.photos/200/300?random=6",
+    "status": "Ongoing",
+    "popular": true,
+    "latest": true,
+    "releaseYear": 2020,
+    "chapters": 132,
+    "rating": 4.9,
+    "description": "The last heir to a fallen empire rises to reclaim his throne against impossible odds."
+  },
+  {
+    "id": 7,
+    "title": "Silent Melody",
+    "author": "Im Hye-Rin",
+    "genre": "Romance, Slice of Life",
+    "type": "Manga",
+    "recommended": true,
+    "coverImage": "https://picsum.photos/200/300?random=7",
+    "status": "Completed",
+    "popular": false,
+    "latest": false,
+    "releaseYear": 2016,
+    "chapters": 48,
+    "rating": 3.9,
+    "description": "A mute girl finds her voice through music and love."
+  },
+  {
+    "id": 8,
+    "title": "Phantom Reaper",
+    "author": "Baek Hyun-Woo",
+    "genre": "Action, Supernatural",
+    "type": "Manhwa",
+    "coverImage": "https://picsum.photos/200/300?random=8",
+    "status": "Ongoing",
+    "popular": true,
+    "latest": true,
+    "releaseYear": 2021,
+    "chapters": 99,
+    "rating": 4.6,
+    "description": "A grim reaper is forced to live among humans and confront his forgotten past."
+  },
+  {
+    "id": 9,
+    "title": "Celestial Academy",
+    "author": "Yoon Mi-Sun",
+    "genre": "Fantasy, School Life",
+    "type": "Manhua",
+    "coverImage": "https://picsum.photos/200/300?random=9",
+    "status": "Ongoing",
+    "popular": false,
+    "recommended": true,
+    "latest": true,
+    "releaseYear": 2020,
+    "chapters": 120,
+    "rating": 4.3,
+    "description": "Students at a magical academy fight to become guardians of the celestial realms."
+  },
+  {
+    "id": 10,
+    "title": "Rebirth of the Tyrant",
+    "author": "Jung Woo-Shik",
+    "genre": "Action, Isekai",
+    "type": "Manhwa",
+    "coverImage": "https://picsum.photos/200/300?random=10",
+    "status": "Completed",
+    "popular": true,
+    "recommended": true,
+    "latest": false,
+    "releaseYear": 2018,
+    "chapters": 150,
+    "rating": 4.7,
+    "description": "A tyrant is reborn in another world with a chance to rewrite his fate."
+  },
+  
 
 ]

@@ -24,9 +24,9 @@ function App() {
         <Route path='/top' element={<Top/>}/>
         <Route path='/latest' element={<Latest/>}/>
         <Route path='/profile' element={<Profile/>}/>
-        <Route path='/manga/id' element={<Manga/>}/>
+        <Route path='/manga/:id' element={<Manga/>}/>
         <Route path='/mangaName/chapterNo' element={<Chapter/>}/>
-        <Route path='/Home' element={<Search/>}/>
+        <Route path='/search' element={<Search/>}/>
       </Routes>
 
       <Footer/>

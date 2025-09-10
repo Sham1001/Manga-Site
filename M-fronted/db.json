@@ -1,0 +1,124 @@
+{
+  "info": [
+    {
+      "id": 1,
+      "title": "Shadow Chronicles",
+      "author": "Kim Jae-Ho",
+      "genre": "Action, Fantasy",
+      "type": "Manhwa",
+      "coverImage": "https://picsum.photos/200/300?random=1",
+      "status": "Ongoing",
+      "popular": true,
+      "latest": true,
+      "releaseYear": 2021
+    },
+    {
+      "id": 2,
+      "title": "Crimson Reign",
+      "author": "Lee Min-Soo",
+      "genre": "Drama, Thriller",
+      "type": "Manhwa",
+      "coverImage": "https://picsum.photos/200/300?random=2",
+      "status": "Completed",
+      "popular": false,
+      "latest": false,
+      "releaseYear": 2019
+    },
+    {
+      "id": 3,
+      "title": "Eternal Night",
+      "author": "Park Soo-Yeon",
+      "genre": "Romance, Fantasy",
+      "type": "Manhwa",
+      "coverImage": "https://picsum.photos/200/300?random=3",
+      "status": "Ongoing",
+      "popular": true,
+      "latest": true,
+      "releaseYear": 2022
+    },
+    {
+      "id": 4,
+      "title": "Blade of Destiny",
+      "author": "Hwang Dong-Suk",
+      "genre": "Action, Adventure",
+      "type": "Manhwa",
+      "coverImage": "https://picsum.photos/200/300?random=4",
+      "status": "Ongoing",
+      "popular": true,
+      "latest": false,
+      "releaseYear": 2020
+    },
+    {
+      "id": 5,
+      "title": "Mystic Academy",
+      "author": "Choi Mi-Young",
+      "genre": "Fantasy, School Life",
+      "type": "Manhwa",
+      "coverImage": "https://picsum.photos/200/300?random=5",
+      "status": "Completed",
+      "popular": false,
+      "latest": false,
+      "releaseYear": 2018
+    },
+    {
+      "id": 6,
+      "title": "Silent Oath",
+      "author": "Seo Ji-Hoon",
+      "genre": "Mystery, Drama",
+      "type": "Manhwa",
+      "coverImage": "https://picsum.photos/200/300?random=6",
+      "status": "Ongoing",
+      "popular": false,
+      "latest": true,
+      "releaseYear": 2023
+    },
+    {
+      "id": 7,
+      "title": "Dragon’s Will",
+      "author": "Han Soo-Min",
+      "genre": "Fantasy, Adventure",
+      "type": "Manhwa",
+      "coverImage": "https://picsum.photos/200/300?random=7",
+      "status": "Ongoing",
+      "popular": true,
+      "latest": true,
+      "releaseYear": 2021
+    },
+    {
+      "id": 8,
+      "title": "Cyber Hearts",
+      "author": "Kim Na-Ra",
+      "genre": "Sci-Fi, Romance",
+      "type": "Manhwa",
+      "coverImage": "https://picsum.photos/200/300?random=8",
+      "status": "Completed",
+      "popular": true,
+      "latest": false,
+      "releaseYear": 2020
+    },
+    {
+      "id": 9,
+      "title": "Vengeance Code",
+      "author": "Park Min-Joon",
+      "genre": "Action, Thriller",
+      "type": "Manhwa",
+      "coverImage": "https://picsum.photos/200/300?random=9",
+      "status": "Ongoing",
+      "popular": false,
+      "latest": true,
+      "releaseYear": 2022
+    },
+    {
+      "id": 10,
+      "title": "The Last Guardian",
+      "author": "Yoon Da-Hye",
+      "genre": "Fantasy, Action",
+      "type": "Manhwa",
+      "coverImage": "https://picsum.photos/200/300?random=10",
+      "status": "Ongoing",
+      "popular": true,
+      "latest": false,
+      "releaseYear": 2021
+    }
+  ]
+}

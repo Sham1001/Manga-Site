@@ -1,13 +1,15 @@
 import React from "react";
 import { assets  } from "../assets/fronted/assets";
+import { Link } from "react-router-dom";
 
-const MangaContex = ({ title, chapters, coverImage }) => {
+const MangaContex = ({ title, chapters, coverImage,id }) => {
   return (
-    <div className="max-w-sm hover:scale-105 transition ease-in-out rounded-2xl overflow-hidden shadow-lg bg-white hover:shadow-2xl transition-shadow duration-300">
+    <Link to ={`/manga/${id}`}>
+    < div  className=" max-w-sm hover:scale-105 transition ease-in-out  rounded-2xl overflow-hidden shadow-lg bg-white hover:shadow-2xl transition-shadow duration-300">
       {/* Cover Image */}
-      <div>
+      <div className="">
         <img
-          
+           
           src={coverImage || "https://picsum.photos/400/250?random=1"}
           alt={title}
           className="w-full h-48 object-cover "
@@ -32,6 +34,7 @@ const MangaContex = ({ title, chapters, coverImage }) => {
         </div>
       </div>
     </div>
+    </Link>
   );
 };
 

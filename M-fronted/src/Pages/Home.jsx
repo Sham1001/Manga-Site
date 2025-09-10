@@ -90,7 +90,7 @@ const Home = () => {
           
           {
             TopManga.map((items,index)=>(
-              <MangaContex key={index} title={items.title} chapters={items.chapters} coverImage={items.coverImage} />
+              <MangaContex key={index} title={items.title} chapters={items.chapters} coverImage={items.coverImage} id={items.id} />
             ))
           }
         
@@ -108,7 +108,7 @@ const Home = () => {
         {
           mangaInfo.map((items,index)=>(
             <div className='px-2'>
-            <MangaContex key={index} title={items.title} chapters={items.chapters} coverImage={items.coverImage}/>
+            <MangaContex key={index} title={items.title} chapters={items.chapters} coverImage={items.coverImage} id={items.id}/>
             </div>
           ))
         }
@@ -129,7 +129,7 @@ const Home = () => {
           
           {
             recommended.map((items,index)=>(
-              <MangaContex key={index} title={items.title} chapters={items.chapters} coverImage={items.coverImage} />
+              <MangaContex key={index} title={items.title} chapters={items.chapters} coverImage={items.coverImage} id={items.id} />
             ))
           }
         
