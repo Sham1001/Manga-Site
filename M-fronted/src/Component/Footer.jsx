@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="navbar text-gray-300 py-5 mt-25">
-      <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+    <footer className="w-full bg-gray-900/80 backdrop-blur-md shadow-inner mt-24">
+      <div className="max-w-6xl mx-auto px-6 md:px-16 py-8 flex flex-col md:flex-row justify-between items-center gap-6">
         
         {/* Logo / Brand */}
         <div className="text-2xl font-bold text-white">
@@ -12,36 +12,36 @@ const Footer = () => {
         </div>
 
         {/* Footer Links */}
-        <div className="flex gap-8 text-lg font-medium">
+        <div className="flex flex-wrap gap-6 md:gap-8 text-lg font-semibold">
           <Link
             to="/"
-            className="hover:text-white transition duration-200"
+            className="text-white hover:text-blue-400 transition-colors"
           >
-            HOME
+            Home
           </Link>
           <Link
             to="/blog"
-            className="hover:text-white transition duration-200"
+            className="text-white hover:text-blue-400 transition-colors"
           >
-            BLOG
+            Blog
           </Link>
           <Link
             to="/about"
-            className="hover:text-white transition duration-200"
+            className="text-white hover:text-blue-400 transition-colors"
           >
-            ABOUT US
+            About Us
           </Link>
           <Link
             to="/contact"
-            className="hover:text-white transition duration-200"
+            className="text-white hover:text-blue-400 transition-colors"
           >
-            CONTACT
+            Contact
           </Link>
         </div>
       </div>
 
       {/* Bottom Line */}
-      <div className="border-t border-gray-700 mt-8 text-center text-sm font-semibold text-white">
+      <div className="border-t border-gray-900 mt-6 text-center text-sm font-semibold text-white py-4">
         © {new Date().getFullYear()} MyWebsite. All rights reserved.
       </div>
     </footer>

@@ -14,7 +14,7 @@ const SearchBar = () => {
       <div className="flex items-center flex-1 gap-2">
         <img src={assets.search2} alt="search" className="w-5 h-5 text-gray-500" />
         <input
-        onChange={(e)=>setIsSearch(e.target.value)} value={isSearch}
+          onChange={(e)=>setIsSearch(e.target.value)} value={isSearch}
           type="text"
           placeholder="Search..."
           className="flex-1 outline-none border-none bg-transparent text-gray-700 placeholder-gray-400"

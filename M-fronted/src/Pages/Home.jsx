@@ -27,6 +27,9 @@ const Home = () => {
     </div>
   ),
   dotsClass: "slick-dots custom-dots", // custom class for styling
+  
+  
+  
   };
 
   //   const settings2 = {
@@ -62,7 +65,7 @@ const Home = () => {
   const {info} = useContext(MangaCon)
 
   useEffect(()=>{
-    const info2 = info
+    const info2 = info.slice()
     setMangaInfo(info2)
   },[])
 
@@ -78,7 +81,7 @@ const Home = () => {
     <>
     <div className=''>
       <div>
-        <div className='flex text-center justify-between items-center mt-10 mx-22 '>
+        <div className='flex text-center justify-between items-center mt-25 mx-22 '>
             <Link to={'/top'}  className='text-2xl font-bold'>Popular Manga</Link>
             <div className="">
               <Link to={'/top'}>
@@ -86,7 +89,7 @@ const Home = () => {
             </Link>
             </div>
             </div>
-           <Slider className='flex mt-10 mx-20 gap-5' {...settings}>
+           <Slider className='flex mx-20 gap-5' {...settings}>
           
           {
             TopManga.map((items,index)=>(
@@ -103,7 +106,7 @@ const Home = () => {
              <Link   className='text-2xl font-bold'>Latest Chapters</Link>
              <img className="hover:scale-120 transition ease-in-out w-20 h-10" src={assets.arrow} alt="hello" />
              </div>
-              <Slider className=' mt-10 mx-20 '  {...gridSettings}>
+              <Slider className='  mx-20 '  {...gridSettings}>
         {/* <div className='mt-20 mx-20 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3  space-y-4 '> */}
         {
           mangaInfo.map((items,index)=>(
@@ -125,7 +128,7 @@ const Home = () => {
             <img className="hover:scale-120 transition ease-in-out w-20 h-10" src={assets.arrow} alt="hello" />
             </Link>
             </div>
-           <Slider className='flex mt-10 mx-20 gap-5' {...settings}>
+           <Slider className='flex  mx-20 gap-5' {...settings}>
           
           {
             recommended.map((items,index)=>(

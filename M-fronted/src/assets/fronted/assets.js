@@ -680,3 +680,499 @@ export const favorites =[
   
 
 ]
+
+
+export const comment = [
+  {
+    "id": "c1",
+    "text": "This manga is amazing, love the art style! ❤️",
+    "user": {
+      "id": "u1",
+      "username": "MangaFan99",
+      "avatar": "https://i.pravatar.cc/150?img=1"
+    },
+    "parentType": "Manga",
+    "parentId": "m1",
+    "createdAt": "2025-09-12T10:30:00Z"
+  },
+  {
+    "id": "c2",
+    "text": "Story is kinda slow, but I’m hooked!",
+    "user": {
+      "id": "u2",
+      "username": "OtakuGirl",
+      "avatar": "https://i.pravatar.cc/150?img=2"
+    },
+    "parentType": "Manga",
+    "parentId": "m1",
+    "createdAt": "2025-09-12T10:35:00Z"
+  },
+  {
+    "id": "c3",
+    "text": "That twist at the end of Chapter 5 😱🔥",
+    "user": {
+      "id": "u3",
+      "username": "ShonenLover",
+      "avatar": "https://i.pravatar.cc/150?img=3"
+    },
+    "parentType": "Chapter",
+    "parentId": "ch5",
+    "createdAt": "2025-09-12T10:40:00Z"
+  },
+  {
+    "id": "c4",
+    "text": "Chapter 6 fight scene was epic!!",
+    "user": {
+      "id": "u4",
+      "username": "SamuraiX",
+      "avatar": "https://i.pravatar.cc/150?img=4"
+    },
+    "parentType": "Chapter",
+    "parentId": "ch6",
+    "createdAt": "2025-09-12T10:45:00Z"
+  },
+   {
+    "id": "c1",
+    "text": "This manga is amazing, love the art style! ❤️",
+    "user": {
+      "id": "u1",
+      "username": "MangaFan99",
+      "avatar": "https://i.pravatar.cc/150?img=1"
+    },
+    "parentType": "Manga",
+    "parentId": "m1",
+    "createdAt": "2025-09-12T10:30:00Z"
+  },
+  {
+    "id": "c2",
+    "text": "Story is kinda slow, but I’m hooked!",
+    "user": {
+      "id": "u2",
+      "username": "OtakuGirl",
+      "avatar": "https://i.pravatar.cc/150?img=2"
+    },
+    "parentType": "Manga",
+    "parentId": "m1",
+    "createdAt": "2025-09-12T10:35:00Z"
+  },
+  {
+    "id": "c3",
+    "text": "That twist at the end of Chapter 5 😱🔥",
+    "user": {
+      "id": "u3",
+      "username": "ShonenLover",
+      "avatar": "https://i.pravatar.cc/150?img=3"
+    },
+    "parentType": "Chapter",
+    "parentId": "ch5",
+    "createdAt": "2025-09-12T10:40:00Z"
+  },
+  {
+    "id": "c4",
+    "text": "Chapter 6 fight scene was epic!!",
+    "user": {
+      "id": "u4",
+      "username": "SamuraiX",
+      "avatar": "https://i.pravatar.cc/150?img=4"
+    },
+    "parentType": "Chapter",
+    "parentId": "ch6",
+    "createdAt": "2025-09-12T10:45:00Z"
+  },
+   {
+    "id": "c1",
+    "text": "This manga is amazing, love the art style! ❤️",
+    "user": {
+      "id": "u1",
+      "username": "MangaFan99",
+      "avatar": "https://i.pravatar.cc/150?img=1"
+    },
+    "parentType": "Manga",
+    "parentId": "m1",
+    "createdAt": "2025-09-12T10:30:00Z"
+  },
+  {
+    "id": "c2",
+    "text": "Story is kinda slow, but I’m hooked!",
+    "user": {
+      "id": "u2",
+      "username": "OtakuGirl",
+      "avatar": "https://i.pravatar.cc/150?img=2"
+    },
+    "parentType": "Manga",
+    "parentId": "m1",
+    "createdAt": "2025-09-12T10:35:00Z"
+  },
+  {
+    "id": "c3",
+    "text": "That twist at the end of Chapter 5 😱🔥",
+    "user": {
+      "id": "u3",
+      "username": "ShonenLover",
+      "avatar": "https://i.pravatar.cc/150?img=3"
+    },
+    "parentType": "Chapter",
+    "parentId": "ch5",
+    "createdAt": "2025-09-12T10:40:00Z"
+  },
+  {
+    "id": "c4",
+    "text": "Chapter 6 fight scene was epic!!",
+    "user": {
+      "id": "u4",
+      "username": "SamuraiX",
+      "avatar": "https://i.pravatar.cc/150?img=4"
+    },
+    "parentType": "Chapter",
+    "parentId": "ch6",
+    "createdAt": "2025-09-12T10:45:00Z"
+  }
+]
+
+
+export const chapters = [
+  {
+    mangaId: 1,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "The Awakening",
+        releaseDate: "2023-01-15",
+        pages: [
+          "https://picsum.photos/800/1200?random=101",
+          "https://picsum.photos/800/1200?random=102"
+        ]
+      },
+      {
+        chapterNumber: 2,
+        title: "Shadows Rising",
+        releaseDate: "2023-01-22",
+        pages: [
+          "https://picsum.photos/800/1200?random=103",
+          "https://picsum.photos/800/1200?random=104"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 2,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "A Royal Secret",
+        releaseDate: "2018-05-10",
+        pages: [
+          "https://picsum.photos/800/1200?random=201",
+          "https://picsum.photos/800/1200?random=202"
+        ]
+      },
+      {
+        chapterNumber: 2,
+        title: "Forbidden Meeting",
+        releaseDate: "2018-05-17",
+        pages: [
+          "https://picsum.photos/800/1200?random=203",
+          "https://picsum.photos/800/1200?random=204"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 3,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "The Endless Night",
+        releaseDate: "2022-07-01",
+        pages: [
+          "https://picsum.photos/800/1200?random=301",
+          "https://picsum.photos/800/1200?random=302"
+        ]
+      },
+      {
+        chapterNumber: 2,
+        title: "Whispers in the Dark",
+        releaseDate: "2022-07-08",
+        pages: [
+          "https://picsum.photos/800/1200?random=303",
+          "https://picsum.photos/800/1200?random=304"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 4,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "The Sword Appears",
+        releaseDate: "2019-03-02",
+        pages: [
+          "https://picsum.photos/800/1200?random=401",
+          "https://picsum.photos/800/1200?random=402"
+        ]
+      },
+      {
+        chapterNumber: 2,
+        title: "Rival Encounter",
+        releaseDate: "2019-03-09",
+        pages: [
+          "https://picsum.photos/800/1200?random=403",
+          "https://picsum.photos/800/1200?random=404"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 5,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "The Moonlit Wedding",
+        releaseDate: "2017-02-11",
+        pages: [
+          "https://picsum.photos/800/1200?random=501",
+          "https://picsum.photos/800/1200?random=502"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 6,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "The Monarch Returns",
+        releaseDate: "2020-05-22",
+        pages: [
+          "https://picsum.photos/800/1200?random=601",
+          "https://picsum.photos/800/1200?random=602"
+        ]
+      },
+      {
+        chapterNumber: 2,
+        title: "Battle for the Throne",
+        releaseDate: "2020-05-29",
+        pages: [
+          "https://picsum.photos/800/1200?random=603",
+          "https://picsum.photos/800/1200?random=604"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 7,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "Silent Beginnings",
+        releaseDate: "2016-04-03",
+        pages: [
+          "https://picsum.photos/800/1200?random=701",
+          "https://picsum.photos/800/1200?random=702"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 8,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "Arrival of the Reaper",
+        releaseDate: "2021-09-12",
+        pages: [
+          "https://picsum.photos/800/1200?random=801",
+          "https://picsum.photos/800/1200?random=802"
+        ]
+      },
+      {
+        chapterNumber: 2,
+        title: "Human Struggles",
+        releaseDate: "2021-09-19",
+        pages: [
+          "https://picsum.photos/800/1200?random=803",
+          "https://picsum.photos/800/1200?random=804"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 9,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "First Day at the Academy",
+        releaseDate: "2020-10-01",
+        pages: [
+          "https://picsum.photos/800/1200?random=901",
+          "https://picsum.photos/800/1200?random=902"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 10,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "Rebirth Begins",
+        releaseDate: "2018-06-15",
+        pages: [
+          "https://picsum.photos/800/1200?random=1001",
+          "https://picsum.photos/800/1200?random=1002"
+        ]
+      },
+      {
+        chapterNumber: 2,
+        title: "The Tyrant’s Choice",
+        releaseDate: "2018-06-22",
+        pages: [
+          "https://picsum.photos/800/1200?random=1003",
+          "https://picsum.photos/800/1200?random=1004"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 11,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "Murder in the Dark",
+        releaseDate: "2022-11-12",
+        pages: [
+          "https://picsum.photos/800/1200?random=1101",
+          "https://picsum.photos/800/1200?random=1102"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 12,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "Dream Unfolds",
+        releaseDate: "2019-08-05",
+        pages: [
+          "https://picsum.photos/800/1200?random=1201",
+          "https://picsum.photos/800/1200?random=1202"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 13,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "Rise of the Machine",
+        releaseDate: "2021-04-09",
+        pages: [
+          "https://picsum.photos/800/1200?random=1301",
+          "https://picsum.photos/800/1200?random=1302"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 14,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "Petals of War",
+        releaseDate: "2015-07-20",
+        pages: [
+          "https://picsum.photos/800/1200?random=1401",
+          "https://picsum.photos/800/1200?random=1402"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 15,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "The Forgotten Battle",
+        releaseDate: "2020-03-13",
+        pages: [
+          "https://picsum.photos/800/1200?random=1501",
+          "https://picsum.photos/800/1200?random=1502"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 16,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "Winter Love",
+        releaseDate: "2017-01-21",
+        pages: [
+          "https://picsum.photos/800/1200?random=1601",
+          "https://picsum.photos/800/1200?random=1602"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 17,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "Hunter’s Rise",
+        releaseDate: "2021-02-25",
+        pages: [
+          "https://picsum.photos/800/1200?random=1701",
+          "https://picsum.photos/800/1200?random=1702"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 18,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "Into the Abyss",
+        releaseDate: "2022-09-14",
+        pages: [
+          "https://picsum.photos/800/1200?random=1801",
+          "https://picsum.photos/800/1200?random=1802"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 19,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "Time Reborn",
+        releaseDate: "2018-11-05",
+        pages: [
+          "https://picsum.photos/800/1200?random=1901",
+          "https://picsum.photos/800/1200?random=1902"
+        ]
+      }
+    ]
+  },
+  {
+    mangaId: 20,
+    chapters: [
+      {
+        chapterNumber: 1,
+        title: "Destiny’s Call",
+        releaseDate: "2021-05-18",
+        pages: [
+          "https://picsum.photos/800/1200?random=2001",
+          "https://picsum.photos/800/1200?random=2002"
+        ]
+      }
+    ]
+  }
+];
+

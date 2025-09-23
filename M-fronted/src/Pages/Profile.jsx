@@ -32,7 +32,7 @@ const Profile = () => {
   }, []);
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="max-w-5xl mt-20 mx-auto p-6">
       {/* Profile Section */}
       <div className="flex flex-col items-center gap-4 mb-10">
         <img

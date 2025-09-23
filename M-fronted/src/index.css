@@ -63,9 +63,7 @@
   background-color: DarkOliveGreen;
 }
 
-body{
-  background: #C6D870;
-}
+
 
 ::-webkit-scrollbar{
   display: none;
@@ -89,3 +87,9 @@ body{
 .slick-prev:hover:before, .slick-next:hover:before {
   color: #000000 !important; /* optional: change color on hover */
 }
+
+
+/* body {
+  
+  background-color: rgba(220, 213, 213, 0.849);
+} */

@@ -9,6 +9,8 @@ import Search from './Pages/Search.jsx'
 import Manga from './Pages/Manga.jsx'
 import Chapter from './Pages/Chapter.jsx'
 import Footer from './Component/Footer.jsx'
+import Login from    './Pages/Login.jsx'
+// import Layout from './Component/Layout.jsx'
 
 
 
@@ -20,13 +22,15 @@ function App() {
       <NavBar/>
 
       <Routes>
+       {/* <Route path="/" element={<Layout />}></Route>  */}
         <Route path='/' element={<Home/>}/>
         <Route path='/top' element={<Top/>}/>
         <Route path='/latest' element={<Latest/>}/>
         <Route path='/profile' element={<Profile/>}/>
         <Route path='/manga/:id' element={<Manga/>}/>
-        <Route path='/mangaName/chapterNo' element={<Chapter/>}/>
+        <Route path='/manga/:mangaId/:chapterNo' element={<Chapter/>}/>
         <Route path='/search' element={<Search/>}/>
+        <Route path='/login' element={<Login/>}/>
       </Routes>
 
       <Footer/>
