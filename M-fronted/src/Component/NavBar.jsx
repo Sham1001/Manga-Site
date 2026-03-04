@@ -2,12 +2,18 @@ import React, { useContext } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { assets } from "../assets/fronted/assets.js";
 import { MangaCon } from "../Context/MangaContex.jsx";
-import { useNavigate } from "react-router-dom";
+
+
 
 const NavBar = () => {
 
-  const navigate = useNavigate()
-  const { setSearchResult } = useContext(MangaCon);
+  
+  const { setSearchResult,token,setToken,navigate } = useContext(MangaCon);
+
+  const logOut = ()=>{
+    
+  }
+
 
   return (
     <div className="w-full fixed top-0 left-0 z-50 bg-gray-900/80 backdrop-blur-md shadow-md">
@@ -49,13 +55,13 @@ const NavBar = () => {
         <div className="flex gap-6 md:gap-8 items-center">
           <Link to="/search" className="flex items-center gap-2">
             <img
-              onClick={() => setSearchResult((prev) => !prev)}
+              
               className="h-7 md:h-8 hover:scale-110 transition-transform"
               src={assets.search}
               alt="Search"
             />
           </Link>
-          <Link to="/login">
+          <Link to={token ? "/profile" : "/login"}>
             <img
               // onClick={()=>navigate("/login")}
               className="h-7 md:h-8 hover:scale-110 transition-transform rounded-full"

@@ -14,11 +14,11 @@ const Search = () => {
   const [subCategory, setSubCategory] = useState([]);
   const [search, setSearch] = useState([]);
 
-  const { info, isSearch } = useContext(MangaCon);
+  const { info, isSearch,manga } = useContext(MangaCon);
 
   useEffect(() => {
     applyFilter();
-  }, [category, subCategory, isSearch, search]);
+  }, [category, subCategory, isSearch, search,manga]);
 
   useEffect(() => {
     sortCollection();
@@ -58,23 +58,23 @@ const Search = () => {
   };
 
   const applyFilter = () => {
-    let productCopy = info.slice();
+    let productCopy = manga.slice();
 
     if (isSearch) {
       productCopy = productCopy.filter((items) =>
-        items.title.toLowerCase().includes(isSearch.toLowerCase())
+        items.name.toLowerCase().includes(isSearch.toLowerCase())
       );
     }
 
     if (category.length > 0) {
       productCopy = productCopy.filter((items) =>
-        items.genre.split(", ").some((g) => category.includes(g))
+        items.genres.some((g) => category.includes(g))
       );
     }
 
     if (subCategory.length > 0) {
       productCopy = productCopy.filter((items) =>
-        items["sub-genre"].split(", ").some((g) => subCategory.includes(g))
+        items.subGenres.some((g) => subCategory.includes(g))
       );
     }
 
@@ -95,7 +95,7 @@ const Search = () => {
 
       case "A-Z":
         setCollection(
-          sortCollectionCopy.sort((a, b) => a.title.localeCompare(b.title))
+          sortCollectionCopy.sort((a, b) => a.name.localeCompare(b.name))
         );
         break;
 
@@ -192,10 +192,7 @@ const Search = () => {
           {collection.map((items, index) => (
             <div key={index} className="px-2">
               <MangaContex
-                title={items.title}
-                chapters={items.chapters}
-                coverImage={items.coverImage}
-                id={items.id}
+                key={index} name={items.name} chapters={items.chapters} coverImg={items.coverImg} id={items._id}
               />
             </div>
           ))}

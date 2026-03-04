@@ -1,19 +1,70 @@
 import React, { useEffect, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import SignInButton from "../Component/GoogleLogin.jsx";
+import { useContext } from "react";
+import { MangaCon } from "../Context/MangaContex.jsx"
+import axios from "axios"
+import { toast } from "react-toastify"
 
 const Login = () => {
+
   const [isSign, setIsSign] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [showPassword, setShowPassword] = useState(false)
+
+  const { token, setToken, backendUrl, navigate } = useContext(MangaCon)
+
 
   useEffect(() => {
-    console.log("the email is :", email);
-  }, [email]);
+    console.log("the email is :", isSign);
 
-  const handleEvent = (e) => {
+  }, [isSign]);
+
+  const handleEvent = async (e) => {
     e.preventDefault();
+   try{
+     if (!isSign) {
+      const response = await axios.post(backendUrl + '/api/user/register', { name, email, password })
+      if (response.data.success) {
+        setToken(response.data.token)
+        localStorage.setItem('token', response.data.token)
+        toast.success("Register successfully")
+        setName('')
+        setEmail('')
+        setPassword('')
+
+      }
+      else {
+        toast.error(response.data.message)
+      }
+    }
+    else {
+      const response = await axios.post(backendUrl + '/api/user/login', { email, password })
+      if (response.data.success) {
+        setToken(response.data.token)
+        localStorage.setItem('token', response.data.token)
+
+
+      }
+      else {
+        toast.error(response.data.message)
+      }
+    }
+  }
+    catch(error){
+      console.log(error)
+      toast.error(error.response?.data?.message || error.message)
+    }
+   
   };
+
+  useEffect(() => {
+    if (token) {
+      navigate('/')
+    }
+  }, [token])
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-r from-blue-100 to-purple-200 px-4">
@@ -44,14 +95,23 @@ const Login = () => {
             placeholder="Enter your email"
             required
           />
-          <input
-            className="border border-gray-300 rounded-xl py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full transition"
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-            placeholder="Enter your password"
-            required
-          />
+          <div className="relative w-full">
+            <input
+              className="border border-gray-300 rounded-xl py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full transition pr-10"
+              type={showPassword ? "text" : "password"}
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              placeholder="Enter your password"
+              required
+            />
+            <span
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500 hover:text-gray-700"
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </span>
+          </div>
+
         </div>
 
         <div className="mt-6">

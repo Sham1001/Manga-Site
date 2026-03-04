@@ -8,7 +8,7 @@ import { MangaCon } from '../Context/MangaContex'
 const SearchBar = () => {
 
   const {searchResult, setSearchResult,isSearch, setIsSearch} = useContext(MangaCon)
-  return searchResult ? (
+  return  (
     <div className="flex items-center justify-between bg-white shadow-md rounded-2xl px-4 py-2 w-full max-w-md">
       {/* Input + search icon */}
       <div className="flex items-center flex-1 gap-2">
@@ -26,7 +26,7 @@ const SearchBar = () => {
         <img src={assets.cross} alt="close" className="w-4 h-4 cursor-pointer hover:scale-110 transition" />
       </button>
     </div>
-  ): null
+  )
 }
 
 export default SearchBar

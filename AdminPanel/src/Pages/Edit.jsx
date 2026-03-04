@@ -6,7 +6,7 @@ const Edit = () => {
   const [authName, setAuthName] = useState("");
   const [chapNo, setChapNo] = useState("");
 
-  const HandleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     const formData = new FormData();
@@ -21,7 +21,7 @@ const Edit = () => {
 
   return (
     <form
-      onSubmit={HandleSubmit}
+      onSubmit={handleSubmit}
       className="max-w-2xl mx-auto bg-white shadow-lg rounded-2xl p-6 space-y-6"
     >
       {/* Input fields */}
@@ -73,11 +73,11 @@ const Edit = () => {
           {imageArr.map((file, index) => (
             <div key={index} className="relative group">
               <img
-  onClick={() => filterImg(file)}
-  src={URL.createObjectURL(file)}
-  alt={`page-${index}`}
-  className="w-full h-32 object-cover rounded-lg shadow-md cursor-pointer transition duration-300 hover:shadow-[0_0_15px_5px_rgba(239,68,68,0.7)] hover:scale-105"
-/>
+                onClick={() => filterImg(file)}
+                src={URL.createObjectURL(file)}
+                alt={`page-${index}`}
+                className="w-full h-32 object-cover rounded-lg shadow-md cursor-pointer transition duration-300 hover:shadow-[0_0_15px_5px_rgba(239,68,68,0.7)] hover:scale-105"
+              />
 
 
             </div>

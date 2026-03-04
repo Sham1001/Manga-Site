@@ -1,20 +1,23 @@
 import React, { useState } from 'react'
 import { assest } from '../assets/Admin/asset'
+import axios from "axios"
+import {toast} from "react-toastify"
+import { Backend } from 'firebase/ai'
 
-const Add = () => {
+const Add = ({backendUrl}) => {
   const [genres, setGenres] = useState([])
   const [subGenres, setSubGenres] = useState([])
   const [authName, setAuthName] = useState("")
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [date, setDate] = useState("")
-  const [type, setType] = useState("")
+  const [type, setType] = useState("Manga")
   const [popular, setPopular] = useState(false)
   const [isComplete, setComplete] = useState(false)
   const [recommended, setRecommended] = useState(false)
   const [image, setImage] = useState(false)
 
-  const HandleForm = (e) => {
+  const handleForm = async(e) => {
     e.preventDefault()
     const formData = new FormData()
 
@@ -25,10 +28,30 @@ const Add = () => {
     formData.append("popular", popular)
     formData.append("complete", isComplete)
     formData.append("recommended", recommended)
-    formData.append("genres", genres)
-    formData.append("subGenres", subGenres)
+    // formData.append("genres", genres)
+    genres.forEach(genres=>formData.append('genres',genres))
+    subGenres.forEach(subGenres=>formData.append('subGenres',subGenres))
+    // formData.append("subGenres", subGenres)
+    formData.append("type", type)
+
 
     image && formData.append("image", image)
+
+    console.log(type)
+
+    try{
+      const response = await axios.post(backendUrl+"/api/manga/add",formData)
+    if(response.data.success){
+      toast.success("Added successfully")
+    }
+    else{
+      toast.error(response.data.message)
+    }
+    }
+    catch(error){
+      console.log(error)
+      toast.error(error.message)
+    }
   }
 
   return (
@@ -38,7 +61,7 @@ const Add = () => {
           Add New Manga
         </h1>
 
-        <form onSubmit={HandleForm} className="grid grid-cols-2 gap-8">
+        <form onSubmit={handleForm} className="grid grid-cols-2 gap-8">
           {/* Left - Cover Image */}
           <div className="flex flex-col items-center border rounded-xl p-6 shadow-sm hover:shadow-md transition">
             <h2 className="text-lg font-semibold mb-4 text-gray-700">

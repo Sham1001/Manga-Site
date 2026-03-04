@@ -10,12 +10,16 @@ const Manga = () => {
   const [show, setShow] = useState(false);
   const [commentInfo, setCommentInfo] = useState([])
   const [showMore, setShowMore] = useState(5)
-  const [commentText,setCommentText] = useState("")
+  const [commentText, setCommentText] = useState("")
+  const [sinManga, setSinManga] = useState({})
   const { id } = useParams();
 
-  const { info } = useContext(MangaCon);
+  const { info, manga } = useContext(MangaCon);
 
-  const handlePost = (e)=>{
+
+  const mangaId = id
+
+  const handlePost = (e) => {
     e.preventDefault
     console.log(commentText)
   }
@@ -24,14 +28,33 @@ const Manga = () => {
     setCommentInfo(comment)
   }, [])
 
+  // useEffect(() => {
+  //   if (info) {
+  //     const found = info.find((item) => String(item.id) === String(id));
+  //     if (found) {
+  //       setData(found);
+  //     }
+  //   }
+  // }, [id, info]);
+
   useEffect(() => {
-    if (info) {
-      const found = info.find((item) => String(item.id) === String(id));
-      if (found) {
-        setData(found);
-      }
+    console.log("hello")
+
+    // setSinManga(manga.find(one => one._id.toString() === mangaId.toString()))
+    const found = manga.find(one=>one._id.toString() === mangaId.toString())
+    setSinManga(found)
+    if (sinManga) {
+      console.log("MIl gaya")
     }
-  }, [id, info]);
+    else {
+      console.log("Kaha gaya")
+    }
+   console.log("THis is :",sinManga)
+  }, [mangaId, manga])
+
+  // useEffect(()=>{
+  //   console.log("THis is :",sinManga)
+  // },[])
 
   const handelMore = () => {
     setShowMore((prev) => prev + 5)
@@ -40,14 +63,16 @@ const Manga = () => {
   const handlShowLess = () => {
     setShowMore(5)
   }
-  return data ? (
+  return (
     <>
-      <div className="">
+      <div className="mt-40">
         {/* Main Info Section */}
-        <div className="max-w-6xl mx-auto mt-10 bg-white p-6 rounded-md shadow">
+        
+            {sinManga ?(
+              <div className="max-w-6xl mx-auto mt-10 bg-white p-6 rounded-md shadow">
           {/* Title */}
           <h1 className="text-xl font-semibold text-blue-600 mb-6">
-            {data.title}
+            {sinManga.name}
           </h1>
 
           {/* Grid Content */}
@@ -55,8 +80,8 @@ const Manga = () => {
             {/* Left: Cover */}
             <div className="bg-white rounded-md shadow p-2">
               <img
-                src={data.coverImage}
-                alt={data.title}
+                src={sinManga.coverImg}
+                alt={name.name}
                 className="w-full h-[320px] object-cover"
               />
             </div>
@@ -66,45 +91,56 @@ const Manga = () => {
               {/* Rating */}
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-yellow-400 text-xl">★★★★★</span>
-                <span className="text-gray-800 font-medium">{data.rating}</span>
+                <span className="text-gray-800 font-medium">5</span>
               </div>
 
               {/* Info Grid */}
               <div className="grid grid-cols-2 gap-y-3 gap-x-12 text-sm text-gray-700">
                 <div>
                   <p className="font-semibold text-gray-900">Rating</p>
-                  <p>Average {data.rating} / 5</p>
+                  <p>Average 5 / 5</p>
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900">Release</p>
-                  <p>{data.releaseYear}</p>
+                  <p>10/2/4</p>
                 </div>
 
                 <div>
                   <p className="font-semibold text-gray-900">Alternative</p>
-                  <p>{data.alternative || "N/A"}</p>
+                  <p>"N/A"</p>
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900">Status</p>
-                  <p className="text-gray-900">{data.status}</p>
+                  <p className="text-gray-900">{sinManga.ongoing ? "ongoing" : "Completed"}</p>
                 </div>
 
                 <div>
                   <p className="font-semibold text-gray-900">Author(s)</p>
-                  <p>{data.author}</p>
+                  <p>{sinManga.authorName}</p>
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900">Artist(s)</p>
-                  <p>{data.artist || "Unknown"}</p>
+                  <p> "Unknown"</p>
                 </div>
 
                 <div>
                   <p className="font-semibold text-gray-900">Genre(s)</p>
-                  <p>{data.genre}</p>
+                  {/* <p><div>{manga.genres.map((items,index)(
+                    <p>{items}</p>
+                  ))}</div></p> */}
+                  {/* <div>
+                    {
+                      sinManga.genres?.map((item,index)=>(
+                        <p key={index}>{item},</p>
+                      ))
+                    }
+                  </div> */}
+                  <p>{sinManga?.genres?.join(", ")}</p>
+
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900">Type</p>
-                  <p>{data.type}</p>
+                  <p>{sinManga.type}</p>
                 </div>
               </div>
 
@@ -134,18 +170,15 @@ const Manga = () => {
 
           {/* Description */}
           {/* Description */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-md shadow-lg text-gray-800 leading-relaxed text-justify">
+          {/* <div className="mt-6 p-4 bg-gray-50 rounded-md shadow-lg text-gray-800 leading-relaxed text-justify">
             <h2 className="text-lg font-semibold text-gray-900 mb-2">Description</h2>
-            <p className="whitespace-pre-line">{data.description}</p>
-          </div>
+            <p className="whitespace-pre-line">{manga.description}</p>
+          </div> */}
 
-        </div>
+          {/* <div className="max-w-6xl mt-10 bg-white rounded-lg shadow p-6 mx-auto ">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Chapters</h2> */}
 
-        {/* Chapters Section */}
-        <div className="max-w-6xl mt-10 bg-white rounded-lg shadow p-6 mx-auto ">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Chapters</h2>
-
-          <div className="divide-y">
+          {/* <div className="divide-y">
             {Array.from(
               { length: show ? data.chapters : Math.min(10, data.chapters) },
               (_, i) => (
@@ -153,28 +186,28 @@ const Manga = () => {
                   key={i}
                   className="flex justify-between items-center py-3 hover:bg-gray-50 transition cursor-pointer"
                 >
-                  {/* Left: Chapter number */}
+                 
                   <p className="text-gray-800 font-medium">
                     Chapter {data.chapters - i}
                   </p>
 
-                  {/* Right: Placeholder (replace with views/date later) */}
+                 
                   <p className="text-gray-500 text-sm">31/08/25</p>
                 </Link>
               )
             )}
-          </div>
+          </div> */}
 
-          {data.chapters > 10 && (
+          {/* {data.chapters > 10 && (
             <button
               onClick={() => setShow((prev) => !prev)}
               className="mt-4 px-4 py-2 rounded bg-blue-600 text-white text-sm font-medium hover:bg-blue-700"
             >
               {show ? "Show Less" : "Show More"}
             </button>
-          )}
-        </div>
-        <div className="flex flex-col justify-center m-49 rounded bg-white items-center  mt-10 ">
+          )} */}
+          {/* </div> */}
+          {/* <div className="flex flex-col justify-center m-49 rounded bg-white items-center  mt-10 ">
           <div className="flex justify-center   mt-10 w-3/4 mx-auto">
             <div className="flex items-center gap-3 w-full">
               <input
@@ -241,12 +274,27 @@ const Manga = () => {
 
 
           </div>
-        </div>
+        </div> */}
+
+        </div> 
+            ):
+             (
+              <div className="text-center mt-20 text-gray-500 text-lg">
+            Loading manga details...
+          </div>
+             )
+          }
+          
+        
+
+        {/* Chapters Section */}
+
       </div>
     </>
-  ) : (
-    <div className="text-center mt-20 text-gray-500 text-lg">No data</div>
-  );
+  )
+  // : (
+  //   <div className="text-center mt-20 text-gray-500 text-lg">No data</div>
+  // );
 
 };
 
