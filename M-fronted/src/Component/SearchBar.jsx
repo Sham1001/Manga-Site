@@ -22,7 +22,7 @@ const SearchBar = () => {
       </div>
 
       {/* Cross icon */}
-      <button onClick={()=>setSearchResult(false)}>
+      <button onClick={()=>setIsSearch('')}>
         <img src={assets.cross} alt="close" className="w-4 h-4 cursor-pointer hover:scale-110 transition" />
       </button>
     </div>

@@ -8,13 +8,14 @@ import {toast} from 'react-toastify'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import MangaContex from '../Component/MangaContex.jsx'
+import PaginationPage from '../Component/PaginationPage.jsx'
 
 const Top = () => {
 
   const [topManga,setTopManga] = useState([])
   const [totalManga, setTotalManga] = useState(0)
   const [totalPage, setTotalPage] = useState(1)
-  const [num,setNum] = useState(4)
+  // const [num,setNum] = useState(4)
   const [page, setPage] = useState(1)
   const { backendUrl } = useContext(MangaCon)
   // let totalManga
@@ -82,13 +83,57 @@ const Top = () => {
   }
 
 
+
+
+
+// const getPagination = () => {
+//   const pages = [];
+//   const siblingCount = 2; // pages left & right of current
+
+//   const left = Math.max(page - siblingCount, 1);
+//   const right = Math.min(page + siblingCount, totalPage);
+
+//   // Always show first page
+//   if (left > 1) {
+//     pages.push(1);
+//   }
+
+//   // Left dots
+//   if (left > 2) {
+//     pages.push("...");
+//   }
+
+//   // Middle pages
+//   for (let i = left; i <= right; i++) {
+//     pages.push(i);
+//   }
+
+//   // Right dots
+//   if (right < totalPage - 1) {
+//     pages.push("...");
+//   }
+
+//   // Always show last page
+//   if (right < totalPage) {
+//     pages.push(totalPage);
+//   }
+
+//   return pages;
+// };
+
+
+
+
+
+
+
   useEffect(() => {
       getPopularManga()
     }, [page])
 
-  useEffect(()=>{
-    console.log(topManga.length)
-  })
+  // useEffect(()=>{
+  //   console.log(topManga.length)
+  // })
   
 
 
@@ -99,9 +144,15 @@ const Top = () => {
   // }
   return (
   <div className="px-15 py-20 bg-gray-50 min-h-screen">
-  <h2 className="text-2xl font-bold text-gray-800 mb-6">
+    <div className="flex justify-between mr-6">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">
     Manga Collection
   </h2>
+  <h2 className="font-bold">
+    Total Manga :- {totalManga}
+  </h2>
+    </div>
+  
 
     <div className="space-y-6">
   <div className="w-full grid  grid-cols-2  md:grid-cols-3 lg:grid-cols-4 gap-6" >
@@ -116,34 +167,12 @@ const Top = () => {
         />
       ))}
       </div>
-    {/* </Slider> */}
-    <div className="flex gap-2 justify-center items-center mt-6">
-        <button
-        disabled={page === 1}
-        onClick={
-          ()=>setPage((prev)=>prev-1)
-        } className={`px-8 py-2 rounded-2xl ${page === 1? "cursor-not-allowed bg-gray-400 text-white" : " bg-gray-700 rounded-2xl text-white font-bold border-2" }`}>Prev</button>
-       {Array.from({ length: totalPage }, (_, index) => {
-    const pageNumber = index + 1;
+   
 
-    return (
-      <button
-        key={pageNumber}
-        onClick={() => setPage(pageNumber)}
-        className={`min-w-[40px] h-[40px] flex items-center justify-center 
-          rounded-full font-semibold transition-all duration-200
-          ${
-            page === pageNumber
-              ? "bg-blue-600 text-white shadow-md scale-110"
-              : "bg-white border border-gray-400 hover:bg-gray-100"
-          }`}
-      >
-        {pageNumber}
-      </button>
-    );
-  })}
-        <button disabled={page===totalPage} onClick={()=>setPage((prev)=>prev+1)} className={`px-8 py-2 rounded-2xl ${page === totalPage ? "cursor-not-allowed bg-gray-400 text-white" : " bg-gray-700 rounded-2xl text-white font-bold border-2"}`}>Next</button>
-    </div>
+  
+  <PaginationPage page={page} totalPage={totalPage} onChange={setPage}/>
+
+
     </div>
   
 </div>

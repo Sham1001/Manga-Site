@@ -87,55 +87,81 @@ const MangaContex = ({ name, chapters, coverImg, id, favorite }) => {
 //     console.log(token)
 //   }, [token])
 
-  return (
-    <Link to={`/manga/${id}`}>
-      <div className="relative max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white hover:shadow-2xl transition transform hover:scale-105 duration-300 group">
+ return (
+  <Link to={`/manga/${id}`}>
+    <div className="relative bg-white border border-gray-200 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:border-gray-300 hover:-translate-y-1 group">
 
-       
-        <div className="relative">
-       <img src={coverImg || "https://picsum.photos/400/250?random=1"} alt={name} className="w-full h-48 object-contain" />
-        
-          <button 
-            onClick={handleFavorite}
-            className="absolute top-2 right-2 p-2 rounded-full bg-white/70 shadow-md opacity-0 group-hover:opacity-100 transition"
-          >
-            {/* <Heart
-              size={22}
-              className={favorite.includes(id?.toString()) ? "text-red-500 fill-red-500" : "text-gray-400"}
-            /> */}
-          </button>
-        </div>
+      {/* Image Section */}
+      <div className="relative bg-gradient-to-b from-gray-50 to-gray-100">
+        <img
+          src={coverImg || "https://picsum.photos/400/250?random=1"}
+          alt={name}
+          className="w-full h-56 object-contain p-6 transition duration-500 group-hover:scale-105"
+        />
 
-        {/* Content */}
-        <div className="p-4 card">
-          {/* Title with tooltip */}
-         <div className="relative group">
-  <p className="text-lg font-semibold text-gray-800 mb-2 truncate max-w-[220px]">
+        {/* Favorite Button */}
+        <button
+          onClick={handleFavorite}
+          className="absolute top-4 right-4 p-2.5 rounded-full bg-white border border-gray-300 shadow-md transition-all duration-300 hover:bg-black hover:border-black"
+        >
+          <Heart
+            size={18}
+            className={`transition ${
+              isFavorite
+                ? "text-white fill-white"
+                : "text-gray-600 group-hover:text-white"
+            }`}
+          />
+        </button>
+      </div>
+
+      {/* Content */}
+     {/* Content */}
+<div className="p-5 space-y-4">
+
+  {/* Title */}
+  {/* Title */}
+<div className="relative group">
+  <h3 className="text-xl font-bold text-black tracking-tight truncate cursor-default">
     {name}
-  </p>
+  </h3>
 
   {/* Tooltip */}
-  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-white text-gray-800 text-sm p-2 rounded shadow-lg z-10 w-max max-w-xs break-words">
+  <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3
+                  opacity-0 group-hover:opacity-100
+                  transition-all duration-300
+                  bg-black text-white text-xs
+                  px-3 py-2 rounded-lg shadow-xl
+                  whitespace-nowrap z-20
+                  pointer-events-none">
     {name}
   </div>
 </div>
 
+  {/* Thin Divider */}
+  <div className="h-[1px] bg-gray-300"></div>
 
-        
-          <div className="flex justify-between text-sm text-gray-600">
-            <div>
-              <p>Chapter {chapters}</p>
-              <p>Chapter {chapters - 1}</p>
-            </div>
-            <div className="text-right">
-              <p>26/08/2025</p>
-              <p>19/08/2025</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Link>
-  );
+  {/* Chapters */}
+  <div className="flex justify-between">
+    <div>
+      <p className="text-gray-900 font-semibold text-sm">
+        Chapter {chapters}
+      </p>
+      <p className="text-gray-500 text-sm">
+        Chapter {chapters - 1}
+      </p>
+    </div>
+
+    <div className="text-right text-gray-400 text-xs">
+      <p>26/08/2025</p>
+      <p>19/08/2025</p>
+    </div>
+  </div>
+
+</div>
+    </div>
+  </Link>
+);
 };
 
 export default MangaContex;
