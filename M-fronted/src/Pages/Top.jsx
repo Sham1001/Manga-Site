@@ -4,7 +4,7 @@ import Slider from "react-slick";
 import React from 'react'
 import { useContext } from 'react'
 import {MangaCon} from '../Context/MangaContex.jsx'
-import {toast} from 'react-toastify'
+// import {toast} from 'react-toastify'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import MangaContex from '../Component/MangaContex.jsx'

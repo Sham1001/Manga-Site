@@ -1,8 +1,16 @@
 import React, { useState } from "react";
 import { assest } from "../assets/Admin/asset";
+import search2 from '../assets/search2.svg'
+import cross from '../assets/cross.svg'
+import axios from 'axios'
+import MangaComponent from '../Component/MangaComponent.jsx'
+import { useEffect } from "react";
 
-const Edit = () => {
+const Edit = ({backendUrl}) => {
   const [imageArr, setImageArr] = useState([]);
+  const [allManga, setAllManga] = useState([])
+  const [mangaId, setMangaId] = useState("")
+  const [search, setSearch] = useState('')
   const [authName, setAuthName] = useState("");
   const [chapNo, setChapNo] = useState("");
 
@@ -19,11 +27,73 @@ const Edit = () => {
     setImageArr((prev) => prev.filter((item) => item !== file));
   };
 
+  const getManga = async()=>{
+    try{
+      const response = await axios.get(backendUrl+"/api/manga/mangaInfo",{
+      params:{search, limit:6}
+    })
+    if(response.data.success){
+      const matchedManga = response.data.pageInfo
+      setAllManga(matchedManga)
+    }
+
+    }
+    catch(error){
+      console.log(error)
+    }
+
+  }
+
+
+  useEffect(()=>{
+    getManga()
+  },[search])
+
+  useEffect(()=>{
+  // console.log(mangaId,"This is id")
+  const timeout = setTimeout(() => {
+    console.log(allManga, "This is Id")
+  }, 3000);
+  },[mangaId])
+
+
+
+  // useEffect(()=>{
+  //   console.log(search)
+  // },[search])
+
   return (
+    <div>
+    
+    <div className="flex items-center justify-center bg-white shadow-md rounded-2xl px-4 py-2 max-w-md">
+            {/* Input + search icon */}
+            <div className="flex items-center flex-1 gap-2">
+              <img src={search2} alt="search" className="w-5 h-5 text-gray-500" />
+              <input
+                onChange={(e)=>setSearch(e.target.value)} value={search}
+                type="text"
+                placeholder="Search..."
+                className="flex-1 outline-none border-none bg-transparent text-gray-700 placeholder-gray-400"
+              />
+            </div>
+      
+            {/* Cross icon */}
+            <button >
+              <img src={cross} alt="close" className="w-4 h-4 cursor-pointer hover:scale-110 transition" />
+            </button>
+          </div>
+
+          
+    <div className="space-y-10 flex gap-8 w-full">
+
+  
     <form
       onSubmit={handleSubmit}
       className="max-w-2xl mx-auto bg-white shadow-lg rounded-2xl p-6 space-y-6"
     >
+       
+
+
       {/* Input fields */}
       <div className="space-y-4">
         <input
@@ -102,6 +172,16 @@ const Edit = () => {
         </button>
       </div>
     </form>
+
+    <div className="grid grid-cols-2  gap-10">
+      {
+        allManga?.map((item)=>(
+          <MangaComponent name={item.name} coverImg={item.coverImg} id = {item.id} />
+        ))
+      }
+    </div>
+      </div>
+      </div>
   );
 };
 

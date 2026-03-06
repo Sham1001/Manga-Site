@@ -152,7 +152,7 @@ if (category) {
         // if (sort === "rating") sortOption = { rating: -1 };
         if (sort === "A-Z") sortOption = { name: 1 };
         if (sort === "Z-A") sortOption = { name: -1 };
-        if (sort === "Oldest") sortOption = { name: 1 };
+        if (sort === "Oldest") sortOption = { createdAt: 1 };
 
 
         const [pageInfo, total] = await Promise.all([
@@ -176,7 +176,8 @@ if (category) {
 
 const getManga = async(req,res)=>{
     
-    const {id} = req.body
+    const id = req.query.mangaId
+    console.log(id,"This is id")
     if(!id){
         return res.status(500).json({success:false, message:"Manag id is missing"})
     }
