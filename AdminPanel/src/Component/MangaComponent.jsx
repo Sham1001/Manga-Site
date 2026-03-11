@@ -101,7 +101,7 @@ const MangaComponent = ({ name, chapters, coverImg, date}) => {
 
                     {/* Favorite Button */}
                     {/* <button
-                        onClick={handleFavorite}
+                        // onClick={handleFavorite}
                         className="absolute top-4 right-4 p-2.5 rounded-full bg-white border border-gray-300 shadow-md transition-all duration-300 hover:bg-black hover:border-black"
                     >
                         <Heart

@@ -176,7 +176,7 @@ const Search = () => {
   // };
 
   return (
-    <div className="flex flex-col lg:flex-row mt-20 gap-8 px-6 py-8">
+    <div className="flex flex-col lg:flex-row mt-15 gap-8 px-6 py-8">
       {/* Sidebar */}
       <div className="w-full lg:w-1/4 space-y-6">
         {/* Search Bar */}

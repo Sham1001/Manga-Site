@@ -175,7 +175,7 @@ const Home = () => {
     <>
       <div className=''>
         <div>
-          <div className='flex text-center justify-between items-center mt-25 mx-22 '>
+          <div className='flex text-center justify-between items-center mt-15 mx-22 '>
             <Link to={'/top'} className='text-2xl font-bold'>Popular Manga</Link>
             <div className="">
               <Link to={'/top'}>

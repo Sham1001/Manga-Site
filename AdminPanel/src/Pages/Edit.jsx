@@ -1,26 +1,49 @@
 import React, { useState } from "react";
-import { assest } from "../assets/Admin/asset";
+import { assest } from "../assets/Admin/asset.js";
 import search2 from '../assets/search2.svg'
 import cross from '../assets/cross.svg'
 import axios from 'axios'
 import MangaComponent from '../Component/MangaComponent.jsx'
 import { useEffect } from "react";
+import PaginationPage from '../Component/Pagination.jsx'
+import { toast } from "react-toastify";
 
 const Edit = ({backendUrl}) => {
   const [imageArr, setImageArr] = useState([]);
   const [allManga, setAllManga] = useState([])
   const [mangaId, setMangaId] = useState("")
+  const [page, setPage] = useState(1)
+  const [totalPage, setTotalPage] = useState(1)
+  // const [totoalPage,]
   const [search, setSearch] = useState('')
-  const [authName, setAuthName] = useState("");
+  const [chpName, setChpName] = useState("");
   const [chapNo, setChapNo] = useState("");
+  
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("authName", authName);
+    formData.append("chpName", chpName);
     formData.append("chapNo", chapNo);
-    imageArr && imageArr.forEach((file) => formData.append("imageArr", file));
+    formData.append("mangaId",mangaId)
+    imageArr && imageArr.forEach((img) => formData.append("imageArr", img));
+
+    try{
+        const response = await axios.post(backendUrl+"/api/chapter/add",formData)
+        if(response.data.success){
+          setMangaId('')
+          setChapNo('')
+          setChpName('')
+          setImageArr([])
+          toast.success("Chapter added")
+        }
+        
+    }
+    catch(error){
+      console.log(error)
+      toast.error(error)
+    }
   };
 
   const filterImg = (file) => {
@@ -30,10 +53,12 @@ const Edit = ({backendUrl}) => {
   const getManga = async()=>{
     try{
       const response = await axios.get(backendUrl+"/api/manga/mangaInfo",{
-      params:{search, limit:6}
+      params:{search, limit:4, page}
     })
     if(response.data.success){
       const matchedManga = response.data.pageInfo
+      setTotalPage(response.data.totalPages)
+
       setAllManga(matchedManga)
     }
 
@@ -47,13 +72,14 @@ const Edit = ({backendUrl}) => {
 
   useEffect(()=>{
     getManga()
-  },[search])
+  },[search,page])
 
   useEffect(()=>{
   // console.log(mangaId,"This is id")
-  const timeout = setTimeout(() => {
-    console.log(allManga, "This is Id")
-  }, 3000);
+  // const timeout = setTimeout(() => {
+  //   console.log(mangaId, "This is Id")
+  // }, 3000);
+  console.log(mangaId,"This is manga Id")
   },[mangaId])
 
 
@@ -63,45 +89,41 @@ const Edit = ({backendUrl}) => {
   // },[search])
 
   return (
-    <div>
-    
-    <div className="flex items-center justify-center bg-white shadow-md rounded-2xl px-4 py-2 max-w-md">
-            {/* Input + search icon */}
-            <div className="flex items-center flex-1 gap-2">
-              <img src={search2} alt="search" className="w-5 h-5 text-gray-500" />
-              <input
-                onChange={(e)=>setSearch(e.target.value)} value={search}
-                type="text"
-                placeholder="Search..."
-                className="flex-1 outline-none border-none bg-transparent text-gray-700 placeholder-gray-400"
-              />
-            </div>
-      
-            {/* Cross icon */}
-            <button >
-              <img src={cross} alt="close" className="w-4 h-4 cursor-pointer hover:scale-110 transition" />
-            </button>
-          </div>
+   <div>
+  <div className="flex items-center justify-center bg-white shadow-md rounded-2xl px-4 py-2 max-w-md mx-auto mb-8">
+    {/* Input + search icon */}
+    <div className="flex items-center flex-1 gap-2">
+      <img src={search2} alt="search" className="w-5 h-5 text-gray-500" />
+      <input
+        onChange={(e)=>setSearch(e.target.value)} value={search}
+        type="text"
+        placeholder="Search..."
+        className="flex-1 outline-none border-none bg-transparent text-gray-700 placeholder-gray-400"
+      />
+    </div>
 
-          
-    <div className="space-y-10 flex gap-8 w-full">
+    {/* Cross icon */}
+    <button>
+      <img src={cross} alt="close" className="w-4 h-4 cursor-pointer hover:scale-110 transition" />
+    </button>
+  </div>
 
-  
+
+  <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-10 mr-10">
+
     <form
       onSubmit={handleSubmit}
-      className="max-w-2xl mx-auto bg-white shadow-lg rounded-2xl p-6 space-y-6"
+      className="w-full lg:w-1/2 bg-white shadow-lg rounded-2xl p-6 space-y-6 "
     >
-       
-
 
       {/* Input fields */}
       <div className="space-y-4">
         <input
-          onChange={(e) => setAuthName(e.target.value)}
-          value={authName}
+          onChange={(e) => setChpName(e.target.value)}
+          value={chpName}
           type="text"
           required
-          placeholder="Enter author name..."
+          placeholder="Enter chp name..."
           className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-500 outline-none"
         />
         <input
@@ -148,8 +170,6 @@ const Edit = ({backendUrl}) => {
                 alt={`page-${index}`}
                 className="w-full h-32 object-cover rounded-lg shadow-md cursor-pointer transition duration-300 hover:shadow-[0_0_15px_5px_rgba(239,68,68,0.7)] hover:scale-105"
               />
-
-
             </div>
           ))}
         </div>
@@ -173,15 +193,28 @@ const Edit = ({backendUrl}) => {
       </div>
     </form>
 
-    <div className="grid grid-cols-2  gap-10">
-      {
-        allManga?.map((item)=>(
-          <MangaComponent name={item.name} coverImg={item.coverImg} id = {item.id} />
-        ))
-      }
+
+    <div className="w-full lg:w-1/2 space-y-8">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-6 m-auto ">
+        {
+          allManga?.map((item)=>(
+            <div
+              key={item._id}
+              className={`hover:shadow-[0_0_15px_5px_rgba(239,68,68,0.7)] rounded-2xl hover:scale-105 transition mr-10  ${mangaId === item._id ? 'bg-red-600':"" } `}
+              onClick={()=>setMangaId(item._id)}
+            >
+              
+              <MangaComponent name={item.name} coverImg={item.coverImg} id={item.id} />
+            </div>
+          ))
+        }
+      </div>
+
+      <PaginationPage page={page} onChange={setPage} totalPage={totalPage}/>
     </div>
-      </div>
-      </div>
+
+  </div>
+</div>
   );
 };
 

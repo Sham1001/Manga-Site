@@ -16,7 +16,7 @@ const NavBar = () => {
 
 
   return (
-    <div className="w-full fixed top-0 left-0 z-50 bg-gray-900/80 backdrop-blur-md shadow-md">
+    <div className="w-full top-0 left-0 z-50 bg-gray-900/80 backdrop-blur-md shadow-md">
       <nav className="flex justify-between items-center h-20 px-6 md:px-16">
         {/* Logo */}
         <div>

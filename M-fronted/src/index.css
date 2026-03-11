@@ -65,9 +65,12 @@
 
 
 
-::-webkit-scrollbar{
-  display: none;
-}
+ ::-webkit-scrollbar{
+  display:none;
+  background-color: #ffffff;
+} 
+
+/* .chapter { height: 500px; overflow-y: auto; } */
 
 .card{
   /* background: #8FA31E; */
@@ -93,3 +96,5 @@
   
   background-color: rgba(220, 213, 213, 0.849);
 } */
+
+/* .body { height: 400px; overflow-y: scroll; } */

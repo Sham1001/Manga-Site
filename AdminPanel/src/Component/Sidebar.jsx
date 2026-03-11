@@ -21,7 +21,7 @@ const SideBar = () => {
           }
         >
           <img src={assest.add} alt="Add" className="w-5 h-5" />
-          <p className="hidden md:block">Add Items</p>
+          <p className="hidden md:block">Add Manga</p>
         </NavLink>
 
         <NavLink
@@ -34,7 +34,7 @@ const SideBar = () => {
           }
         >
           <img src={assest.order} alt="List" className="w-5 h-5" />
-          <p className="hidden md:block">Edit Items</p>
+          <p className="hidden md:block">Add Chapter</p>
         </NavLink>
 
         <NavLink
@@ -47,7 +47,7 @@ const SideBar = () => {
           }
         >
           <img src={assest.order} alt="Order" className="w-5 h-5" />
-          <p className="hidden md:block">List Items</p>
+          <p className="hidden md:block">Edit Items</p>
         </NavLink>
       </nav>
     </div>

@@ -121,7 +121,7 @@ const Manga = () => {
   // }
   return (
     <>
-      <div className="mt-40">
+      <div className="mt-15">
         {/* Main Info Section */}
         
             {data ?(

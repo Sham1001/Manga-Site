@@ -1,7 +1,7 @@
 import mangaModel from "../models/mangaModel.js";
 import fs from 'fs'
 import { v2 as cloudinary } from 'cloudinary'
-import { promises } from "dns";
+// import { promises } from "dns";
 
 
 const addManga = async (req, res) => {
@@ -45,11 +45,11 @@ const addManga = async (req, res) => {
             return res.status(400).json({ success: false, message: "CoverImg is missing" })
         }
 
-        const isName = await mangaModel.findOne({ name })
+        // const isName = await mangaModel.findOne({ name })
 
-        if (isName) {
-            return res.json({ success: false, message: "This name exists in Data Base , Name should be uniqe" })
-        }
+        // if (isName) {
+        //     return res.json({ success: false, message: "This name exists in Data Base , Name should be uniqe" })
+        // }
 
 
 
@@ -85,7 +85,7 @@ const addManga = async (req, res) => {
 const getMangaInfo = async (req, res) => {
     try {
 
-        const name = req.body
+        // const name = req.body
         
         const page = parseInt(req.query.page) || 1
         const limit = parseInt(req.query.limit) || 12

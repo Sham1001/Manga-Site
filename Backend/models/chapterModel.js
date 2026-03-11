@@ -15,6 +15,11 @@ const chapterSchema = new Schema({
         required:true,
         
     },
+    managaId:{
+        type:Schema.Types.ObjectId,
+        ref:"Manga",
+        required:true
+    },
     comments:[{
         type:Schema.Types.ObjectId,
         ref:"Comment"
