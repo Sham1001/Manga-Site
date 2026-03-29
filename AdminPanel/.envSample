@@ -1,0 +1,2 @@
+VITE_FRONTED_URL = "Your Frontend URL"
+VITE_BACKEND_URL= "Your Backend URL"

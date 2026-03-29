@@ -86,7 +86,7 @@ const getMangaInfo = async (req, res) => {
     try {
 
         // const name = req.body
-        
+
         const page = parseInt(req.query.page) || 1
         const limit = parseInt(req.query.limit) || 12
         const sort = req.query.sort || "latest"
@@ -134,18 +134,18 @@ const getMangaInfo = async (req, res) => {
 
 
 
-if (category) {
-  const categoryArray = category.split(",");
-  query.genres = { $all: categoryArray };
-}
+        if (category) {
+            const categoryArray = category.split(",");
+            query.genres = { $all: categoryArray };
+        }
 
         // if(sort === "Latest"){
         //      let sortOption = { createdAt: -1 };  // latest default
         // }
 
-//         console.log("Category from frontend:", category);
-// console.log("Final Mongo Query:", req.query);
-    // console.log(name.sort,"This is body")
+        //         console.log("Category from frontend:", category);
+        // console.log("Final Mongo Query:", req.query);
+        // console.log(name.sort,"This is body")
 
 
         let sortOption = { createdAt: -1 }
@@ -164,7 +164,7 @@ if (category) {
         const totalPages = Math.ceil(total / limit);
 
 
-      
+
         return res.status(200).json({ success: true, pageInfo, total, totalPages })
     }
     catch (error) {
@@ -174,19 +174,93 @@ if (category) {
 }
 
 
-const getManga = async(req,res)=>{
-    
+const getManga = async (req, res) => {
+
     const id = req.query.mangaId
-    console.log(id,"This is id")
-    if(!id){
-        return res.status(500).json({success:false, message:"Manag id is missing"})
+    console.log(id, "This is id")
+    if (!id) {
+        return res.status(500).json({ success: false, message: "Manag id is missing" })
     }
     const mangaInfo = await mangaModel.findById(id)
 
-    return res.status(200).json({success:true, mangaInfo})
+    return res.status(200).json({ success: true, mangaInfo })
 
 
 
 }
 
-export { addManga,getManga, getMangaInfo }
+const editManga = async (req, res) => {
+    // const {mangaName, artistName, releaseDate, authorName, status, genres, type, description, mangaId} = req.body
+    // const mangaValue = req.body
+    console.log(Object.values(req.body))
+    try {
+        const coverImg = req?.file?.path
+
+        // const auth = req.body.author
+        // const id = req?.body.mangaId
+
+        const mangaValue = [
+            "name",
+            "artistName",
+            "date",
+            "authorName",
+            "status",
+            "genres",
+            "type",
+            "description",
+            "mangaId",
+
+        ]
+
+        const updateManga = {}
+
+        mangaValue.forEach(element => {
+            if (req.body[element] != undefined) {
+                updateManga[element] = req.body[element]
+            }
+        });
+
+        if (coverImg != undefined) {
+            const result = await cloudinary.uploader.upload(coverImg, { folder: "manga", use_filename: true, unique_filename: true })
+
+            // await fs.promises.unlink(coverImg);
+            updateManga["coverImg"] = result.secure_url
+        }
+        console.log(Object.keys(updateManga))
+        // if(Object.keys(updateManga).length < 4){
+        //     return res.status(401).json({success:false,message:"No changes is made"})
+        // }
+
+        const update = await mangaModel.findByIdAndUpdate(req?.body?.mangaId, {
+            $set: updateManga
+        },
+            { new: true })
+
+        return res.status(200).json({ success: true, update })
+    }
+    catch (error) {
+        console.log(error, "Update error")
+        return res.status(500).json({ success: false, message: "Something went wrong , Please try again later" })
+
+    }
+
+
+}
+
+
+const deleteManga = async(req,res)=>{
+    const mangaId = req.query.mangaId
+    console.log(req.query.mangaId,"Id hai ye")
+
+    try{
+        await mangaModel.findByIdAndDelete(mangaId)
+
+        return res.status(200).json({success:true, message:"Manga deleted successfully"})
+    }
+    catch(error){
+        console.log(error)
+        return res.status(500).json({success:false, message:"-"})
+    }
+}
+
+export { addManga, getManga, getMangaInfo, editManga, deleteManga }

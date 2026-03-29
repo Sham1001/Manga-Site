@@ -14,6 +14,10 @@ const mangaSchema = new mongoose.Schema({
         required: true,
 
     },
+    artistName:{
+        type: String,
+        required: true
+    },
     description: {
         type: String,
         required: true
@@ -44,6 +48,10 @@ const mangaSchema = new mongoose.Schema({
         type: Boolean,
         required: true
     },
+    // status:{
+    //     type: String,
+    //     required: true
+    // },
 
     Recommended: {
         type: Boolean,

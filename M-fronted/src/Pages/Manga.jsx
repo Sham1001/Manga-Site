@@ -137,7 +137,7 @@ const Manga = () => {
             <div className="bg-white rounded-md shadow p-2">
               <img
                 src={data.coverImg}
-                alt={name.name}
+                alt={data.name}
                 className="w-full h-[320px] object-fit"
               />
             </div>
@@ -169,7 +169,7 @@ const Manga = () => {
                 </div> */}
                 <div>
                   <p className="font-semibold text-gray-900">Status</p>
-                  <p className="text-gray-900"> {data.status ? data.status : "-" }</p>
+                  <p className="text-gray-900"> {data.ongoing == false ? 'Ongoing' : "Completed" }</p>
                 </div>
 
                 <div>
@@ -178,7 +178,7 @@ const Manga = () => {
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900">Artist(s)</p>
-                  <p className=""> {data.artist ? data.artist : "-" }</p>
+                  <p className=""> {data.artistName ? data.artistName : "-" }</p>
                 </div>
 
                 <div>
