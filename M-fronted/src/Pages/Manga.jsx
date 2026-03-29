@@ -11,9 +11,11 @@ import {format, differenceInDays, formatDistanceToNow} from "date-fns"
 
 const Manga = () => {
   const [data, setData] = useState([]);
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
+  const [chapterToShow, setChapterToShow] = useState(1) 
   const [commentInfo, setCommentInfo] = useState([])
-  const [showMore, setShowMore] = useState(5)
+  const [chapter, setChapter] = useState([])
+  const [showMore, setShowMore] = useState(2)
   const [commentText, setCommentText] = useState("")
   const [sinManga, setSinManga] = useState({})
   const { id } = useParams();
@@ -28,6 +30,18 @@ const Manga = () => {
   const handlePost = (e) => {
     e.preventDefault
     console.log(commentText)
+  }
+
+  const showChapter = ()=>{
+  if(show){
+     setShow(prev=>!prev)
+   setChapterToShow(chapter.length)
+  }
+  else{
+    setChapterToShow(1)
+    setShow(prev=>!prev)
+  }
+
   }
 
   
@@ -61,16 +75,32 @@ const Manga = () => {
       
   }
 
+  const getTotalChapter = async()=>{
+    try{
+        const response = await axios.get(backendUrl+`/api/chapter/${mangaId}`)
+
+        if(response.data.success){
+          setChapter(response?.data?.allChapter)
+        }
+    }
+    catch(error){
+      console.log(error)
+    }
+  }
+
    
 
 
   useEffect(()=>{
     getMangaInfo()
+    getTotalChapter()
   },[])
 
+  
+
   useEffect(()=>{
-    console.log(data,"This is data")
-  },[data])
+    console.log(chapter,"This is data")
+  },[chapter])
 
   // useEffect(()=>{
   //   const intervel = setInterval(() => {
@@ -238,27 +268,32 @@ const Manga = () => {
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Chapters</h2>
 
           <div className="divide-y">
-            {chapterArray.map((item)=>
+            {chapter.length > 0 ? chapter.slice(0,chapterToShow).map((item)=>
               (
-                <Link to={`/manga/${id}/${item}`}
+                <Link to={`/manga/${id}/${item.chapterNo}`}
                   // key={i}
                   className="flex justify-between items-center py-3 hover:bg-gray-50 transition cursor-pointer"
                 >
                  
                   <p className="text-gray-800 font-medium">
-                    Chapter {item}
+                    Chapter {item.chapterNo}
                   </p>
 
                  
                   {/* <p className="text-gray-500 text-sm"><ChapterTime releaseDate={"2025-11-14T08:23:45.000Z"}/></p> */}
                   <p>
                       {
-                        getDate("2025-11-14T08:23:45.000Z")
+                        getDate(`${item.createdAt}`)
                       }
                   </p>
                 </Link>
               )
-            )}
+            )
+              :
+              <h1 className="text-center text-gray-400 text-lg font-semibold py-12 border border-dashed border-gray-300 rounded-xl bg-gray-50">
+  📭 No chapters yet
+</h1>
+            }
 
             {/* {
               chapterArray.map((item)=>(
@@ -270,12 +305,12 @@ const Manga = () => {
             } */}
           </div>
 
-          {data.chapters > 10 && (
+          {chapter.length > 1 && (
             <button
-              onClick={() => setShow((prev) => !prev)}
+              onClick={showChapter}
               className="mt-4 px-4 py-2 rounded bg-blue-600 text-white text-sm font-medium hover:bg-blue-700"
             >
-              {show ? "Show Less" : "Show More"}
+              {show ? "Show More" : "Show Less"}
             </button>
           )}
           </div>

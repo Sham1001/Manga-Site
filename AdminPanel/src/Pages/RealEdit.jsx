@@ -26,7 +26,7 @@ const RealEdit = ({ backendUrl }) => {
   
 
   const [description, setDescription] = useState('')
-
+ 
 
 
   const getMangaInfo = async () => {
@@ -195,7 +195,7 @@ const RealEdit = ({ backendUrl }) => {
 
 
   return (
-    <div className="mt-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center min-h-[70vh]">
+    <div className="mt-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center min-h-[70vh] mb-10">
       {data ? (
         <div className="max-w-6xl mx-auto mt-6 bg-white p-4 sm:p-6 lg:p-8 rounded-xl shadow-lg border border-gray-100">
 

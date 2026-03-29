@@ -27,23 +27,29 @@ function App() {
     {
     token === '' ? <Login setToken={setToken}/> :
    
-   <div >
+   <div className="h-screen flex flex-col">
 
-    <NavBar setToken={setToken}/>
-    <div className="flex">
-      <SideBar/>
-        <div className='w-70% mx-auto ml-[max(5vw,25px)] my-8 text-gray-600 text-base mb-30 '>
-      <Routes>
-        <Route path="/add" element={<Add backendUrl={backendUrl}  token={token}/>} />
-        <Route path="/edit" element={<Edit backendUrl={backendUrl}  token={token}/>} />
-        <Route path="/view" element={<View backendUrl={backendUrl}  token={token}/>} />
-        <Route path="/:mangaId" element={<RealEdit backendUrl={backendUrl}  token={token}/>}/>
-      </Routes>
-   </div>
+ 
+  <NavBar setToken={setToken} />
 
-   </div>
+ 
+  <div className="flex flex-1 overflow-hidden">
+
    
+    <SideBar />
+
+  
+    <div className="flex-1 overflow-y-auto mx-auto ml-[max(5vw,25px)] my-8 text-gray-600 text-base mb-10">
+      <Routes>
+        <Route path="/add" element={<Add backendUrl={backendUrl} token={token} />} />
+        <Route path="/edit" element={<Edit backendUrl={backendUrl} token={token} />} />
+        <Route path="/view" element={<View backendUrl={backendUrl} token={token} />} />
+        <Route path="/:mangaId" element={<RealEdit backendUrl={backendUrl} token={token} />} />
+      </Routes>
     </div>
+
+  </div>
+</div>
     
    
 }

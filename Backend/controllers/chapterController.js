@@ -30,7 +30,8 @@ const addChapter = async(req,res)=>{
        imageArr.map(async(img)=>{
             let result = await cloudinary.uploader.upload(img.path,{folder:'chapter',resource_type: "image"})
             return result.secure_url
-        })
+        }),
+        // fs.promises.unlink(img.path)
     )
 
 
@@ -97,4 +98,17 @@ const getChapter = async(req, res)=>{
     return res.status(200).json({success:true, chapter, totalChapters})
 }
 
-export {addChapter, getChapter}
+const totalChapter = async(req,res)=>{
+    try{
+        const mangaId = req.params.mangaId
+
+        const allChapter = await chapterModel.find({managaId:mangaId}).sort({chapterNo: -1})
+        return res.status(200).json({success:true, allChapter})
+    }
+    catch(error){
+        console.log(error)
+         return res.status(500).json(`{success:false, message:${error}}`)
+    }
+}
+
+export {addChapter, getChapter, totalChapter}
