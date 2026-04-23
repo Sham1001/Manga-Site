@@ -28,8 +28,8 @@ const Login = () => {
      if (!isSign) {
       const response = await axios.post(backendUrl + '/api/user/register', { name, email, password })
       if (response.data.success) {
-        setToken(response.data.token)
-        localStorage.setItem('token', response.data.token)
+        setToken(response?.data?.token)
+        localStorage.setItem('token', response?.data?.token)
         toast.success("Register successfully")
         setName('')
         setEmail('')
@@ -44,7 +44,7 @@ const Login = () => {
       const response = await axios.post(backendUrl + '/api/user/login', { email, password })
       if (response.data.success) {
         setToken(response.data.token)
-        localStorage.setItem('token', response.data.token)
+        localStorage.setItem('token', response?.data?.token)
 
 
       }

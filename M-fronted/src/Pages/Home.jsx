@@ -68,7 +68,7 @@ const Home = () => {
   const [latest, setLatest] = useState([])
   const [page, setPage] = useState(1)
 
-  const { token, PaginatApi, backendUrl } = useContext(MangaCon)
+  const { token, PaginatApi, backendUrl, isFavorite, setClicked } = useContext(MangaCon)
 
 
 
@@ -106,6 +106,11 @@ const Home = () => {
   //   useEffect(() => {
   //   console.log("Popular updated:", popular);
   // }, [popular]);
+
+
+  // const handleFav = ()=>{
+
+  // }
 
   const getPopularManga = async () => {
     try {
@@ -160,6 +165,7 @@ const Home = () => {
 
   useEffect(() => {
     getPopularManga()
+    console.log(localStorage.getItem(token))
   }, [])
 
   useEffect(() => {
@@ -169,6 +175,12 @@ const Home = () => {
   useEffect(() => {
     getLatestManga()
   }, [])
+
+  // useEffect(()=>{
+  //   setInterval(()=>{
+  //       console.log(isFavorite,"This is populated data")
+  //   },3000)
+  // },[])
 
   return (
 
@@ -187,7 +199,7 @@ const Home = () => {
 
             {
               popular.map((items, index) => (
-                <MangaContex key={index} name={items.name} chapters={items.chapters} coverImg={items.coverImg} id={items._id} favorite={items.favorites} />
+                <MangaContex setClicked={setClicked} key={index} name={items.name} chapters={items.chapters} coverImg={items.coverImg} id={items._id} favorite={items.favorites} isFavorite={isFavorite} />
               ))
             }
 
@@ -196,7 +208,7 @@ const Home = () => {
 
 
         <div>
-          <div className='flex text-center justify-between items-center mt-20 mx-22'>
+          <div  className='flex text-center justify-between items-center mt-20 mx-22'>
             <Link className='text-2xl font-bold'>Latest Chapters</Link>
             <img className="hover:scale-120 transition ease-in-out w-20 h-10" src={assets.arrow} alt="hello" />
           </div>
@@ -204,11 +216,14 @@ const Home = () => {
             {latest.map((items) => (
               <div className='px-2' key={items._id}>
                 <MangaContex
+                  key={items?._id}
                   name={items.name}
                   chapters={items.chapters}
                   coverImg={items.coverImg}
                   id={items._id}
                   favorite={items.favorites}
+                  isFavorite={isFavorite}
+                  setClicked={setClicked}
                 />
               </div>
             ))}
@@ -227,7 +242,7 @@ const Home = () => {
 
             {
               recommended.map((items, index) => (
-                <MangaContex key={index} name={items.name} chapters={items.chapters} coverImg={items.coverImg} id={items._id} favorites={items.favorite} />
+                <MangaContex setClicked={setClicked} key={index} name={items.name} chapters={items.chapters} coverImg={items.coverImg} id={items._id} favorites={items.favorite} isFavorite={isFavorite}/>
               ))
             }
 

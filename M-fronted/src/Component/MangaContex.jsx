@@ -6,17 +6,64 @@ import axios from "axios";
 import { toast } from "react-toastify";
 // import { favorites } from "../assets/fronted/assets.js";
 
-const MangaContex = ({ name, chapters, coverImg, id, favorite }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
+const MangaContex = ({ name, chapters, coverImg, id, isFavorite, setClicked }) => {
+  // const [isFavorite, setIsFavorite] = useState([]);
   const { backendUrl, token } = useContext(MangaCon)
+  // const {fav, setFav} = useState(false)
+
+  
 
   const mangaId = id
 
+
+  // const checkToken = ()=>{
+  //   if(!token){
+  //     toast.error("Login to add Favorete")
+  //   }
+  //   else{
+  //     setClicked(prev=>!prev)
+  //   }
+  // }
+
+
+  // const userFav = async ()=>{
+  //   try{
+  //       const response = await axios.post(backendUrl+"/api/user/userFav",{headers:{ Authorization: `Bearer ${token}` }})
+
+  //   if(response.data.success){
+  //     // if(response.data.message==="Manga Added successfully"){
+  //     //   toast.success("Added to favorete")
+  //     //   console.log(response)
+  //     // }
+  //     // else if(response.data.message==="Manga removed successfully"){
+  //     //   toast.success("Removed From favorete")
+  //     //   console.log(response)
+  //     // }
+  //     toast.success(response.data.message)
+  //     setIsFavorite(response.data.fav)
+  //     console.log(response.data.fav)
+  //   }
+  //   else{
+  //     toast.error(response.data.message)
+  //     console.log("Idher issue hai")
+  //   }
+
+
+  // } 
+    
+  //   catch(error){
+
+  //     console.log(error)
+  //   }
+  // }
  
 
   const handleFavorite = async (e) => {
       e.preventDefault();
-      const response = await axios.post(backendUrl+"/api/user/Favorites",{mangaId},{headers:{ Authorization: `Bearer ${token}` }})
+      if(!token){
+      return toast.error("Login to add Favorete")
+    }
+    
   try {
     // // get existing favorites from localStorage
     // let favs = JSON.parse(localStorage.getItem("favs")) || [];
@@ -54,6 +101,7 @@ const MangaContex = ({ name, chapters, coverImg, id, favorite }) => {
     //     toast.error(response.data.message);
     //   }
     // }
+    const response = await axios.post(backendUrl+"/api/user/Favorites",{mangaId},{headers:{ Authorization: `Bearer ${token}` }})
 
     if(response.data.success){
       // if(response.data.message==="Manga Added successfully"){
@@ -64,7 +112,12 @@ const MangaContex = ({ name, chapters, coverImg, id, favorite }) => {
       //   toast.success("Removed From favorete")
       //   console.log(response)
       // }
+      toast(response.data.message)
+      // setIsFavorite(response.data.fav)
       console.log(response.data.fav)
+     
+      setClicked(prev=>!prev)
+    
     }
     else{
       toast.error(response.data.message)
@@ -73,10 +126,14 @@ const MangaContex = ({ name, chapters, coverImg, id, favorite }) => {
 
 
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
     toast.error(error.message);
   }
 };
+
+// useEffect(()=>{
+//  userFav()
+// },[isFavorite])
 
 // useEffect(() => {
 //   const favs = JSON.parse(localStorage.getItem("favs")) || [];
@@ -106,10 +163,11 @@ const MangaContex = ({ name, chapters, coverImg, id, favorite }) => {
         >
           <Heart
             size={18}
+            // onClick={checkToken}
             className={`transition ${
-              isFavorite
-                ? "text-white fill-white"
-                : "text-gray-600 group-hover:text-white"
+              isFavorite?.includes(mangaId)
+                ? "text-red-800 fill-red-700"
+                : "text-gray-600 group-hover:text-red-600"
             }`}
           />
         </button>

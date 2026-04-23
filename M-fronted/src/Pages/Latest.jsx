@@ -10,7 +10,7 @@ const Latest = () => {
 
   const [latestManga, setLatestManga] = useState([])
   // const [num, setNum] = useState(4)
-  const { backendUrl } = useContext(MangaCon)
+  const { backendUrl , isFavorite, setClicked} = useContext(MangaCon)
   const [page, setPage] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
   const [totalManga, setTotalManga] = useState(0)
@@ -77,6 +77,8 @@ const Latest = () => {
           chapters={item.chapters}
           coverImg={item.coverImg}
           id={item._id}
+          isFavorite={isFavorite}
+          setClicked={setClicked}
         />
       ))}
       </div>

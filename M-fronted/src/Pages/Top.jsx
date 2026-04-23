@@ -17,7 +17,7 @@ const Top = () => {
   const [totalPage, setTotalPage] = useState(1)
   // const [num,setNum] = useState(4)
   const [page, setPage] = useState(1)
-  const { backendUrl } = useContext(MangaCon)
+  const { backendUrl, isFavorite, setClicked } = useContext(MangaCon)
   // let totalManga
   // const [page, setPage] = useState(1)
   // let moreMange = manga.slice()
@@ -164,6 +164,8 @@ const Top = () => {
           chapters={item.chapters}
           coverImg={item.coverImg}
           id={item._id}
+          isFavorite={isFavorite}
+          setClicked={setClicked}
         />
       ))}
       </div>

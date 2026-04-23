@@ -1,12 +1,16 @@
 import React from 'react';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../firebase'; // This import will now work!
+// import { Navigate } from 'react-router-dom';
+// import navigate 
 
 const SignInButton = () => {
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
+      
+
       console.log("Signed in with Google!");
       // Handle successful sign-in (e.g., redirect user)
     } catch (error) {

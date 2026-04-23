@@ -7,35 +7,48 @@ import { assets } from "../assets/fronted/assets.js";
 import Slider from "react-slick";
 import axios from "axios"
 import { toast } from "react-toastify"
+import PaginationPage from '../Component/PaginationPage.jsx'
+import { useActionData } from "react-router-dom";
 
 const Profile = () => {
-  const [favorite, setFavorite] = useState([]);
+  // const [favorite, setFavorite] = useState([]);
   const [drop1, setDrop1] = useState(false)
   const [drop, setDrop] = useState(false)
   const [userInfo, setUserInfo] = useState({})
-  const { setToken, token, navigate, backendUrl } = useContext(MangaCon)
+  const [favorite, setFavorite] = useState({})
+  const [page, setPage] = useState(1)
+  const [limit, setLimit] = useState(3)
+  const [totalPage, setTotalPage] = useState(1)
+  const [totalManga, setTotalManga] = useState(0)
+  const { setToken, token, navigate, backendUrl, isFavorite, setClicked, clicked } = useContext(MangaCon)
 
 
 
 
 
-  const gridSettings = {
-    dots: true,
-    arrows: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 4,
-    rows: 2,
-    slidesPerRow: 1,
-    customPaging: (i) => (
-      <div className="text-black text-sm font-bold">
-        {i + 1}   {/* show 1, 2, 3 instead of dots */}
-      </div>
-    ),
-    dotsClass: "slick-dots custom-dots", // custom class for styling
-  };
+  // const gridSettings = {
+  //   dots: true,
+  //   arrows: true,
+  //   infinite: true,
+  //   speed: 500,
+  //   slidesToShow: 4,
+  //   slidesToScroll: 4,
+  //   rows: 2,
+  //   slidesPerRow: 1,
+  //   customPaging: (i) => (
+  //     <div className="text-black text-sm font-bold">
+  //       {i + 1}   {/* show 1, 2, 3 instead of dots */}
+  //     </div>
+  //   ),
+  //   dotsClass: "slick-dots custom-dots", // custom class for styling
+  // };
 
+
+  const handlePagination = ()=>{
+
+    getData()
+    setPage((prev)=>prev+1)
+  }
 
 
 
@@ -43,18 +56,34 @@ const Profile = () => {
   const getData = async () => {
     try {
       console.log(token)
-      const response = await axios.get(backendUrl + '/api/user/profile', { headers: { Authorization: `Bearer ${token}` } })
+      // const response = await axios.get(backendUrl + '/api/user/profile', { headers: { Authorization: `Bearer ${token}` } },
+      //   { params: {  page,  limit } }
+      // )
+      const response = await axios.get(
+  backendUrl + '/api/user/profile',
+  {
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    params: {
+      page,
+      limit
+    }
+  }
+);
       if (response.data.success) {
         console.log(response.data.user)
         const userData = response.data.user
+        // const setTotalPage = 
 
-        const date = new Date(userInfo.createdAt).toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "short",
-          day: "numeric"
-        });
+        // const date = new Date(userInfo.createdAt).toLocaleDateString("en-US", {
+        //   year: "numeric",
+        //   month: "short",
+        //   day: "numeric"
+        // });
 
         setUserInfo(userData)
+        setFavorite(response?.data?.fav?.favorites)
         // toast.success("ho gaya")
 
       }
@@ -78,7 +107,9 @@ const Profile = () => {
 
   useEffect(() => {
     if (token) {
-      getData()
+      // setInterval(() => {
+        getData()
+      // }, 10000)
     }
 
 
@@ -86,11 +117,13 @@ const Profile = () => {
     // console.log(token)
 
 
-  }, [token]);
+  }, [clicked, page]);
 
   useEffect(() => {
-    setFavorite(favorites);
-  }, [])
+    // setFavorite(favorites);
+    console.log(favorite)
+
+  }, [page])
 
 
   // useEffect(()=>{
@@ -122,12 +155,12 @@ const Profile = () => {
             <ul className="text-gray-600 space-y-2">
               <li>📧 Email: {userInfo.email}</li>
               <li>📅 Joined: {userInfo.createdAt &&
-                new Date(userInfo.createdAt).toLocaleDateString("en-US",{
-                  year:"numeric",
-                  month:"short",
-                  day:"numeric"
+                new Date(userInfo.createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric"
                 })
-                }</li>
+              }</li>
               <li>⭐ Role: Member</li>
             </ul> :
             ''
@@ -136,33 +169,56 @@ const Profile = () => {
       </div>
 
       {/* Favorites Section */}
-      <div className={`p-10  bg-white rounded-2xl shadow-lg ${drop ? "p-20" : ""}`}>
+      <div className={`p-10  bg-white rounded-2xl shadow-lg ${drop ? "p-10" : ""}`}>
         <div className="flex items-center  gap-5">
           <h3 className="text-xl font-bold text-gray-800 mb-4">
             Favorite Manga
           </h3>
           <img onClick={() => setDrop((prev) => !prev)} className="h-8 " src={assets.arrow} alt="" />
         </div>
-        {/* <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">   */}
-        {
-          drop ? <Slider  {...gridSettings}>
-            {favorite.map((items, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-lg shadow-md p-4 hover:shadow-xl transition"
-              >
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {/* { */}
+          {/* drop ? <Slider  {...gridSettings}> */}
+          {
+            drop ?
+              favorite?.map((items, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-2xl shadow-sm p-4 border border-gray-100 
+                 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 
+                 cursor-pointer"
+                >
+                  <div className="flex gap-4 items-start">
 
-                <MangaContex
-                  title={items.title}
-                  chapters={items.chapters}
-                  coverImage={items.coverImage}
-                />
+                    <div className="flex-1">
+                      <MangaContex
+                        name={items.name}
+                        chapters={items.chapters}
+                        coverImg={items.coverImg}
+                        id={items._id}
+                        isFavorite={isFavorite}
+                        setClicked={setClicked}
+                      />
+                    </div>
 
-
-              </div>
-            ))}
-          </Slider> : ""}
-        {/* </div> */}
+                  </div>
+                </div>
+              ))
+               
+              :
+              ''
+          }
+        <div className="flex gap-5">
+            <button onClick={handlePagination}>
+            {page}
+          </button>
+           <button onClick={handlePagination}>
+            Next
+          </button>
+        </div>
+           {/* {drop ?<PaginationPage page={page} totalPage={totalPage} onChange={setPage}/> : ""} */}
+          {/* </Slider> : ""} */}
+        </div>
       </div>
       <button
         onClick={logout}
