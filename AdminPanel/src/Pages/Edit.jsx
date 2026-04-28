@@ -7,6 +7,10 @@ import MangaComponent from '../Component/MangaComponent.jsx'
 import { useEffect } from "react";
 import PaginationPage from '../Component/Pagination.jsx'
 import { toast } from "react-toastify";
+// import {v2 as cloudinary} from 'cloudinary'
+
+
+
 
 const Edit = ({backendUrl}) => {
   const [imageArr, setImageArr] = useState([]);
@@ -20,8 +24,36 @@ const Edit = ({backendUrl}) => {
   const [chapNo, setChapNo] = useState("");
   
 
+//   const cloudinaryConfig =async()=>{
+//     cloudinary.config({
+//         cloud_name:import.meta.env.CLOUDINARY_NAME,
+//         api_key:import.meta.env.CLOUDINARY_KEY,
+//         api_secret:import.meta.env.CLOUDINARY_SECREAT
+        
+        
+//     });
+//     console.log("The cloudinary is connected")
+// }
+
+
+  
+
   const handleSubmit = async(e) => {
     e.preventDefault();
+
+    
+        
+    //  cloudinaryConfig()
+    //  const chapUrl = await Promise.all(
+    //        imageArr.map(async(img)=>{
+    //             let result = await cloudinary.uploader.upload(img.path,{folder:'chapter',resource_type: "image"})
+    //             return result.secure_url
+    //         }),
+    //         // fs.promises.unlink(img.path)
+    //     )
+
+    // setImageArr(chapUrl)
+
 
     const formData = new FormData();
     formData.append("chpName", chpName);

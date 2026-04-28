@@ -14,8 +14,12 @@ const Profile = () => {
   // const [favorite, setFavorite] = useState([]);
   const [drop1, setDrop1] = useState(false)
   const [drop, setDrop] = useState(false)
+  const [edit, setEdit] = useState(false)
   const [userInfo, setUserInfo] = useState({})
   const [favorite, setFavorite] = useState({})
+  const [userImg, setUserImage] = useState("")
+  const [username, setusername] = useState("")
+  const [deescription, setDescription] = useState("")
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(3)
   const [totalPage, setTotalPage] = useState(1)
@@ -25,6 +29,10 @@ const Profile = () => {
 
 
 
+  const formData = new FormData()
+  formData.append("userImg", userImg)
+  formData.append("username", username)
+  formData.append("deescription", deescription)
 
   // const gridSettings = {
   //   dots: true,
@@ -44,11 +52,35 @@ const Profile = () => {
   // };
 
 
-  const handlePagination = ()=>{
+  const  updateProfileImg = async()=>{
+    try{
+      const response = await axios.patch(backendUrl+'api//user/profile',{
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          {userImg:userImg}
+        })
+        if(response.data.success){
+          
+        }
+    }
+    catch(error){
+      console.log(error)
+    }
+  }
+
+  const handlePaginationNext = () => {
 
     getData()
-    setPage((prev)=>prev+1)
+    setPage((prev) => prev + 1)
   }
+
+  const handlePaginatioPrev = () => {
+
+    getData()
+    setPage((prev) => prev - 1)
+  }
+
 
 
 
@@ -60,17 +92,17 @@ const Profile = () => {
       //   { params: {  page,  limit } }
       // )
       const response = await axios.get(
-  backendUrl + '/api/user/profile',
-  {
-    headers: {
-      Authorization: `Bearer ${token}`
-    },
-    params: {
-      page,
-      limit
-    }
-  }
-);
+        backendUrl + '/api/user/profile',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          params: {
+            page,
+            limit
+          }
+        }
+      );
       if (response.data.success) {
         console.log(response.data.user)
         const userData = response.data.user
@@ -84,6 +116,7 @@ const Profile = () => {
 
         setUserInfo(userData)
         setFavorite(response?.data?.fav?.favorites)
+        setTotalPage(response?.data?.totalPages)
         // toast.success("ho gaya")
 
       }
@@ -108,7 +141,8 @@ const Profile = () => {
   useEffect(() => {
     if (token) {
       // setInterval(() => {
-        getData()
+      getData()
+      console.log(username)
       // }, 10000)
     }
 
@@ -117,7 +151,7 @@ const Profile = () => {
     // console.log(token)
 
 
-  }, [clicked, page]);
+  }, [clicked, page, username]);
 
   useEffect(() => {
     // setFavorite(favorites);
@@ -131,15 +165,86 @@ const Profile = () => {
   // },[])
   return (
     <div className="max-w-5xl mt-20 mx-auto p-6">
+      <div className="flex justify-end">
+        <button onClick={() => setEdit((prev) => !prev)} className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
+          Edit
+        </button>
+      </div>
       {/* Profile Section */}
       <div className="flex flex-col items-center gap-4 mb-10">
-        <img
-          className="h-40 w-40 rounded-full object-cover shadow-lg border-4 border-gray-200"
-          src={assets.luffy}
-          alt="profile"
-        />
-        <h2 className="text-2xl font-bold text-gray-800">{userInfo.name}</h2>
-        <p className="text-gray-500">Manga Enthusiast</p>
+        {
+          edit ?
+            <div className="flex flex-col items-center gap-4">
+
+
+              <img
+                className="h-40 w-40 rounded-full object-cover shadow-lg border-4 border-gray-200"
+                src={userImg ? URL.createObjectURL(userImg) : assets.luffy}
+                alt="profile"
+              />
+
+
+              <label
+                htmlFor="profile"
+                className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+              >
+                Upload
+              </label>
+
+
+              <input
+                type="file"
+                hidden
+                id="profile"
+                onChange={(e) => setUserImage(e.target.files[0])}
+              />
+              <div className="space-y-4">
+
+  <div className="flex items-center gap-3">
+    <label htmlFor="Username" className="w-28 text-sm font-medium text-gray-700">
+      Username
+    </label>
+    <input
+      onChange={(e)=>setusername(e.target.value)}
+      id="Username"
+      value={username}
+      type="text"
+      placeholder="Enter username"
+      className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
+    />
+  </div>
+
+  <div className="flex items-center gap-3">
+    <label htmlFor="Description" className="w-28 text-sm font-medium text-gray-700">
+      Description
+    </label>
+    <input
+      onChange={(e)=>setDescription(e.target.value)}
+      id="Description"
+      value={deescription}
+      type="text"
+      placeholder="Enter description"
+      className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
+    />
+  </div>
+
+</div>
+              
+            </div>
+
+            :
+            <div className="flex flex-col items-center gap-4 mb-10">
+              <img
+              className="h-40 w-40 rounded-full object-cover shadow-lg border-4 border-gray-200"
+              src={assets.luffy}
+              alt="profile"
+            />
+            <h2 className="text-2xl font-bold text-gray-800">{userInfo.name}</h2>
+            <p className="text-gray-500">Manga Enthusiast</p>
+            </div>
+        }
+        {/* <h2 className="text-2xl font-bold text-gray-800">{userInfo.name}</h2>
+        <p className="text-gray-500">Manga Enthusiast</p> */}
       </div>
 
       {/* Personal Info */}
@@ -176,47 +281,71 @@ const Profile = () => {
           </h3>
           <img onClick={() => setDrop((prev) => !prev)} className="h-8 " src={assets.arrow} alt="" />
         </div>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div >
           {/* { */}
           {/* drop ? <Slider  {...gridSettings}> */}
           {
             drop ?
-              favorite?.map((items, index) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-2xl shadow-sm p-4 border border-gray-100 
+
+              <div className="space-y-6">
+                <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+                  {
+                    favorite?.map((items, index) => (
+                      <div
+                        key={index}
+                        className="bg-white rounded-2xl shadow-sm p-4 border border-gray-100 
                  hover:shadow-xl hover:-translate-y-1 transition-all duration-300 
                  cursor-pointer"
-                >
-                  <div className="flex gap-4 items-start">
+                      >
+                        <div className="flex gap-4 items-start">
 
-                    <div className="flex-1">
-                      <MangaContex
-                        name={items.name}
-                        chapters={items.chapters}
-                        coverImg={items.coverImg}
-                        id={items._id}
-                        isFavorite={isFavorite}
-                        setClicked={setClicked}
-                      />
-                    </div>
+                          <div className="flex-1">
+                            <MangaContex
+                              name={items.name}
+                              chapters={items.chapters}
+                              coverImg={items.coverImg}
+                              id={items._id}
+                              isFavorite={isFavorite}
+                              setClicked={setClicked}
+                            />
+                          </div>
 
-                  </div>
+                        </div>
+                      </div>
+                    ))}
                 </div>
-              ))
-               
+                <div className="flex gap-5">
+                  <button disabled={page === 1} className={`px-4 py-2 rounded-xl font-semibold ${page === 1 ? "bg-gray-300 cursor-not-allowed"
+                    : "bg-gray-700 text-white hover:bg-gray-800"}`} onClick={handlePaginatioPrev}>
+                    prev
+                  </button>
+                  <button>
+                    {page}
+                  </button>
+                  <button disabled={page === totalPage} className={`px-4 py-2 rounded-xl font-semibold ${page === totalPage ? "bg-gray-300 cursor-not-allowed"
+                    : "bg-gray-700 text-white hover:bg-gray-800"}`} onClick={handlePaginationNext}>
+                    Next
+                  </button>
+                </div>
+              </div>
+
               :
               ''
           }
-        <div className="flex gap-5">
-            <button onClick={handlePagination}>
+          {/* <div className="flex gap-5">
+        <button disabled={page===1} className={`px-4 py-2 rounded-xl font-semibold ${page ===1 ?"bg-gray-300 cursor-not-allowed"
+        : "bg-gray-700 text-white hover:bg-gray-800"}`} onClick={handlePaginatioPrev}>
+          prev
+        </button>
+            <button>
             {page}
           </button>
-           <button onClick={handlePagination}>
+           <button disabled={page===totalPage} className={`px-4 py-2 rounded-xl font-semibold ${page === totalPage ?"bg-gray-300 cursor-not-allowed"
+        : "bg-gray-700 text-white hover:bg-gray-800"}`} onClick={handlePaginationNext}>
             Next
           </button>
-        </div>
-           {/* {drop ?<PaginationPage page={page} totalPage={totalPage} onChange={setPage}/> : ""} */}
+        </div> */}
+          {/* {drop ?<PaginationPage page={page} totalPage={totalPage} onChange={setPage}/> : ""} */}
           {/* </Slider> : ""} */}
         </div>
       </div>

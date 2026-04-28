@@ -1,4 +1,5 @@
 import { userModel } from "../models/userModel.js";
+// import {mangaModel} from "../models/mangaModel.js";
 import validator from "validator"
 import jwt from "jsonwebtoken"
 import bcrypt from 'bcrypt'
@@ -115,6 +116,7 @@ const addFav = async (req, res) => {
     const { mangaId } = req.body
     const userId = req.userId
     try {
+
         if (!mangaId) {
             return res.json({ success: false, message: "mangaId is missing" })
         }
@@ -132,10 +134,11 @@ const addFav = async (req, res) => {
 
             return res.status(200).json({ success: true, message: "Manga removed successfully" })
         }
-        const fav = user.favorites
+        const fav = user
+        // const favorites = fav.favorites
         user.favorites.push(mangaId)
         await user.save()
-        return res.status(200).json({ success: true,fav })
+        return res.status(200).json({ success: true, message: "Manga Added successfully", fav })
     }
     catch (error) {
         console.log(error)
@@ -173,18 +176,53 @@ const removeFav = async (req, res) => {
 
 const userProfile = async (req, res) => {
     const userId = req.userId
+    const page = req.query.page 
+    const limit = req.query.limit || 3
+    const decending = req.query.decending
+    const skip = (page - 1) * limit
 
     try {
+        console.log(page ,"Page hai")
+         console.log(limit ,"Limit hai")
         if (!userId) {
             return res.json({ success: false, message: "Give user id" })
         }
         const user = await userModel.findById(userId)
-        if (!user) {
-            return res.json({ success: false, message: "User does not exist" })
-        }
+        // const fav = await userModel.findById(userId).select({ favorites: { $slice: [skip, limit] } }).populate('favorites')
+       const fav = await userModel.findById(userId).populate({
+  path: 'favorites',
+  options: {
+    skip,
+    limit,
+    // sort: { createdAt: -1 }, // optional
+  },
+});
+        // const fav1 = await fav.favorites
+        // const fav2 = await fav1.skip(0).limit(3)
+        // if (!user) {
+        //     return res.json({ success: false, message: "User does not exist" })
+        // }
 
 
-        return res.status(200).json({ success: true, user })
+        // const mangaPaginate = await user
+        // const [pageInfo, total] = await Promise.all([
+        //             userModel.populate('favorites').sort(createdAt-1).skip(skip).limit(limit),
+        //             userModel.populate('favorites').countDocuments(query)
+        //         ])\
+        const total = user?.favorites?.length
+                   
+                   
+            
+
+
+        const totalPages = Math.ceil(total / limit);
+
+
+
+        return res.status(200).json({ success: true, user, fav, totalPages })
+
+
+        // return res.status(200).json({ success: true, user })
     }
     catch (error) {
         console.log(error)
@@ -193,4 +231,21 @@ const userProfile = async (req, res) => {
 }
 
 
-export { userRegistor, userLogin, adminLogin, addFav, removeFav, userProfile }
+const userFav = async (req, res) => {
+
+    const userId = req.userId
+    try {
+
+        const user = await userModel.findById(userId)
+        const fav = user.favorites
+        return res.status(200).json({ success: true, fav })
+
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: error.message })
+    }
+
+}
+
+
+export { userRegistor, userLogin, adminLogin, addFav, removeFav, userProfile, userFav }

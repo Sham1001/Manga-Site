@@ -1,5 +1,5 @@
 // import mangaModel from '../models/mangaModel.js'
-import {userRegistor,userLogin,adminLogin,addFav,removeFav,userProfile} from '../controllers/userController.js'
+import {userRegistor,userLogin,adminLogin,addFav,removeFav,userProfile,userFav} from '../controllers/userController.js'
 import userCheck from '../middleware/userAuth.js'
 import express from "express"
 
@@ -11,5 +11,6 @@ userRoute.post('/admin/login',adminLogin)
 userRoute.post('/Favorites',userCheck,addFav)
 userRoute.get('/profile',userCheck,userProfile)
 userRoute.delete('/Favorites',userCheck,removeFav)
+userRoute.get('/userFav',userCheck,userFav)
 
 export default userRoute
