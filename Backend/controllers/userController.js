@@ -3,7 +3,9 @@ import { userModel } from "../models/userModel.js";
 import validator from "validator"
 import jwt from "jsonwebtoken"
 import bcrypt from 'bcrypt'
-
+// import { v2 as cloudinary } from 'cloudinary'
+import { v2 as cloudinary } from 'cloudinary'
+import fs from 'fs'
 
 
 
@@ -248,4 +250,84 @@ const userFav = async (req, res) => {
 }
 
 
-export { userRegistor, userLogin, adminLogin, addFav, removeFav, userProfile, userFav }
+const userProfileImg= async(req,res)=>{
+    const img = req?.file?.path
+    const id = req.userId
+
+    // if(id){
+    //     // return res.status(400).json({success:false, message:"User Id is missing"})
+    //     console.log(id,"Id is this")
+    // }
+    if(!img){
+        return res.status(400).json({success:false, message:"Profile img is missing"})
+    }
+    const imgLink = await cloudinary.uploader.upload(img,{ folder: "user", use_filename: true, unique_filename: true })
+
+    await fs.promises.unlink(img);
+
+    const imgUploadedLink = await userModel.findByIdAndUpdate(id,
+        {profileImg:imgLink.secure_url},
+        {new:true}
+
+    )
+
+    
+
+    return res.status(200).json({success:true, imgUploadedLink})
+}
+
+
+const changeUserName = async(req,res)=>{
+    const userName = req.body.userName
+    const id = req.userId
+    
+    if(!userName){
+        console.log(userName)
+        return res.status(400).json({success:false, message:"UserName is missing"})
+    }
+
+    const changeName = await userModel.findByIdAndUpdate(id,
+        {name:userName},
+        {new:true})
+
+    const newUsername = changeName?.name
+
+
+    if(!newUsername){
+        return res.status(400).json({success:false, message:"Something went wrong please try again later"})
+    }
+
+   
+    return res.status(200).json({success:true, newUsername, changeName})
+    
+}
+
+
+const changeDescription = async(req,res)=>{
+    const description = req.body.description
+    const id = req.userId
+    
+    if(!description){
+        return res.status(400).json({success:false, message:"description is missing"})
+    }
+
+    const changeDescription = await userModel.findByIdAndUpdate(id,
+        {description:description},
+        {new:true})
+
+    const newDescription = changeDescription?.description
+
+
+    if(!newDescription){
+        return res.status(400).json({success:false, message:"Something went wrong please try again later"})
+    }
+
+   
+    return res.status(200).json({success:true, newDescription, changeDescription})
+}
+    
+
+
+
+
+export { userRegistor, userLogin, adminLogin, addFav, removeFav, userProfile, userFav, userProfileImg, changeDescription, changeUserName }

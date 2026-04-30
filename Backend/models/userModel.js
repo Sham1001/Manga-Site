@@ -18,8 +18,13 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:[true,"Password is required"]
     },
-    profile:{
-        type:String
+    profileImg:{
+        type:String,
+        default: ""
+    },
+    description:{
+        type: String,
+        default:""
     },
     favorites:[
         {

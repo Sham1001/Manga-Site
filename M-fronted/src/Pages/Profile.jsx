@@ -19,6 +19,8 @@ const Profile = () => {
   const [favorite, setFavorite] = useState({})
   const [userImg, setUserImage] = useState("")
   const [username, setusername] = useState("")
+  const [uploadImg, setUploadImg] = useState("")
+  const [updatedProfile, setUpdatedProfile] = useState("")
   const [deescription, setDescription] = useState("")
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(3)
@@ -30,9 +32,9 @@ const Profile = () => {
 
 
   const formData = new FormData()
-  formData.append("userImg", userImg)
-  formData.append("username", username)
-  formData.append("deescription", deescription)
+  formData.append("userImg", uploadImg)
+  // formData.append("username", username)
+  // formData.append("deescription", deescription)
 
   // const gridSettings = {
   //   dots: true,
@@ -52,17 +54,71 @@ const Profile = () => {
   // };
 
 
-  const  updateProfileImg = async()=>{
-    try{
-      const response = await axios.patch(backendUrl+'api//user/profile',{
+  const updateProfileImg = async () => {
+    try {
+      const response = await axios.post(backendUrl + '/api/user/profileImg',
+
+        formData
+        ,
+        {
           headers: {
             Authorization: `Bearer ${token}`
           },
-          {userImg:userImg}
+
         })
-        if(response.data.success){
-          
-        }
+      if (response.data.success) {
+        setEdit(false)
+        setUserImage(response.data.imgUploadedLink.profileImg)
+      }
+      else {
+        console.log(response.data.message)
+        toast(response.data.message)
+        
+    }
+    }
+    catch (error) {
+      console.log(error)
+    }
+  }
+
+ 
+  const changeUsername = async()=>{
+    try{
+      const response = await axios.patch(backendUrl + '/api/user/changeUsername',{userName:username},{
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+
+        })
+
+      if(response.data.success){
+        
+        setusername(response?.data.newUsername)
+        setEdit(false)
+        
+      }
+
+    }
+    catch(error){
+      console.log(error)
+      toast.error(error)
+    }
+  }
+
+
+   const changeDescription = async()=>{
+    try{
+      const response = await axios.patch(backendUrl + '/api/user/changeDescription',{description:deescription},{
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+
+        })
+
+      if(response.data.success){
+        setDescription(response?.data.newDescription)
+        setEdit(false)
+      }
     }
     catch(error){
       console.log(error)
@@ -142,6 +198,7 @@ const Profile = () => {
     if (token) {
       // setInterval(() => {
       getData()
+      // console.log(userImg)
       console.log(username)
       // }, 10000)
     }
@@ -151,7 +208,7 @@ const Profile = () => {
     // console.log(token)
 
 
-  }, [clicked, page, username]);
+  }, [clicked, page, edit]);
 
   useEffect(() => {
     // setFavorite(favorites);
@@ -178,8 +235,9 @@ const Profile = () => {
 
 
               <img
+              
                 className="h-40 w-40 rounded-full object-cover shadow-lg border-4 border-gray-200"
-                src={userImg ? URL.createObjectURL(userImg) : assets.luffy}
+                src={uploadImg ? URL.createObjectURL(uploadImg) : assets.luffy} 
                 alt="profile"
               />
 
@@ -190,57 +248,65 @@ const Profile = () => {
               >
                 Upload
               </label>
+              <button onClick={updateProfileImg} className={`cursor-not-allowed text-white px-4 py-2 rounded-md ${uploadImg === "" ? "bg-gray-400" : "cursor-pointer  bg-blue-500 hover:bg-blue-600 transition"} `}>Confirm</button>
 
 
               <input
                 type="file"
                 hidden
                 id="profile"
-                onChange={(e) => setUserImage(e.target.files[0])}
+                onChange={(e) => setUploadImg(e.target.files[0])}
               />
               <div className="space-y-4">
 
-  <div className="flex items-center gap-3">
-    <label htmlFor="Username" className="w-28 text-sm font-medium text-gray-700">
-      Username
-    </label>
-    <input
-      onChange={(e)=>setusername(e.target.value)}
-      id="Username"
-      value={username}
-      type="text"
-      placeholder="Enter username"
-      className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
-    />
-  </div>
+                <div className="flex items-center gap-3">
+                  <label htmlFor="Username" className="w-28 text-sm font-medium text-gray-700">
+                    Username
+                  </label>
+                  <input
+                    onChange={(e) => setusername(e.target.value)}
+                    id="Username"
+                    value={username}
+                    type="text"
+                    placeholder="Enter username"
+                    className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                  <button onClick={changeUsername} className={`cursor-not-allowed text-white px-4 py-2 rounded-md ${username === "" ? "bg-gray-400" : "cursor-pointer  bg-blue-500 hover:bg-blue-600 transition"}`}>
+                    upload
+                  </button>
+                </div>
 
-  <div className="flex items-center gap-3">
-    <label htmlFor="Description" className="w-28 text-sm font-medium text-gray-700">
-      Description
-    </label>
-    <input
-      onChange={(e)=>setDescription(e.target.value)}
-      id="Description"
-      value={deescription}
-      type="text"
-      placeholder="Enter description"
-      className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
-    />
-  </div>
+                <div className="flex items-center gap-3">
+                  <label htmlFor="Description" className="w-28 text-sm font-medium text-gray-700">
+                    Description
+                  </label>
+                  <input
+                    onChange={(e) => setDescription(e.target.value)}
+                    id="Description"
+                    value={deescription}
+                    type="text"
+                    placeholder="Enter description"
+                    className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
 
-</div>
-              
+                  <button  onClick={changeDescription} className={`cursor-not-allowed text-white px-4 py-2 rounded-md ${deescription === "" ? "bg-gray-400" : "cursor-pointer  bg-blue-500 hover:bg-blue-600 transition"}`}>
+                    upload
+                  </button>
+                </div>
+
+              </div>
+
             </div>
 
             :
             <div className="flex flex-col items-center gap-4 mb-10">
               <img
-              className="h-40 w-40 rounded-full object-cover shadow-lg border-4 border-gray-200"
-              src={assets.luffy}
-              alt="profile"
-            />
-            <h2 className="text-2xl font-bold text-gray-800">{userInfo.name}</h2>
-            <p className="text-gray-500">Manga Enthusiast</p>
+                className="h-40 w-40 rounded-full object-cover shadow-lg border-4 border-gray-200"
+                src={userInfo?.profileImg || assets.luffy}
+                alt="profile"
+              />
+              <h2 className="text-2xl font-bold text-gray-800">{userInfo.name}</h2>
+              <p className="text-gray-500">{userInfo.description || "Manga Enthusiast"}</p>
             </div>
         }
         {/* <h2 className="text-2xl font-bold text-gray-800">{userInfo.name}</h2>
