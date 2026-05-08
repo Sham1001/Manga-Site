@@ -7,6 +7,7 @@ import { comment } from '../assets/fronted/assets.js'
 import { Link } from "react-router-dom";
 import axios from "axios";
 import {format, differenceInDays, formatDistanceToNow} from "date-fns"
+import { toast } from "react-toastify"; 
 
 
 const Manga = () => {
@@ -15,17 +16,110 @@ const Manga = () => {
   const [chapterToShow, setChapterToShow] = useState(1) 
   const [commentInfo, setCommentInfo] = useState([])
   const [chapter, setChapter] = useState([])
+  const [countManga, setCountManga] = useState([])
   const [showMore, setShowMore] = useState(2)
   const [commentText, setCommentText] = useState("")
+  const [count, setCount] = useState(0)
   const [sinManga, setSinManga] = useState({})
+  // const [clicked,setClicked] = useState(false)
   const { id } = useParams();
   // const mangaDate = new Date(data?.date);
   const chapterArray = Array.from({length:20},(_,i)=>20-i)
 
-  const { backendUrl } = useContext(MangaCon);
+  const { backendUrl, token, isFavorite, setClicked, clicked } = useContext(MangaCon);
+  // const mangaId = params.mangaId
 
 
   const mangaId = id
+
+
+  const handleFavorite = async (e) => {
+      e.preventDefault();
+
+      if(!token){
+      return toast.error("Login to add Favorete")
+       ()
+    }
+    
+  try {
+    // // get existing favorites from localStorage
+    // let favs = JSON.parse(localStorage.getItem("favs")) || [];
+
+    // if (!favs.includes(mangaId)) {
+    //   // Add to favorites
+    //   const response = await axios.post(
+    //     backendUrl + "/api/user/Favorites",
+    //     { mangaId },
+    //     { headers: { Authorization: `Bearer ${token}` } }
+    //   );
+
+    //   if (response.data.success) {
+    //     favs.push(mangaId);
+    //     localStorage.setItem("favs", JSON.stringify(favs)); // ✅ store updated list
+    //     setIsFavorite(true);
+    //     toast.success("Added successfully");
+    //   } else {
+    //     toast.error(response.data.message);
+    //   }
+
+    // } else {
+    //   // Remove from favorites
+    //   const response = await axios.delete(backendUrl + "/api/user/Favorites", {
+    //     headers: { Authorization: `Bearer ${token}` },
+    //     data: { mangaId },
+    //   });
+
+    //   if (response.data.success) {
+    //     favs = favs.filter((id) => id !== mangaId);
+    //     localStorage.setItem("favs", JSON.stringify(favs)); // ✅ update list
+    //     setIsFavorite(false);
+    //     toast.success("Removed successfully");
+    //   } else {
+    //     toast.error(response.data.message);
+    //   }
+    // }
+    const response = await axios.post(backendUrl+"/api/user/Favorites",{mangaId},{headers:{ Authorization: `Bearer ${token}` }})
+
+    const response2 = await axios.get(backendUrl + `/api/manga/${mangaId}`,{headers:{ Authorization: `Bearer ${token}` }})
+
+    if(response.data.success){
+      // if(response.data.message==="Manga Added successfully"){
+      //   toast.success("Added to favorete")
+      //   console.log(response)
+      // }
+      // else if(response.data.message==="Manga removed successfully"){
+      //   toast.success("Removed From favorete")
+      //   console.log(response)
+      // }
+      toast(response.data.message)
+      
+      // setIsFavorite(response.data.fav)
+      console.log(response.data.fav)
+     
+      setClicked(prev=>!prev)
+    
+    }
+    else{
+      toast.error(response.data.message)
+      console.log("Idher issue hai")
+    }
+
+    if(response2.data.success){
+          setCount(response2?.data?.count)
+          setCountManga(response2.data.manga)
+         
+          
+      }
+      else{
+        toast.error(response2.data.message)
+      }
+
+  } catch (error) {
+    console.log(error.message);
+    toast.error(error.message);
+  }
+};
+
 
   const handlePost = (e) => {
     e.preventDefault
@@ -42,6 +136,45 @@ const Manga = () => {
     setShow(prev=>!prev)
   }
 
+  }
+
+
+  // const addOrRemoveCount = async()=>{
+  //     try{
+  //       const response = await axios.get(backendUrl + `/api/manga/${mangaId}`,{headers:{ Authorization: `Bearer ${token}` }})
+  //     if(response.data.success){
+  //         setCount(response?.data?.count)
+  //         setCountManga(response.data.manga)
+          
+  //     }
+  //     else{
+  //       toast.error(response.data.message)
+  //     }
+  //     }
+  //     catch(error){
+  //       console.log(error)
+  //       console.log("Mil gaya issue")
+  //     }
+
+  // }
+
+
+  const getCount = async()=>{
+   try{
+     const responce = await axios.get(backendUrl+`/api/manga/count/${mangaId}`)
+     
+     if(responce.data.success){
+      setCount(responce.data.count)
+      // toast(responce.data.count)
+     }
+
+     else{
+      toast.error(responce.data.message)
+     }
+   }
+      catch(error){
+        console.log(error)
+      }
   }
 
   
@@ -91,9 +224,23 @@ const Manga = () => {
    
 
 
+  // useEffect(()=>{
+  //   // getMangaInfo()
+  //   addOrRemoveCount()
+    
+    
+  //   // getTotalChapter()
+  // },[clicked])
+
+  useEffect(()=>{
+    console.log(count,"This is count")
+    console.log(countManga,"This is mangacount")
+  },[clicked, count])
+
   useEffect(()=>{
     getMangaInfo()
     getTotalChapter()
+    getCount()
   },[])
 
   
@@ -236,12 +383,12 @@ const Manga = () => {
 
               {/* Buttons */}
               <div className="flex gap-3 mt-6">
-                <button className="px-4 py-2 rounded bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
+                <Link to={`/manga/${mangaId}/1`} className="px-4 py-2 rounded bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
                   Read First
-                </button>
-                <button className="px-4 py-2 rounded bg-blue-100 text-blue-700 text-sm font-medium hover:bg-blue-200">
+                </Link>
+                <Link to={`/manga/${mangaId}/${chapter.at(0)?.chapterNo}`} className="px-4 py-2 rounded bg-blue-100 text-blue-700 text-sm font-medium hover:bg-blue-200">
                   Read Last
-                </button>
+                </Link>
               </div>
 
               {/* Bottom Row */}
@@ -251,8 +398,11 @@ const Manga = () => {
                   <span>Comments</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-blue-600 text-lg">🔖</span>
-                  <span>3.4K Users bookmarked This</span>
+                  <span onClick={handleFavorite} className="text-blue-600 text-lg">{
+                    isFavorite.includes(mangaId) ? 'Fav' : '🔖'
+                    }</span>
+                  {/* <span>3.4K Users bookmarked This</span> */}
+                  <span>{count}</span>
                 </div>
               </div>
             </div>

@@ -20,6 +20,12 @@ function App() {
   return (
     <>
     <div className='h-screen '>
+    {/* <div
+  className="h-screen bg-cover bg-center"
+  style={{
+    backgroundImage: "url('https://wallpapers.com/images/hd/minimalist-drawing-anime-zoro-pfp-yghugxvpljyjd2gv.jpg')",
+  }}
+> */}
       <ToastContainer/>
       <NavBar/>
 
@@ -30,7 +36,7 @@ function App() {
         <Route path='/latest' element={<Latest/>}/>
         <Route path='/profile' element={<Profile/>}/>
         <Route path='/manga/:id' element={<Manga/>}/>
-        <Route path='/manga/:mangaId/:chapterNo' element={<Chapter/>}/>
+        <Route path='/manga/:mangaId/:chapterNo' element={<Chapter/>} />
         <Route path='/search' element={<Search/>}/>
         <Route path='/login' element={<Login/>}/>
       </Routes>

@@ -143,7 +143,13 @@ const Top = () => {
   //   PaginatApi(page)
   // }
   return (
-  <div className="px-15 py-20 bg-gray-50 min-h-screen">
+  // <div className="px-15 py-20 bg-gray-50 min-h-screen">
+    <div
+  className="h-screen bg-cover bg-center"
+  style={{
+    backgroundImage: "url('https://wallpapers.com/images/hd/jujutsu-kaisen-colored-manga-pfp-1oc4oppcu5emx8t1.jpg')",
+  }}
+> 
     <div className="flex justify-between mr-6">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">
     Manga Collection

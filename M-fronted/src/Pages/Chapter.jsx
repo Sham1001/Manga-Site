@@ -382,6 +382,7 @@ const Chapter = () => {
                   src={page}
                   alt={`page-${index}`}
                   className="w-full block"
+                  // class="max-w-full h-auto" 
                 />
               ))}
             </div>

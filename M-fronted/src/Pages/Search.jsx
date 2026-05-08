@@ -20,7 +20,7 @@ const Search = () => {
   const [allManga, setAllManga] = useState([])
   const [page, setPage] = useState(1)
 
-  const { backendUrl, isSearch } = useContext(MangaCon);
+  const { backendUrl, isSearch, setClicked, favorite, isFavorite } = useContext(MangaCon);
 
   // useEffect(() => {
   //   applyFilter();
@@ -240,19 +240,32 @@ const Search = () => {
         </div>
 
       <div className="space-y-6">
-  <div className="w-full grid  grid-cols-2  md:grid-cols-3 lg:grid-cols-4 gap-6" >
-    {/* <Slider {...gridSettings}> */}
-      {allManga.map((item) => (
-        <MangaContex
-          key={item._id}
-          name={item.name}
-          chapters={item.chapters}
-          coverImg={item.coverImg}
-          id={item._id}
-        />
-      ))}
+  <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+  {allManga?.length > 0 ? allManga.map((item) => (
+    <MangaContex
+      key={item._id}
+      name={item.name}
+      chapters={item.chapters}
+      coverImg={item.coverImg}
+      id={item._id}
+
+      // favorite={item.favorites}
+      isFavorite={isFavorite}
+      setClicked={setClicked}
+    />
+  )) : (
+    <div className="col-span-full flex justify-center items-center py-20">
+      <div className="bg-zinc-900 border border-zinc-700 px-8 py-6 rounded-2xl shadow-xl text-center">
+        <h2 className="text-2xl font-bold text-white mb-2">
+          No Manga Found
+        </h2>
+        <p className="text-zinc-400 text-sm">
+          No manga with that genre is available.
+        </p>
       </div>
-   
+    </div>
+  )}
+</div>
 
   
   <PaginationPage page={page} totalPage={totalPage} onChange={setPage}/>
