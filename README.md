@@ -1,1 +1,1 @@
-MANGA_SITE
+Built a full-featured Manga Reading Platform using the MERN stack with secure JWT authentication and Google OAuth login. The application includes advanced features such as manga browsing with pagination, nested comments and discussions, personalized user profiles, favorites management, responsive UI, and scalable REST APIs. Designed to deliver a smooth and engaging reading experience similar to modern manga platforms.
