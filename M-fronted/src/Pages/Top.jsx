@@ -145,7 +145,7 @@ const Top = () => {
   return (
   // <div className="px-15 py-20 bg-gray-50 min-h-screen">
     <div
-  className="h-screen bg-cover bg-center"
+  className="bg-cover bg-center px-15 py-20 bg-gray-50 min-h-screen "
   style={{
     backgroundImage: "url('https://wallpapers.com/images/hd/jujutsu-kaisen-colored-manga-pfp-1oc4oppcu5emx8t1.jpg')",
   }}

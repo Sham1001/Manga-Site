@@ -132,9 +132,9 @@ const Home = () => {
   const getLatestManga = async () => {
     try {
       const response = await axios.get(backendUrl + "/api/manga/mangaInfo",
-        { params: { limit: 24 } })
+        { params: { limit: 24, sort: 'Latest' } })
       if (response.data.success) {
-        const latestManga = response.data.pageInfo
+        const latestManga = response.data.latestChapters
         setLatest(latestManga)
       }
     }
@@ -217,11 +217,11 @@ const Home = () => {
               <div className='px-2' key={items._id}>
                 <MangaContex
                   key={items?._id}
-                  name={items.name}
-                  chapters={items.chapters}
-                  coverImg={items.coverImg}
-                  id={items._id}
-                  favorite={items.favorites}
+                  name={items?.manga?.name}
+                  chapters={items.chapterNo}
+                  coverImg={items?.manga?.coverImg}
+                  id={items.manga?._id}
+                  // favorite={items.favorites}
                   isFavorite={isFavorite}
                   setClicked={setClicked}
                 />
