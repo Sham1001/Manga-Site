@@ -98,3 +98,30 @@
 } */
 
 /* .body { height: 400px; overflow-y: scroll; } */
+
+
+.slick-dots li button:before {
+  color: gray;
+  font-size: 10px;
+}
+
+.slick-dots li.slick-active button:before {
+  color: black;
+}
+
+.slick-slide {
+  padding: 0 10px;
+}
+
+.slick-dots li button:before {
+  color: gray;
+  font-size: 10px;
+}
+
+.slick-dots li.slick-active button:before {
+  color: black;
+}
+
+.slick-slide {
+  padding: 0 10px;
+}

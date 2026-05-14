@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import {format, differenceInDays, formatDistanceToNow} from "date-fns"
 import { toast } from "react-toastify"; 
+import Comment from '../Component/ChildComment.jsx'
 
 
 const Manga = () => {
@@ -19,8 +20,11 @@ const Manga = () => {
   const [countManga, setCountManga] = useState([])
   const [showMore, setShowMore] = useState(2)
   const [commentText, setCommentText] = useState("")
+  const [comments, setComments] = useState([])
   const [count, setCount] = useState(0)
   const [sinManga, setSinManga] = useState({})
+  const [refreshComments, setRefreshComments] = useState(false)
+  // const [isReply, setIsReply] = useState(false)
   // const [clicked,setClicked] = useState(false)
   const { id } = useParams();
   // const mangaDate = new Date(data?.date);
@@ -121,10 +125,43 @@ const Manga = () => {
 };
 
 
-  const handlePost = (e) => {
+  const handleComment = async(e) => {
     e.preventDefault
-    console.log(commentText)
+    if(!token){
+      return toast.error("Login to add comment") 
+    }
+    try{
+       const response = await axios.post( backendUrl + "/api/comment/add",{text:commentText,contentTypeId:mangaId},{headers:{ Authorization: `Bearer ${token}` }})
+       if(response.data.success){    
+        toast.success(response.data.message)
+        setRefreshComments((prev)=>!prev)
+       }
+       else{
+        toast.error(response.data.message)
+       }
+    }
+    catch(error){
+      console.log(error)
+    }
   }
+
+  const getComments = async()=>{
+    try{
+      const response = await axios.get(backendUrl + `/api/comment/get/${mangaId}`)
+      if(response.data.success){
+        setComments(response.data.rootComments)
+      }
+      else{
+        toast.error(response.data.messsage)
+      }
+    }
+    catch(error){
+      console.log(error)
+      toast.error(error.message)
+    }
+  }
+
+  
 
   const showChapter = ()=>{
   if(show){
@@ -233,14 +270,16 @@ const Manga = () => {
   // },[clicked])
 
   useEffect(()=>{
-    console.log(count,"This is count")
-    console.log(countManga,"This is mangacount")
-  },[clicked, count])
+    // console.log(count,"This is count")
+    // console.log(countManga,"This is mangacount")
+    getComments()
+  },[refreshComments])
 
   useEffect(()=>{
     getMangaInfo()
     getTotalChapter()
     getCount()
+    
   },[])
 
   
@@ -475,7 +514,7 @@ const Manga = () => {
                 placeholder="Write a comment..."
               />
               <button
-                onClick={handlePost}
+                onClick={handleComment}
                 className="px-5 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
               >
                 Post
@@ -486,7 +525,7 @@ const Manga = () => {
           </div>
           <div className="flex items-center gap-3 mb-2 mt-10  ">
             <div className="flex items-center justify-center rounded-full w-8 h-8 bg-black text-white text-sm font-medium">
-              {commentInfo.length}
+              {comments.length}
             </div>
             <span className="text-gray-700 font-medium">Comments</span>
             
@@ -501,7 +540,7 @@ const Manga = () => {
 
 
 
-            {
+            {/* {
               (commentInfo.slice(0, showMore)).map((items, index) => (
 
                 <Comments key={index} avatar={items.user.avatar} username={items.user.username} text={items.text} />
@@ -527,7 +566,19 @@ const Manga = () => {
                   </button>
                 )
               )}
-            </div>
+            </div> */}
+
+             {comments.map(comment => (
+        <Comment
+          key={comment._id}
+          comment={comment}
+          depth={0}
+          mangaId={mangaId}
+          // isEditing={isEditing}
+          setRefreshComments={setRefreshComments}
+          // setIsReply= {setIsReply}
+        />
+      ))}
 
 
           </div>
