@@ -376,7 +376,7 @@ const RealEdit = ({ backendUrl }) => {
 
                     <div>
                       <p className="font-semibold text-gray-900">Artist(s)</p>
-                      <p>{data.artist ? data.artist : "-"}</p>
+                      <p>{data.artistName ? data.artistName : "-"}</p>
                     </div>
 
                 }

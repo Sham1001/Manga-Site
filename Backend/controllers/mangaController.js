@@ -1,6 +1,10 @@
 import mangaModel from "../models/mangaModel.js";
+import chapterModel from '../models/chapterModel.js'
 import fs from 'fs'
 import { v2 as cloudinary } from 'cloudinary'
+import { group } from "console";
+import { lookup } from "dns";
+import { format } from "path";
 // import { promises } from "dns";
 
 
@@ -139,9 +143,56 @@ const getMangaInfo = async (req, res) => {
             query.genres = { $all: categoryArray };
         }
 
-        // if(sort === "Latest"){
-        //      let sortOption = { createdAt: -1 };  // latest default
-        // }
+        if (sort === "Latest") {
+            //  let sortOption = { createdAt: -1 };  // latest default
+
+           try{
+             const latestChapters = await chapterModel.aggregate([
+                {
+                    $sort: {
+                        createdAt: -1
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$managaId",
+                        latestChapter: { $first: "$$ROOT" }
+                    }
+                },
+                {
+                    $replaceRoot: {
+                        newRoot: "$latestChapter"
+                    }
+                },
+                {
+                    $lookup:{
+                        from:"mangas",
+                        localField:"managaId",
+                        foreignField:"_id",
+                        as:"manga"
+
+                    }
+                },
+                {
+                    $unwind:"$manga"
+                },
+                {
+                    $sort:{
+                        createdAt:-1
+                    }
+                },
+                {
+                    $limit: limit
+                }
+            ])
+                return res.status(200).json({success:true, latestChapters})
+
+           }
+           catch(error){
+                console.log(error)
+                return res.status(500).json({success:false, message:"There is some issue, Please try again later"})
+           }
+        }
 
         //         console.log("Category from frontend:", category);
         // console.log("Final Mongo Query:", req.query);
@@ -248,19 +299,137 @@ const editManga = async (req, res) => {
 }
 
 
-const deleteManga = async(req,res)=>{
+const deleteManga = async (req, res) => {
     const mangaId = req.query.mangaId
-    console.log(req.query.mangaId,"Id hai ye")
+    console.log(req.query.mangaId, "Id hai ye")
 
-    try{
+    try {
         await mangaModel.findByIdAndDelete(mangaId)
 
-        return res.status(200).json({success:true, message:"Manga deleted successfully"})
+        return res.status(200).json({ success: true, message: "Manga deleted successfully" })
     }
-    catch(error){
+    catch (error) {
         console.log(error)
-        return res.status(500).json({success:false, message:"-"})
+        return res.status(500).json({ success: false, message: "-" })
     }
 }
 
-export { addManga, getManga, getMangaInfo, editManga, deleteManga }
+const savedCount = async (req, res) => {
+    try {
+        const mangaId = req?.params?.mangaId
+        const user = req?.userId
+        let countDone
+        if (!mangaId) {
+            console.log("No manga is present")
+            console.log(user, "User id hai")
+
+        }
+
+        const manga = await mangaModel.findById(mangaId)
+
+        if (!manga) {
+            console.log(manga, "No manga with this")
+        }
+
+        const alreadyAdded = await manga.saved.includes(user)
+
+        if (alreadyAdded) {
+            countDone = await mangaModel.findByIdAndUpdate(mangaId, {
+                $pull: {
+                    saved: user
+                }
+            },
+                {
+                    new: true
+                })
+        }
+
+        else {
+            countDone = await mangaModel.findByIdAndUpdate(mangaId, {
+                $addToSet: {
+                    saved: user
+                }
+            },
+                {
+                    new: true
+                })
+        }
+
+
+
+
+
+        const count = countDone?.saved?.length
+
+
+        return res.status(200).json({ success: true, count, manga })
+    }
+    catch (error) {
+        console.log(error)
+        return res.status(500).json({ success: false, message: "Something went wrong, Please try again later" })
+    }
+
+
+
+}
+
+const getCount = async (req, res) => {
+    try {
+        const mangaId = req?.params?.mangaId
+
+        if (!mangaId) {
+
+            return res.status(400).json({ success: false, message: "There is no such manga" })
+
+        }
+
+        const manga = await mangaModel.findById(mangaId)
+
+        if (manga) {
+            console.log(manga, "No manga with this")
+            // return res.status(400).json({success:false, message:"No manga is found"})
+        }
+
+        // const alreadyAdded = await manga.saved.includes(user)
+
+        // if(alreadyAdded){
+        //     const  removeUserFav = await mangaModel.findByIdAndUpdate(mangaId,{
+        //     $pull:{
+        //         saved:user
+        //     }
+        // },
+        // {
+        //     new:true
+        // })
+        // }
+
+        // else{
+        //     const addedUserFav  = await mangaModel.findByIdAndUpdate(mangaId,{
+        //     $addToSet:{
+        //         saved:user
+        //     }
+        // },
+        // {
+        //     new:true
+        // })
+        // }
+
+
+
+
+
+        const count = manga?.saved?.length
+
+
+        return res.status(200).json({ success: true, count, manga })
+    }
+    catch (error) {
+        console.log(error)
+        return res.status(500).json({ success: false, message: "Something went wrong, Please try again later" })
+    }
+
+
+
+}
+
+export { addManga, getManga, getMangaInfo, editManga, deleteManga, savedCount, getCount }

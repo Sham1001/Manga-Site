@@ -61,6 +61,13 @@ const mangaSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    saved:[
+        {
+        type:Schema.Types.ObjectId,
+        ref:"User",
+        default:[]
+        }
+    ],
     chapter: [
         {
             type: Schema.Types.ObjectId,

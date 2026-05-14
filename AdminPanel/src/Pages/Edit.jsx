@@ -70,6 +70,9 @@ const Edit = ({backendUrl}) => {
           setImageArr([])
           toast.success("Chapter added")
         }
+        else{
+          toast.error(response.data.message)
+        }
         
     }
     catch(error){

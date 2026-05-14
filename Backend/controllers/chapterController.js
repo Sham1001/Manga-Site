@@ -19,48 +19,49 @@ const addChapter = async (req, res) => {
         }
 
         if (!mangaId) {
-            return res.status(400).json({ success: false, message: "Chap Id is missing " })
+            return res.status(400).json({ success: false, message: "Please Slect a Manga" })
         }
 
         if (!imageArr) {
             return res.status(400).json({ success: false, message: "Chap Img is missing " })
         }
 
-        // const chapUrl = await Promise.all(
-        //    imageArr.map(async(img)=>{
-        //         let result = await cloudinary.uploader.upload(img.path,{folder:'chapter',resource_type: "image"})
-        //         return result.secure_url
-        //     }),
-        //     // fs.promises.unlink(img.path)
-        // )
+        const chapUrl = await Promise.all(
+           imageArr.map(async(img)=>{
+                let result = await cloudinary.uploader.upload(img.path,{folder:'chapter',resource_type: "image"})
+                await fs.promises.unlink(img.path)
+                return result.secure_url
+            }),
+           
+        )
 
-        const imgCompression = async (imageArr) => {
-            const compressedImg = []
+        // const imgCompression = async (imageArr) => {
+        //     const compressedImg = []
 
-            for (const img of imageArr) {
-                const newImg = `compressed-${Date.now()}-${img.originalname}`;
+        //     for (const img of imageArr) {
+        //         const newImg = `compressed-${Date.now()}-${img.originalname}`;
 
-                await sharp(img.path)
-                    .resize({ width: 800 })
-                    .jpeg({ quality: 60 })
-                    .toFile(newImg);
+        //         await sharp(img.path)
+        //             .resize({ width: 800 })
+        //             .jpeg({ quality: 60 })
+        //             .toFile(newImg);
 
-                compressedImg.push(newImg)
-            }
+        //         compressedImg.push(newImg)
+        //     }
 
-            return compressedImg
-        }
+        //     return compressedImg
+        // }
 
        
-        const con = imgCompression(imageArr)
+        // const con = imgCompression(imageArr)
 
-            const upload = await Promise.all(
-                con.map((imgPath) =>{
-                const result = cloudinary.uploader.upload(imgPath,{folder:'chapter',resource_type: "image"})
-                return result.secure_url
-                }
-                )
-            )
+        //     const upload = await Promise.all(
+        //         con.map((imgPath) =>{
+        //         const result = cloudinary.uploader.upload(imgPath,{folder:'chapter',resource_type: "image"})
+        //         return result.secure_url
+        //         }
+        //         )
+        //     )
 
 
             // return await Promise.all(uploads);
@@ -77,7 +78,8 @@ const addChapter = async (req, res) => {
         const chapter = new chapterModel({
             name: chpName,
             chapterNo: chapNo,
-            chapterPage: upload,
+            // chapterPage: upload,
+            chapterPage: chapUrl,
             managaId: mangaId
 
 
