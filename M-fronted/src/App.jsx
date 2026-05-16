@@ -1,4 +1,4 @@
-import { useState } from 'react'
+// import { useState } from 'react'
 import {Routes,Route} from 'react-router-dom'
 import NavBar from './Component/NavBar.jsx'
 import Home from "./Pages/Home.jsx"
@@ -36,7 +36,7 @@ function App() {
         <Route path='/latest' element={<Latest/>}/>
         <Route path='/profile' element={<Profile/>}/>
         <Route path='/manga/:id' element={<Manga/>}/>
-        <Route path='/manga/:mangaId/:chapterNo' element={<Chapter/>} />
+        <Route path='/manga/:mangaId/:chapterId/:chapterNo' element={<Chapter/>} />
         <Route path='/search' element={<Search/>}/>
         <Route path='/login' element={<Login/>}/>
       </Routes>

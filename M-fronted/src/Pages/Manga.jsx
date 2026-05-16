@@ -6,15 +6,17 @@ import ChapterTime from '../Component/dateCalculation.jsx'
 import { comment } from '../assets/fronted/assets.js'
 import { Link } from "react-router-dom";
 import axios from "axios";
-import {format, differenceInDays, formatDistanceToNow} from "date-fns"
-import { toast } from "react-toastify"; 
+import { format, differenceInDays, formatDistanceToNow } from "date-fns"
+import { toast } from "react-toastify";
 import Comment from '../Component/ChildComment.jsx'
+import SuggestManga from "../Component/SuggestManga.jsx"
+import MangaContex from "../Component/MangaContex.jsx";
 
 
 const Manga = () => {
   const [data, setData] = useState([]);
   const [show, setShow] = useState(true);
-  const [chapterToShow, setChapterToShow] = useState(1) 
+  const [chapterToShow, setChapterToShow] = useState(1)
   const [commentInfo, setCommentInfo] = useState([])
   const [chapter, setChapter] = useState([])
   const [countManga, setCountManga] = useState([])
@@ -24,11 +26,12 @@ const Manga = () => {
   const [count, setCount] = useState(0)
   const [sinManga, setSinManga] = useState({})
   const [refreshComments, setRefreshComments] = useState(false)
+  // const [mangaIds, setMangaIds] = useState("")
   // const [isReply, setIsReply] = useState(false)
   // const [clicked,setClicked] = useState(false)
   const { id } = useParams();
   // const mangaDate = new Date(data?.date);
-  const chapterArray = Array.from({length:20},(_,i)=>20-i)
+  const chapterArray = Array.from({ length: 20 }, (_, i) => 20 - i)
 
   const { backendUrl, token, isFavorite, setClicked, clicked } = useContext(MangaCon);
   // const mangaId = params.mangaId
@@ -38,140 +41,140 @@ const Manga = () => {
 
 
   const handleFavorite = async (e) => {
-      e.preventDefault();
+    e.preventDefault();
 
-      if(!token){
+    if (!token) {
       return toast.error("Login to add Favorete")
-       ()
+        ()
     }
-    
-  try {
-    // // get existing favorites from localStorage
-    // let favs = JSON.parse(localStorage.getItem("favs")) || [];
 
-    // if (!favs.includes(mangaId)) {
-    //   // Add to favorites
-    //   const response = await axios.post(
-    //     backendUrl + "/api/user/Favorites",
-    //     { mangaId },
-    //     { headers: { Authorization: `Bearer ${token}` } }
-    //   );
+    try {
+      // // get existing favorites from localStorage
+      // let favs = JSON.parse(localStorage.getItem("favs")) || [];
 
-    //   if (response.data.success) {
-    //     favs.push(mangaId);
-    //     localStorage.setItem("favs", JSON.stringify(favs)); // ✅ store updated list
-    //     setIsFavorite(true);
-    //     toast.success("Added successfully");
-    //   } else {
-    //     toast.error(response.data.message);
-    //   }
+      // if (!favs.includes(mangaId)) {
+      //   // Add to favorites
+      //   const response = await axios.post(
+      //     backendUrl + "/api/user/Favorites",
+      //     { mangaId },
+      //     { headers: { Authorization: `Bearer ${token}` } }
+      //   );
 
-    // } else {
-    //   // Remove from favorites
-    //   const response = await axios.delete(backendUrl + "/api/user/Favorites", {
-    //     headers: { Authorization: `Bearer ${token}` },
-    //     data: { mangaId },
-    //   });
+      //   if (response.data.success) {
+      //     favs.push(mangaId);
+      //     localStorage.setItem("favs", JSON.stringify(favs)); // ✅ store updated list
+      //     setIsFavorite(true);
+      //     toast.success("Added successfully");
+      //   } else {
+      //     toast.error(response.data.message);
+      //   }
 
-    //   if (response.data.success) {
-    //     favs = favs.filter((id) => id !== mangaId);
-    //     localStorage.setItem("favs", JSON.stringify(favs)); // ✅ update list
-    //     setIsFavorite(false);
-    //     toast.success("Removed successfully");
-    //   } else {
-    //     toast.error(response.data.message);
-    //   }
-    // }
-    const response = await axios.post(backendUrl+"/api/user/Favorites",{mangaId},{headers:{ Authorization: `Bearer ${token}` }})
+      // } else {
+      //   // Remove from favorites
+      //   const response = await axios.delete(backendUrl + "/api/user/Favorites", {
+      //     headers: { Authorization: `Bearer ${token}` },
+      //     data: { mangaId },
+      //   });
 
-    const response2 = await axios.get(backendUrl + `/api/manga/${mangaId}`,{headers:{ Authorization: `Bearer ${token}` }})
-
-    if(response.data.success){
-      // if(response.data.message==="Manga Added successfully"){
-      //   toast.success("Added to favorete")
-      //   console.log(response)
+      //   if (response.data.success) {
+      //     favs = favs.filter((id) => id !== mangaId);
+      //     localStorage.setItem("favs", JSON.stringify(favs)); // ✅ update list
+      //     setIsFavorite(false);
+      //     toast.success("Removed successfully");
+      //   } else {
+      //     toast.error(response.data.message);
+      //   }
       // }
-      // else if(response.data.message==="Manga removed successfully"){
-      //   toast.success("Removed From favorete")
-      //   console.log(response)
-      // }
-      toast(response.data.message)
-      
-      // setIsFavorite(response.data.fav)
-      console.log(response.data.fav)
-     
-      setClicked(prev=>!prev)
-    
-    }
-    else{
-      toast.error(response.data.message)
-      console.log("Idher issue hai")
-    }
+      const response = await axios.post(backendUrl + "/api/user/Favorites", { mangaId }, { headers: { Authorization: `Bearer ${token}` } })
 
-    if(response2.data.success){
-          setCount(response2?.data?.count)
-          setCountManga(response2.data.manga)
-         
-          
+      const response2 = await axios.get(backendUrl + `/api/manga/${mangaId}`, { headers: { Authorization: `Bearer ${token}` } })
+
+      if (response.data.success) {
+        // if(response.data.message==="Manga Added successfully"){
+        //   toast.success("Added to favorete")
+        //   console.log(response)
+        // }
+        // else if(response.data.message==="Manga removed successfully"){
+        //   toast.success("Removed From favorete")
+        //   console.log(response)
+        // }
+        toast(response.data.message)
+
+        // setIsFavorite(response.data.fav)
+        console.log(response.data.fav)
+
+        setClicked(prev => !prev)
+
       }
-      else{
+      else {
+        toast.error(response.data.message)
+        console.log("Idher issue hai")
+      }
+
+      if (response2.data.success) {
+        setCount(response2?.data?.count)
+        setCountManga(response2.data.manga)
+
+
+      }
+      else {
         toast.error(response2.data.message)
       }
 
-  } catch (error) {
-    console.log(error.message);
-    toast.error(error.message);
-  }
-};
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
+    }
+  };
 
 
-  const handleComment = async(e) => {
+  const handleComment = async (e) => {
     e.preventDefault
-    if(!token){
-      return toast.error("Login to add comment") 
+    if (!token) {
+      return toast.error("Login to add comment")
     }
-    try{
-       const response = await axios.post( backendUrl + "/api/comment/add",{text:commentText,contentTypeId:mangaId},{headers:{ Authorization: `Bearer ${token}` }})
-       if(response.data.success){    
+    try {
+      const response = await axios.post(backendUrl + "/api/comment/add", { text: commentText, contentTypeId: mangaId }, { headers: { Authorization: `Bearer ${token}` } })
+      if (response.data.success) {
         toast.success(response.data.message)
-        setRefreshComments((prev)=>!prev)
-       }
-       else{
+        setRefreshComments((prev) => !prev)
+      }
+      else {
         toast.error(response.data.message)
-       }
+      }
     }
-    catch(error){
+    catch (error) {
       console.log(error)
     }
   }
 
-  const getComments = async()=>{
-    try{
+  const getComments = async () => {
+    try {
       const response = await axios.get(backendUrl + `/api/comment/get/${mangaId}`)
-      if(response.data.success){
+      if (response.data.success) {
         setComments(response.data.rootComments)
       }
-      else{
+      else {
         toast.error(response.data.messsage)
       }
     }
-    catch(error){
+    catch (error) {
       console.log(error)
       toast.error(error.message)
     }
   }
 
-  
 
-  const showChapter = ()=>{
-  if(show){
-     setShow(prev=>!prev)
-   setChapterToShow(chapter.length)
-  }
-  else{
-    setChapterToShow(1)
-    setShow(prev=>!prev)
-  }
+
+  const showChapter = () => {
+    if (show) {
+      setShow(prev => !prev)
+      setChapterToShow(chapter.length)
+    }
+    else {
+      setChapterToShow(1)
+      setShow(prev => !prev)
+    }
 
   }
 
@@ -182,7 +185,7 @@ const Manga = () => {
   //     if(response.data.success){
   //         setCount(response?.data?.count)
   //         setCountManga(response.data.manga)
-          
+
   //     }
   //     else{
   //       toast.error(response.data.message)
@@ -196,97 +199,97 @@ const Manga = () => {
   // }
 
 
-  const getCount = async()=>{
-   try{
-     const responce = await axios.get(backendUrl+`/api/manga/count/${mangaId}`)
-     
-     if(responce.data.success){
-      setCount(responce.data.count)
-      // toast(responce.data.count)
-     }
+  const getCount = async () => {
+    try {
+      const responce = await axios.get(backendUrl + `/api/manga/count/${mangaId}`)
 
-     else{
-      toast.error(responce.data.message)
-     }
-   }
-      catch(error){
-        console.log(error)
+      if (responce.data.success) {
+        setCount(responce.data.count)
+        // toast(responce.data.count)
       }
-  }
 
-  
-
-  const getDate = (releaseDate)=>{
-    const release = new Date(releaseDate)
-
-    const inDays = differenceInDays(new Date(), release )
-    const getDateDiff = formatDistanceToNow(release, {addSuffix: true})
-
-    return inDays > 7 
-    ? format(release, "d MMM yyyy")
-    : getDateDiff
-
-  }
-
-  const getMangaInfo = async()=>{
-      try{
-        const response = await axios.get(backendUrl+"/api/manga/singleManga",
-          {params:{mangaId}}
-        )
-        
-      if(response.data.success){
-         const info = response.data.mangaInfo
-         setData(info)
+      else {
+        toast.error(responce.data.message)
       }
-      }
-      catch(error){
-        console.log(error)
-      }
-      
-  }
-
-  const getTotalChapter = async()=>{
-    try{
-        const response = await axios.get(backendUrl+`/api/chapter/${mangaId}`)
-
-        if(response.data.success){
-          setChapter(response?.data?.allChapter)
-        }
     }
-    catch(error){
+    catch (error) {
       console.log(error)
     }
   }
 
-   
+
+
+  const getDate = (releaseDate) => {
+    const release = new Date(releaseDate)
+
+    const inDays = differenceInDays(new Date(), release)
+    const getDateDiff = formatDistanceToNow(release, { addSuffix: true })
+
+    return inDays > 7
+      ? format(release, "d MMM yyyy")
+      : getDateDiff
+
+  }
+
+  const getMangaInfo = async () => {
+    try {
+      const response = await axios.get(backendUrl + "/api/manga/singleManga",
+        { params: { mangaId } }
+      )
+
+      if (response.data.success) {
+        const info = response.data.mangaInfo
+        setData(info)
+      }
+    }
+    catch (error) {
+      console.log(error)
+    }
+
+  }
+
+  const getTotalChapter = async () => {
+    try {
+      const response = await axios.get(backendUrl + `/api/chapter/${mangaId}`)
+
+      if (response.data.success) {
+        setChapter(response?.data?.allChapter)
+      }
+    }
+    catch (error) {
+      console.log(error)
+    }
+  }
+
+
 
 
   // useEffect(()=>{
   //   // getMangaInfo()
   //   addOrRemoveCount()
-    
-    
+
+
   //   // getTotalChapter()
   // },[clicked])
 
-  useEffect(()=>{
+  useEffect(() => {
     // console.log(count,"This is count")
     // console.log(countManga,"This is mangacount")
     getComments()
-  },[refreshComments])
+  }, [refreshComments, mangaId])
 
-  useEffect(()=>{
+  useEffect(() => {
     getMangaInfo()
     getTotalChapter()
     getCount()
-    
-  },[])
 
-  
+  }, [mangaId])
 
-  useEffect(()=>{
-    console.log(chapter,"This is data")
-  },[chapter])
+
+
+  useEffect(() => {
+    console.log(chapter, "This is data")
+  }, [chapter])
 
   // useEffect(()=>{
   //   const intervel = setInterval(() => {
@@ -337,154 +340,154 @@ const Manga = () => {
   // }
   return (
     <>
-      <div className="mt-15">
+      <div className="mt-15 mb-40">
         {/* Main Info Section */}
-        
-            {data ?(
-              <div className="max-w-6xl mx-auto mt-10 bg-white p-6 rounded-md shadow">
-          {/* Title */}
-          <h1 className="text-xl font-semibold text-blue-600 mb-6">
-            {data.name}
-          </h1>
 
-          {/* Grid Content */}
-          <div className="grid shadow-2xl grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Left: Cover */}
-            <div className="bg-white rounded-md shadow p-2">
-              <img
-                src={data.coverImg}
-                alt={data.name}
-                className="w-full h-[320px] object-fit"
-              />
-            </div>
+        {data ? (
+          <div className="max-w-6xl mx-auto mt-10 bg-white p-6 rounded-md shadow">
+            {/* Title */}
+            <h1 className="text-xl font-semibold text-blue-600 mb-6">
+              {data.name}
+            </h1>
 
-            {/* Right: Info */}
-            <div className="md:col-span-2 bg-white rounded-md p-6">
-              {/* Rating */}
-              {/* <div className="flex items-center gap-2 mb-4">
+            {/* Grid Content */}
+            <div className="grid shadow-2xl grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Left: Cover */}
+              <div className="bg-white rounded-md shadow p-2">
+                <img
+                  src={data.coverImg}
+                  alt={data.name}
+                  className="w-full h-[320px] object-fit"
+                />
+              </div>
+
+              {/* Right: Info */}
+              <div className="md:col-span-2 bg-white rounded-md p-6">
+                {/* Rating */}
+                {/* <div className="flex items-center gap-2 mb-4">
                 <span className="text-yellow-400 text-xl">★★★★★</span>
                 <span className="text-gray-800 font-medium">5</span>
               </div> */}
 
-              {/* Info Grid */}
-              <div className="grid grid-cols-2 gap-y-3 gap-x-12 text-sm text-gray-700">
-                {/* <div>
+                {/* Info Grid */}
+                <div className="grid grid-cols-2 gap-y-3 gap-x-12 text-sm text-gray-700">
+                  {/* <div>
                   <p className="font-semibold text-gray-900">Rating</p>
                   <p>Average 5 / 5</p>
                 </div> */}
-                <div>
-                  <p className="font-semibold text-gray-900">Release</p>
-                  {/* <p>{data.date}</p> */}
-                  <p>{ data?.date ? format(new Date(data?.date), "dd/MM/yyyy") : " - "}</p>
-                 
-                </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Release</p>
+                    {/* <p>{data.date}</p> */}
+                    <p>{data?.date ? format(new Date(data?.date), "dd/MM/yyyy") : " - "}</p>
 
-                {/* <div>
+                  </div>
+
+                  {/* <div>
                   <p className="font-semibold text-gray-900">Alternative</p>
                   <p>"N/A"</p>
                 </div> */}
-                <div>
-                  <p className="font-semibold text-gray-900">Status</p>
-                  <p className="text-gray-900"> {data.ongoing == false ? 'Ongoing' : "Completed" }</p>
-                </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Status</p>
+                    <p className="text-gray-900"> {data.ongoing == false ? 'Ongoing' : "Completed"}</p>
+                  </div>
 
-                <div>
-                  <p className="font-semibold text-gray-900">Author(s)</p>
-                  <p>{data.authorName}</p>
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-900">Artist(s)</p>
-                  <p className=""> {data.artistName ? data.artistName : "-" }</p>
-                </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Author(s)</p>
+                    <p>{data.authorName}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Artist(s)</p>
+                    <p className=""> {data.artistName ? data.artistName : "-"}</p>
+                  </div>
 
-                <div>
-                  <p className="font-semibold text-gray-900">Genre(s)</p>
-                  {/* <p><div>{
+                  <div>
+                    <p className="font-semibold text-gray-900">Genre(s)</p>
+                    {/* <p><div>{
                   data?.genres?.map((items,index)(
                     <p>{items}</p>
                   ))
                   }</div></p> */}
-                  {/* <div>
+                    {/* <div>
                     {
                       data.genres?.map((item,index)=>(
                         <p key={index}>{item},</p>
                       ))
                     }
                   </div> */}
-                  <p>{data?.genres?.join(", ")}</p>
+                    <p>{data?.genres?.join(", ")}</p>
 
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Type</p>
+                    <p>{data.type}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-semibold text-gray-900">Type</p>
-                  <p>{data.type}</p>
-                </div>
-              </div>
 
-              {/* Buttons */}
-              <div className="flex gap-3 mt-6">
-                <Link to={`/manga/${mangaId}/1`} className="px-4 py-2 rounded bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
-                  Read First
-                </Link>
-                <Link to={`/manga/${mangaId}/${chapter.at(0)?.chapterNo}`} className="px-4 py-2 rounded bg-blue-100 text-blue-700 text-sm font-medium hover:bg-blue-200">
-                  Read Last
-                </Link>
-              </div>
-
-              {/* Bottom Row */}
-              <div className="flex items-center gap-10 mt-6 border-t pt-4 text-gray-600 text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="text-blue-600 text-lg">💬</span>
-                  <span>Comments</span>
+                {/* Buttons */}
+                <div className="flex gap-3 mt-6">
+                  <Link to={`/manga/${mangaId}/1`} className="px-4 py-2 rounded bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
+                    Read First
+                  </Link>
+                  <Link to={`/manga/${mangaId}/${chapter.at(0)?.chapterNo}`} className="px-4 py-2 rounded bg-blue-100 text-blue-700 text-sm font-medium hover:bg-blue-200">
+                    Read Last
+                  </Link>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span onClick={handleFavorite} className="text-blue-600 text-lg">{
-                    isFavorite.includes(mangaId) ? 'Fav' : '🔖'
+
+                {/* Bottom Row */}
+                <div className="flex items-center gap-10 mt-6 border-t pt-4 text-gray-600 text-sm">
+                  <div className="flex items-center gap-2">
+                    <span className="text-blue-600 text-lg">💬</span>
+                    <span>Comments</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span onClick={handleFavorite} className="text-blue-600 text-lg">{
+                      isFavorite.includes(mangaId) ? 'Fav' : '🔖'
                     }</span>
-                  {/* <span>3.4K Users bookmarked This</span> */}
-                  <span>{count}</span>
+                    {/* <span>3.4K Users bookmarked This</span> */}
+                    <span>{count}</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          
-          <div className="mt-6 p-4 bg-gray-50 rounded-md shadow-lg text-gray-800 leading-relaxed text-justify">
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">Description</h2>
-            <p className="whitespace-pre-line">{data.description}</p>
-          </div>
 
-          <div className="max-w-6xl mt-10 bg-white rounded-lg shadow p-6 mx-auto ">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Chapters</h2>
+            <div className="mt-6 p-4 bg-gray-50 rounded-md shadow-lg text-gray-800 leading-relaxed text-justify">
+              <h2 className="text-lg font-semibold text-gray-900 mb-2">Description</h2>
+              <p className="whitespace-pre-line">{data.description}</p>
+            </div>
 
-          <div className="divide-y">
-            {chapter.length > 0 ? chapter.slice(0,chapterToShow).map((item)=>
-              (
-                <Link to={`/manga/${id}/${item.chapterNo}`}
-                  // key={i}
-                  className="flex justify-between items-center py-3 hover:bg-gray-50 transition cursor-pointer"
-                >
-                 
-                  <p className="text-gray-800 font-medium">
-                    Chapter {item.chapterNo}
-                  </p>
+            <div className="max-w-6xl mt-10 bg-white rounded-lg shadow p-6 mx-auto ">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Chapters</h2>
 
-                 
-                  {/* <p className="text-gray-500 text-sm"><ChapterTime releaseDate={"2025-11-14T08:23:45.000Z"}/></p> */}
-                  <p>
+              <div className="divide-y">
+                {chapter.length > 0 ? chapter.slice(0, chapterToShow).map((item) =>
+                (
+                  <Link to={`/manga/${id}/${item._id}/${item.chapterNo}`}
+                    // key={i}
+                    className="flex justify-between items-center py-3 hover:bg-gray-50 transition cursor-pointer"
+                  >
+
+                    <p className="text-gray-800 font-medium">
+                      Chapter {item.chapterNo}
+                    </p>
+
+
+                    {/* <p className="text-gray-500 text-sm"><ChapterTime releaseDate={"2025-11-14T08:23:45.000Z"}/></p> */}
+                    <p>
                       {
                         getDate(`${item.createdAt}`)
                       }
-                  </p>
-                </Link>
-              )
-            )
-              :
-              <h1 className="text-center text-gray-400 text-lg font-semibold py-12 border border-dashed border-gray-300 rounded-xl bg-gray-50">
-  📭 No chapters yet
-</h1>
-            }
+                    </p>
+                  </Link>
+                )
+                )
+                  :
+                  <h1 className="text-center text-gray-400 text-lg font-semibold py-12 border border-dashed border-gray-300 rounded-xl bg-gray-50">
+                    📭 No chapters yet
+                  </h1>
+                }
 
-            {/* {
+                {/* {
               chapterArray.map((item)=>(
                 <div key={item} >
                  <p>Chapter {item}</p>
@@ -492,55 +495,55 @@ const Manga = () => {
                 </div>
               ))
             } */}
-          </div>
+              </div>
 
-          {chapter.length > 1 && (
-            <button
-              onClick={showChapter}
-              className="mt-4 px-4 py-2 rounded bg-blue-600 text-white text-sm font-medium hover:bg-blue-700"
-            >
-              {show ? "Show More" : "Show Less"}
-            </button>
-          )}
-          </div>
-          <div className="flex flex-col justify-center m-49 rounded bg-white items-center  mt-10 ">
-          <div className="flex justify-center   mt-10 w-3/4 mx-auto">
-            <div className="flex items-center gap-3 w-full">
-              <input
-                onChange={(e)=>setCommentText(e.target.value)}
-                type="text"
-                value={commentText}
-                className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-800"
-                placeholder="Write a comment..."
-              />
-              <button
-                onClick={handleComment}
-                className="px-5 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
-              >
-                Post
-              </button>
+              {chapter.length > 1 && (
+                <button
+                  onClick={showChapter}
+                  className="mt-4 px-4 py-2 rounded bg-blue-600 text-white text-sm font-medium hover:bg-blue-700"
+                >
+                  {show ? "Show More" : "Show Less"}
+                </button>
+              )}
             </div>
+            <div className="flex flex-col justify-center m-49 rounded bg-white items-center  mt-10 ">
+              <div className="flex justify-center   mt-10 w-3/4 mx-auto">
+                <div className="flex items-center gap-3 w-full">
+                  <input
+                    onChange={(e) => setCommentText(e.target.value)}
+                    type="text"
+                    value={commentText}
+                    className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-800"
+                    placeholder="Write a comment..."
+                  />
+                  <button
+                    onClick={handleComment}
+                    className="px-5 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+                  >
+                    Post
+                  </button>
+                </div>
 
 
-          </div>
-          <div className="flex items-center gap-3 mb-2 mt-10  ">
-            <div className="flex items-center justify-center rounded-full w-8 h-8 bg-black text-white text-sm font-medium">
-              {comments.length}
-            </div>
-            <span className="text-gray-700 font-medium">Comments</span>
-            
-          </div>
-          <hr className=" border-black  mb-10"/>
-          
+              </div>
+              <div className="flex items-center gap-3 mb-2 mt-10  ">
+                <div className="flex items-center justify-center rounded-full w-8 h-8 bg-black text-white text-sm font-medium">
+                  {comments.length}
+                </div>
+                <span className="text-gray-700 font-medium">Comments</span>
+
+              </div>
+              <hr className=" border-black  mb-10" />
 
 
 
 
-          <div className="bg-white rounded-lg w-3/4 px-5 py-4 flex flex-col gap-3">
+
+              <div className="bg-white rounded-lg w-3/4 px-5 py-4 flex flex-col gap-3">
 
 
 
-            {/* {
+                {/* {
               (commentInfo.slice(0, showMore)).map((items, index) => (
 
                 <Comments key={index} avatar={items.user.avatar} username={items.user.username} text={items.text} />
@@ -568,32 +571,38 @@ const Manga = () => {
               )}
             </div> */}
 
-             {comments.map(comment => (
-        <Comment
-          key={comment._id}
-          comment={comment}
-          depth={0}
-          mangaId={mangaId}
-          // isEditing={isEditing}
-          setRefreshComments={setRefreshComments}
-          // setIsReply= {setIsReply}
-        />
-      ))}
+                {comments.map(comment => (
+                  <Comment
+                    key={comment._id}
+                    comment={comment}
+                    depth={0}
+                    mangaId={mangaId}
+                    // isEditing={isEditing}
+                    setRefreshComments={setRefreshComments}
+                  // setIsReply= {setIsReply}
+                  />
+                ))}
 
+
+              </div>
+            </div>
 
           </div>
+        ) :
+          (
+            <div className="text-center mt-20 text-gray-500 text-lg">
+              Loading manga details...
+            </div>
+          )
+        }
+
+        <div>
+  
+          <SuggestManga genres={data?.genres} mangaId={mangaId}/>
+
         </div>
 
-        </div> 
-            ):
-             (
-              <div className="text-center mt-20 text-gray-500 text-lg">
-            Loading manga details...
-          </div>
-             )
-          }
-          
-        
+
 
         {/* Chapters Section */}
 

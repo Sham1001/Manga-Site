@@ -128,8 +128,63 @@ const getMangaInfo = async (req, res) => {
 
 
         if (sort === "popular") {
-            query.popular = true
+            // query.popular = true
+
+            try{
+                const popularManga = await chapterModel.aggregate([
+
+    {
+        $sort: {
+            createdAt: -1
         }
+    },
+
+    {
+        $group: {
+            _id: "$managaId",
+            latestChapter: { $first: "$$ROOT" }
+        }
+    },
+
+    {
+        $replaceRoot: {
+            newRoot: "$latestChapter"
+        }
+    },
+
+    {
+        $lookup: {
+            from: "mangas",
+            localField: "managaId",
+            foreignField: "_id",
+            as: "manga"
+        }
+    },
+
+    {
+        $unwind: "$manga"
+    },
+
+    {
+        $match: {
+            "manga.popular": true
+        }
+    }
+
+])
+
+            if(!popularManga){
+                return res.status(500).json({ success: false, message:"Something wrong" })
+            }
+
+            return res.status(200).json({ success: true, popularManga })
+            }
+
+            catch(error){
+                return res.status(500).json({ success: true, message:error.message })
+            }
+        }
+
 
         if (sort === "Recommended" || sort === "Relevant") {
             query.Recommended = true
@@ -146,52 +201,52 @@ const getMangaInfo = async (req, res) => {
         if (sort === "Latest") {
             //  let sortOption = { createdAt: -1 };  // latest default
 
-           try{
-             const latestChapters = await chapterModel.aggregate([
-                {
-                    $sort: {
-                        createdAt: -1
-                    }
-                },
-                {
-                    $group: {
-                        _id: "$managaId",
-                        latestChapter: { $first: "$$ROOT" }
-                    }
-                },
-                {
-                    $replaceRoot: {
-                        newRoot: "$latestChapter"
-                    }
-                },
-                {
-                    $lookup:{
-                        from:"mangas",
-                        localField:"managaId",
-                        foreignField:"_id",
-                        as:"manga"
+            try {
+                const latestChapters = await chapterModel.aggregate([
+                    {
+                        $sort: {
+                            createdAt: -1
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: "$managaId",
+                            latestChapter: { $first: "$$ROOT" }
+                        }
+                    },
+                    {
+                        $replaceRoot: {
+                            newRoot: "$latestChapter"
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "mangas",
+                            localField: "managaId",
+                            foreignField: "_id",
+                            as: "manga"
 
+                        }
+                    },
+                    {
+                        $unwind: "$manga"
+                    },
+                    {
+                        $sort: {
+                            createdAt: -1
+                        }
+                    },
+                    {
+                        $limit: limit
                     }
-                },
-                {
-                    $unwind:"$manga"
-                },
-                {
-                    $sort:{
-                        createdAt:-1
-                    }
-                },
-                {
-                    $limit: limit
-                }
-            ])
-                return res.status(200).json({success:true, latestChapters})
+                ])
+                return res.status(200).json({ success: true, latestChapters })
 
-           }
-           catch(error){
+            }
+            catch (error) {
                 console.log(error)
-                return res.status(500).json({success:false, message:"There is some issue, Please try again later"})
-           }
+                return res.status(500).json({ success: false, message: "There is some issue, Please try again later" })
+            }
         }
 
         //         console.log("Category from frontend:", category);
@@ -260,7 +315,6 @@ const editManga = async (req, res) => {
             "type",
             "description",
             "mangaId",
-
         ]
 
         const updateManga = {}
@@ -432,4 +486,57 @@ const getCount = async (req, res) => {
 
 }
 
-export { addManga, getManga, getMangaInfo, editManga, deleteManga, savedCount, getCount }
+const getRecommendation = async (req, res) => {
+
+    try {
+
+        const genres = req.query?.genres
+        const page = parseInt(req.query.page) || 1
+        const limit = parseInt(req.query.limit) || 4
+        const skip = (page - 1) * limit
+
+        console.log(genres)
+
+        if (!genres || genres.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Genres missing"
+            })
+        }
+        const [recommendations, total] = await Promise.all([
+            mangaModel.find({
+                genres: {
+                    $in: genres.split(",")
+                }
+            }).skip(skip).limit(limit),
+            mangaModel.countDocuments({
+                genres: {
+                    $in: genres.split(",")
+                }
+            })
+        ])
+
+       
+
+
+        const totalPages = Math.ceil(total / limit);
+
+        return res.status(200).json({
+            success: true,
+            recommendations,
+            totalPages,
+            total
+        })
+
+    } catch (error) {
+
+        console.log(error)
+
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong"
+        })
+    }
+}
+
+export { addManga, getManga, getMangaInfo, editManga, deleteManga, savedCount, getCount, getRecommendation }

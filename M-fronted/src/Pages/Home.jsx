@@ -35,41 +35,41 @@ const Home = () => {
   // };
 
   const settings = {
-  dots: true,
-  infinite: true,
-  speed: 800,
+    dots: true,
+    infinite: true,
+    speed: 800,
 
-  slidesToShow: 4,
-  slidesToScroll: 1,
+    slidesToShow: 5,
+    slidesToScroll: 1,
 
-  autoplay: true,
-  autoplaySpeed: 3500,
+    autoplay: true,
+    autoplaySpeed: 3500,
 
-  pauseOnHover: true,
+    pauseOnHover: true,
 
-  arrows: false,
+    arrows: false,
 
-  responsive: [
-    {
-      breakpoint: 1024,
-      settings: {
-        slidesToShow: 3,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+        },
       },
-    },
-    {
-      breakpoint: 768,
-      settings: {
-        slidesToShow: 2,
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 2,
+        },
       },
-    },
-    {
-      breakpoint: 480,
-      settings: {
-        slidesToShow: 1,
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+        },
       },
-    },
-  ],
-};
+    ],
+  };
 
   //   const settings2 = {
   //   dots: true,
@@ -97,40 +97,40 @@ const Home = () => {
   // };
 
   const gridSettings = {
-  dots: true,
-  arrows: false,
+    dots: true,
+    arrows: false,
 
-  infinite: true,
-  speed: 800,
+    infinite: true,
+    speed: 800,
 
-  slidesToShow: 3,
-  slidesToScroll: 1,
+    slidesToShow: 3,
+    slidesToScroll: 1,
 
-  rows: 3,
-  slidesPerRow: 1,
+    rows: 3,
+    slidesPerRow: 1,
 
-  autoplay: true,
-  autoplaySpeed: 4000,
+    autoplay: true,
+    autoplaySpeed: 4000,
 
-  pauseOnHover: true,
+    pauseOnHover: true,
 
-  responsive: [
-    {
-      breakpoint: 1024,
-      settings: {
-        slidesToShow: 2,
-        rows: 2,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          rows: 2,
+        },
       },
-    },
-    {
-      breakpoint: 768,
-      settings: {
-        slidesToShow: 1,
-        rows: 2,
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          rows: 2,
+        },
       },
-    },
-  ],
-};
+    ],
+  };
 
 
   // const [mangaInfo,setMangaInfo] = useState([])
@@ -188,7 +188,7 @@ const Home = () => {
       const response = await axios.get(backendUrl + "/api/manga/mangaInfo",
         { params: { sort: 'popular' } })
       if (response.data.success) {
-        const popularManga = response.data.pageInfo
+        const popularManga = response.data.popularManga
         setPopular(popularManga)
       }
     }
@@ -270,7 +270,7 @@ const Home = () => {
 
             {
               popular.map((items, index) => (
-                <MangaContex setClicked={setClicked} key={index} name={items.name} chapters={items.chapters} coverImg={items.coverImg} id={items._id} favorite={items.favorites} isFavorite={isFavorite} />
+                <MangaContex setClicked={setClicked} key={items?._id} name={items?.manga?.name} chapters={items.chapterNo} coverImg={items?.manga?.coverImg} id={items?.manga?._id} favorite={items.favorites} isFavorite={isFavorite} />
               ))
             }
 
@@ -279,7 +279,7 @@ const Home = () => {
 
 
         <div>
-          <div  className='flex text-center justify-between items-center mt-20 mx-22'>
+          <div className='flex text-center justify-between items-center mt-20 mx-22'>
             <Link className='text-2xl font-bold'>Latest Chapters</Link>
             <img className="hover:scale-120 transition ease-in-out w-20 h-10" src={assets.arrow} alt="hello" />
           </div>
@@ -309,11 +309,11 @@ const Home = () => {
               <img className="hover:scale-120 transition ease-in-out w-20 h-10" src={assets.arrow} alt="hello" />
             </Link>
           </div>
-          <Slider className='flex  mx-20 gap-5' {...settings}>
+          <Slider className='flex mb-25  mx-20 gap-5' {...settings}>
 
             {
               recommended.map((items, index) => (
-                <MangaContex setClicked={setClicked} key={index} name={items.name} chapters={items.chapters} coverImg={items.coverImg} id={items._id} favorites={items.favorite} isFavorite={isFavorite}/>
+                <MangaContex setClicked={setClicked} key={index} name={items.name} chapters={items.chapters} coverImg={items.coverImg} id={items._id} favorites={items.favorite} isFavorite={isFavorite} />
               ))
             }
 

@@ -161,7 +161,7 @@ const MangaContex = ({ name, chapters, coverImg, id, isFavorite, setClicked }) =
   return (
     <Link to={`/manga/${id}`}>
       <div className="relative bg-white border border-gray-200 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:border-gray-300 hover:-translate-y-1 group">
-
+          
         {/* Image Section */}
         <div className=" bg-gradient-to-b from-gray-50 to-gray-100 group relative">
           <img

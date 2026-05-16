@@ -1,23 +1,30 @@
 import React, { useEffect, useState } from 'react'
-import { chapters } from '../assets/fronted/assets.js'
+// import { chapters } from '../assets/fronted/assets.js'
 import { useParams, useNavigate } from 'react-router-dom'
-import { info } from '../assets/fronted/assets.js'
+// import { info } from '../assets/fronted/assets.js'
 import axios from 'axios'
 import { MangaCon } from '../Context/MangaContex.jsx'
 import { useContext } from 'react'
+import { toast } from 'react-toastify'
+import Comment from '../Component/ChildComment.jsx'
+
+
 
 const Chapter = () => {
   const [chapter, setChapter] = useState(null)
   const [totalChapter, setTotalChapter] = useState([])
+  const [comments, setComments] = useState([])
   const [chapterType, setChamperType] = useState('Scroll')
+  const [commentText, setCommentText] = useState("")
+  const [refreshComments, setRefreshComments] = useState(false)
   const [pageNo, setPageNo] = useState(1)
-  const { mangaId, chapterNo } = useParams()
+  const { mangaId, chapterId, chapterNo } = useParams()
   const navigate = useNavigate()
-  const chpNo = parseInt(chapterNo, 10)
-  const [currentChapterNo, setCurrentChapterNo] = useState(chpNo)
+  // const chpNo = parseInt(chapterNo, 10)
+  const [currentChapterNo, setCurrentChapterNo] = useState(null)
   // let puraChaptere = totalChapter.length
 
-  const { backendUrl } = useContext(MangaCon)
+  const { backendUrl, token } = useContext(MangaCon)
 
 
   const handlePrev = () => {
@@ -31,6 +38,44 @@ const Chapter = () => {
   }
 
 
+  const handleComment = async(e) => {
+    e.preventDefault
+    if(!token){
+      return toast.error("Login to add comment")
+    }
+    try{
+       const response = await axios.post( backendUrl + "/api/comment/add",{text:commentText,contentTypeId:chapterId},{headers:{ Authorization: `Bearer ${token}` }})
+       if(response.data.success){    
+        toast.success(response.data.message)
+        setRefreshComments((prev)=>!prev)
+       }
+       else{
+        toast.error(response.data.message)
+       }
+    }
+    catch(error){
+      console.log(error)
+    }
+  }
+
+  const getComments = async()=>{
+    try{
+      const response = await axios.get(backendUrl + `/api/comment/get/${chapterId}`)
+      if(response.data.success){
+        setComments(response.data.rootComments)
+      }
+      else{
+        toast.error(response.data.messsage)
+      }
+    }
+    catch(error){
+      console.log(error)
+      toast.error(error.message)
+    }
+  }
+
+
+
 
 
   const getChapter = async () => {
@@ -42,7 +87,10 @@ const Chapter = () => {
         const allChapter = response.data.totalChapters
         setChapter(chapter)
         setTotalChapter(allChapter)
-        navigate(`/manga/${mangaId}/${currentChapterNo}`)
+        navigate(
+  `/manga/${mangaId}/${chapter._id}/${chapter.chapterNo}`,
+  { replace: true }
+)
       }
 
     }
@@ -52,10 +100,18 @@ const Chapter = () => {
   }
 
   useEffect(() => {
-    setTimeout(() => {
+    // setTimeout(() => {
       getChapter()
-    }, 200)
-  }, [currentChapterNo, chapterType])
+    // }, 200)
+  }, [currentChapterNo])
+
+
+  useEffect(()=>{
+    getComments()
+    console.log(chapterId,"This is chapter id")
+  },[refreshComments])
+
+
 
   useEffect(() => { document.body.style.overflow = "auto"; return () => { document.body.style.overflow = ""; }; }, []);
 
@@ -67,6 +123,11 @@ const Chapter = () => {
   }, [chapter, totalChapter, chapterType, pageNo])
 
   useEffect(() => { window.scrollTo(0, 0); }, [currentChapterNo]);
+
+
+  useEffect(() => {
+  setCurrentChapterNo(Number(chapterNo))
+}, [chapterNo])
 
 
   // const handleSelectChange = (e) => {
@@ -149,7 +210,7 @@ const Chapter = () => {
                 {chapter?.managaId?.name}
               </p>
 
-              <h1 className="text-2xl font-bold mt-3 mb-3">Chapter {chpNo}</h1>
+              <h1 className="text-2xl font-bold mt-3 mb-3">Chapter {currentChapterNo}</h1>
               <h2 className="text-lg text-gray-600">{chapter?.name}</h2>
             </div>
 
@@ -159,8 +220,8 @@ const Chapter = () => {
 
               {/* Chapter select */}
               <select
-                value={chpNo}
-                onChange={(e) => setCurrentChapterNo(e.target.value)}
+                value={currentChapterNo}
+                onChange={(e) => setCurrentChapterNo(Number(e.target.value))}
                 className="px-4 py-2 border border-gray-300 rounded-md bg-white shadow-sm hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
               >
                 {totalChapter.map((ch, index) => (
@@ -264,8 +325,8 @@ const Chapter = () => {
             <div className="text-center mt-16 space-y-10">
 
               <select
-                value={chpNo}
-                onChange={(e) => setCurrentChapterNo(e.target.value)}
+                value={currentChapterNo}
+                onChange={(e) => setCurrentChapterNo(Number(e.target.value))}
                 className="px-4 py-2 border rounded-md"
               >
                 {totalChapter.map((ch, index) => (
@@ -306,7 +367,7 @@ const Chapter = () => {
           <div className='max-w-5xl mx-auto px-4'>
             <div className="text-center mt-10 mb-6">
               <p onClick={() => navigate(`/manga/${mangaId}`)} className='text-4xl mb-4 font-semibold cursor-pointer'>{chapter?.managaId?.name}</p>
-              <h1 className="text-2xl font-bold mb-3">Chapter {chpNo}</h1>
+              <h1 className="text-2xl font-bold mb-3">Chapter {currentChapterNo}</h1>
               <h2 className="text-lg text-gray-600 mb-5">{chapter?.name}</h2>
 
               {/* Chapter select */}
@@ -314,7 +375,7 @@ const Chapter = () => {
               <div className="flex justify-center items-center gap-4 mb-8">
 
                 <select
-                  value={chpNo}
+                  value={currentChapterNo}
                   onChange={(e) => setCurrentChapterNo(e.target.value)}
                   className="px-4 py-2 border border-gray-300 rounded-md bg-white shadow-sm hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                 >
@@ -401,7 +462,7 @@ const Chapter = () => {
 
             <div className=' text-center'>
               <select
-                value={chpNo}
+                value={currentChapterNo}
                 onChange={(e) => setCurrentChapterNo(e.target.value)}
                 className="px-4 py-2 mt-20 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4"
               >
@@ -444,6 +505,88 @@ const Chapter = () => {
 
 
       }
+
+
+       <div className="flex flex-col justify-center m-49 rounded bg-white items-center  mt-10 ">
+          <div className="flex justify-center   mt-10 w-3/4 mx-auto">
+            <div className="flex items-center gap-3 w-full">
+              <input
+                onChange={(e)=>setCommentText(e.target.value)}
+                type="text"
+                value={commentText}
+                className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-800"
+                placeholder="Write a comment..."
+              />
+              <button
+                onClick={handleComment}
+                className="px-5 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+              >
+                Post
+              </button>
+            </div>
+
+
+          </div>
+          <div className="flex items-center gap-3 mb-2 mt-10  ">
+            <div className="flex items-center justify-center rounded-full w-8 h-8 bg-black text-white text-sm font-medium">
+              {comments.length}
+            </div>
+            <span className="text-gray-700 font-medium">Comments</span>
+            
+          </div>
+          <hr className=" border-black  mb-10"/>
+          
+
+
+
+
+          <div className="bg-white rounded-lg w-3/4 px-5 py-4 flex flex-col gap-3">
+
+
+
+            {/* {
+              (commentInfo.slice(0, showMore)).map((items, index) => (
+
+                <Comments key={index} avatar={items.user.avatar} username={items.user.username} text={items.text} />
+              ))
+
+            }
+
+            <div>
+              {showMore < commentInfo.length ? (
+                <button
+                  // onClick={handelMore}
+                  className="px-4 py-2 rounded my-4 w-30 font-medium text-white bg-blue-600 hover:bg-blue-700"
+                >
+                  Show more
+                </button>
+              ) : (
+                commentInfo.length > 5 && (
+                  <button
+                    // onClick={handlShowLess}
+                    className="px-4 py-2 rounded my-4 w-30 font-medium text-white bg-blue-600 hover:bg-blue-700"
+                  >
+                    Show less
+                  </button>
+                )
+              )}
+            </div> */}
+
+             {comments.map(comment => (
+        <Comment
+          key={comment._id}
+          comment={comment}
+          depth={0}
+          mangaId={chapterId}
+          // isEditing={isEditing}
+          setRefreshComments={setRefreshComments}
+          // setIsReply= {setIsReply}
+        />
+      ))}
+
+
+          </div>
+        </div>
 
 
 

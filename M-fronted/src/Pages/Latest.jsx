@@ -56,7 +56,7 @@ const Latest = () => {
   })
 
   return (
-    <div className="px-15 py-20 bg-gray-50 min-h-screen">
+    <div className="px-15 py-20 min-h-screen">
     <div className="flex justify-between mr-6">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">
     Manga Collection
@@ -68,7 +68,7 @@ const Latest = () => {
   
 
     <div className="space-y-6">
-  <div className="w-full grid  grid-cols-2  md:grid-cols-3 lg:grid-cols-4 gap-6" >
+  <div className="w-full grid  grid-cols-1  md:grid-cols-3 lg:grid-cols-4 gap-6" >
     {/* <Slider {...gridSettings}> */}
       {latestManga.map((item) => (
         <MangaContex

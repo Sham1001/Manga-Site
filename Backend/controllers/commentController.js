@@ -123,7 +123,7 @@ const updateComment = async(req,res)=>{
         const checkDeleted = await commentModel.findById(commentId)
 
         if(checkDeleted.isDeleted){
-            return res.status(200).json({success:false, message:"Comment is deleted, You cant edit It"})
+            return res.status(200).json({success:true, message:"Comment is deleted, You cant edit It"})
         }
 
         await commentModel.findByIdAndUpdate(commentId,{
@@ -162,7 +162,7 @@ const deleteComment = async(req,res) => {
     const isAlreadyDeleted = await commentModel.findById(commentId)
 
     if(isAlreadyDeleted.isDeleted){
-            return res.status(200).json({ success:true, message:"Commet is already is deleted" });
+            return res.status(200).json({ success:false, message:"Commet is already is deleted" });
         }
 
     const deleted = await commentModel.findByIdAndUpdate(
