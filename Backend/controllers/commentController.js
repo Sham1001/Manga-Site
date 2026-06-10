@@ -1,7 +1,4 @@
 import commentModel from "../models/commentModel.js";
-// import mangaModel from "../models/mangaModel";
-// import chapterModel from "../models/chapterModel";
-
 
 const addComment = async (req, res) => {
     try {
@@ -41,15 +38,12 @@ const getComments = async (req, res) => {
     try {
 
         const contentTypeId = req.params.contentTypeId
-        // const contentType = req.query.contentType
+      
 
         if (!contentTypeId) {
             return res.status(500).json({ success: false, message: "Content type Id is missing" })
         }
 
-        // if(!contentType){
-        //     return res.status(500).json({success:false, message:"Content type is missing"})
-        // }
 
 
         const comments = await commentModel.find({ contentId: contentTypeId }).lean().populate("user", "name profileImg")

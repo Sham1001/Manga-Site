@@ -4,6 +4,7 @@ import user from './user.svg'
 import search2 from './search2.svg'
 import cross from './cross.svg'
 import luffy from './luffy.png'
+import mangaSlogan from './mangaSlogan.jpg'
 
 
 export const assets={
@@ -12,7 +13,8 @@ export const assets={
   user,
   search2,
   cross,
-  luffy
+  luffy,
+  mangaSlogan
 }
 
 

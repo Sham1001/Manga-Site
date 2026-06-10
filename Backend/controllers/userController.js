@@ -6,6 +6,11 @@ import bcrypt from 'bcrypt'
 // import { v2 as cloudinary } from 'cloudinary'
 import { v2 as cloudinary } from 'cloudinary'
 import fs from 'fs'
+import { OAuth2Client } from "google-auth-library";
+import { mongoose } from "mongoose";
+
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 
 
@@ -114,6 +119,64 @@ const adminLogin = (req, res) => {
     }
 }
 
+const googleLogin = async (req, res) => {
+    try {
+        const { token } = req.body;
+
+        
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        
+        const payload = ticket.getPayload();
+
+        const {
+            email,
+            name,
+            picture,
+        } = payload;
+
+      
+        let user = await userModel.findOne({ email });
+
+        
+        if (!user) {
+            user = await userModel.create({
+                email,
+                name,
+                profileImg: picture,
+            });
+        }
+
+        
+        const jwtToken = jwt.sign(
+            {
+                id: user._id,
+                email: user.email,
+            },
+            process.env.JWT_KEY,
+            {
+                expiresIn: "7d",
+            }
+        );
+
+        return res.status(200).json({
+            success: true,
+            token: jwtToken,
+            user,
+        });
+    } catch (error) {
+        console.log(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Google Login Failed",
+        });
+    }
+}
+
 const addFav = async (req, res) => {
     const { mangaId } = req.body
     const userId = req.userId
@@ -136,11 +199,11 @@ const addFav = async (req, res) => {
 
             return res.status(200).json({ success: true, message: "Manga removed successfully" })
         }
-        const fav = user
-        // const favorites = fav.favorites
+        
         user.favorites.push(mangaId)
         await user.save()
-        return res.status(200).json({ success: true, message: "Manga Added successfully", fav })
+        const fav = user
+        return res.status(200).json({ success: true, message: "Manga Added successfully", user })
     }
     catch (error) {
         console.log(error)
@@ -161,9 +224,6 @@ const removeFav = async (req, res) => {
         }
         const newFav = await userModel.findById(userId)
 
-        //  if(!newFav.favorites.includes(mangaId)){
-        //     return res.json({success:false,message:"The manga is not in"})
-        //  }
 
         newFav.favorites = newFav.favorites.filter(fil => fil.toString() != mangaId)
         await newFav.save()
@@ -178,53 +238,108 @@ const removeFav = async (req, res) => {
 
 const userProfile = async (req, res) => {
     const userId = req.userId
-    const page = req.query.page 
+    const page = req.query.page
     const limit = req.query.limit || 3
     const decending = req.query.decending
     const skip = (page - 1) * limit
 
     try {
-        console.log(page ,"Page hai")
-         console.log(limit ,"Limit hai")
+
         if (!userId) {
             return res.json({ success: false, message: "Give user id" })
         }
         const user = await userModel.findById(userId)
-        // const fav = await userModel.findById(userId).select({ favorites: { $slice: [skip, limit] } }).populate('favorites')
-       const fav = await userModel.findById(userId).populate({
-  path: 'favorites',
-  options: {
-    skip,
-    limit,
-    // sort: { createdAt: -1 }, // optional
-  },
-});
-        // const fav1 = await fav.favorites
-        // const fav2 = await fav1.skip(0).limit(3)
-        // if (!user) {
-        //     return res.json({ success: false, message: "User does not exist" })
-        // }
+       
+        const fav = await userModel.aggregate([
+            {
+                $match: {
+                    _id: new mongoose.Types.ObjectId(userId)
+                }
+            },
+            {
+                $lookup: {
+                    from: "mangas",
+                    localField: "favorites",
+                    foreignField: "_id",
+                    as: "favManga",
+                    pipeline: [
+                        { $sort: { createdAt: -1 } },
+                        {
+                            $lookup: {
+                                from: "chapters",
+                                localField: "_id",
+                                foreignField: "managaId",
+                                as: "chapters"
+                            }
+                        },
+                        {
+                            $addFields: {
+                                latestChapter: {
+                                  $slice: [
+                { $sortArray: { input: "$chapters", sortBy: { createdAt: -1 } } },
+                2  
+            ]
+                                }
+                            }
+                        },
+                        {
+                            $addFields: {
+                                latestChapterNo: "$latestChapter.chapterNo",
+                                latestChapterDate: "$latestChapter.createdAt"
+                            }
+                        },
+                        {
+                            $project: {
+                                chapters: 0, latestChapter: 0, description: 0, authorName: 0, date: 0, genres: 0, genres: 0, subGenres: 0, popular: 0,
+                                ongoing: 0,
+                                Recommended: 0,
+                                type: 0,
+                                saved: 0,
+                                chapter: 0,
+                                comments: 0,
+                                createdAt: 0,
+                                updatedAt:0
+                            }
+                        },
 
 
-        // const mangaPaginate = await user
-        // const [pageInfo, total] = await Promise.all([
-        //             userModel.populate('favorites').sort(createdAt-1).skip(skip).limit(limit),
-        //             userModel.populate('favorites').countDocuments(query)
-        //         ])\
-        const total = user?.favorites?.length
-                   
-                   
-            
+                        { $skip: skip },
+                        { $limit: 4 }
+                    ]
+                }
+            },
 
 
-        const totalPages = Math.ceil(total / limit);
+            {
+                $addFields: {
+                    totalCount: { $size: "$favorites" }
+                }
+            },
+            {
+                $project: { password: 0, favorites: 0 }
+            }
+        ]);
+       
 
 
 
-        return res.status(200).json({ success: true, user, fav, totalPages })
+
+        const total = fav[0]?.totalCount
 
 
-        // return res.status(200).json({ success: true, user })
+
+
+
+        const totalPages = Math.ceil(fav[0]?.totalCount / limit);
+
+       
+
+
+
+        return res.status(200).json({ success: true, user, fav: fav[0].favManga, totalPages, total })
+
+
+       
     }
     catch (error) {
         console.log(error)
@@ -250,84 +365,80 @@ const userFav = async (req, res) => {
 }
 
 
-const userProfileImg= async(req,res)=>{
+const userProfileImg = async (req, res) => {
     const img = req?.file?.path
     const id = req.userId
 
-    // if(id){
-    //     // return res.status(400).json({success:false, message:"User Id is missing"})
-    //     console.log(id,"Id is this")
-    // }
-    if(!img){
-        return res.status(400).json({success:false, message:"Profile img is missing"})
+    if (!img) {
+        return res.status(400).json({ success: false, message: "Profile img is missing" })
     }
-    const imgLink = await cloudinary.uploader.upload(img,{ folder: "user", use_filename: true, unique_filename: true })
+    const imgLink = await cloudinary.uploader.upload(img, { folder: "user", use_filename: true, unique_filename: true })
 
     await fs.promises.unlink(img);
 
     const imgUploadedLink = await userModel.findByIdAndUpdate(id,
-        {profileImg:imgLink.secure_url},
-        {new:true}
+        { profileImg: imgLink.secure_url },
+        { new: true }
 
     )
 
-    
 
-    return res.status(200).json({success:true, imgUploadedLink})
+
+    return res.status(200).json({ success: true, imgUploadedLink })
 }
 
 
-const changeUserName = async(req,res)=>{
+const changeUserName = async (req, res) => {
     const userName = req.body.userName
     const id = req.userId
-    
-    if(!userName){
+
+    if (!userName) {
         console.log(userName)
-        return res.status(400).json({success:false, message:"UserName is missing"})
+        return res.status(400).json({ success: false, message: "UserName is missing" })
     }
 
     const changeName = await userModel.findByIdAndUpdate(id,
-        {name:userName},
-        {new:true})
+        { name: userName },
+        { new: true })
 
     const newUsername = changeName?.name
 
 
-    if(!newUsername){
-        return res.status(400).json({success:false, message:"Something went wrong please try again later"})
+    if (!newUsername) {
+        return res.status(400).json({ success: false, message: "Something went wrong please try again later" })
     }
 
-   
-    return res.status(200).json({success:true, newUsername, changeName})
-    
+
+    return res.status(200).json({ success: true, newUsername, changeName })
+
 }
 
 
-const changeDescription = async(req,res)=>{
+const changeDescription = async (req, res) => {
     const description = req.body.description
     const id = req.userId
-    
-    if(!description){
-        return res.status(400).json({success:false, message:"description is missing"})
+
+    if (!description) {
+        return res.status(400).json({ success: false, message: "description is missing" })
     }
 
     const changeDescription = await userModel.findByIdAndUpdate(id,
-        {description:description},
-        {new:true})
+        { description: description },
+        { new: true })
 
     const newDescription = changeDescription?.description
 
 
-    if(!newDescription){
-        return res.status(400).json({success:false, message:"Something went wrong please try again later"})
+    if (!newDescription) {
+        return res.status(400).json({ success: false, message: "Something went wrong please try again later" })
     }
 
-   
-    return res.status(200).json({success:true, newDescription, changeDescription})
+
+    return res.status(200).json({ success: true, newDescription, changeDescription })
 }
-    
 
 
 
 
-export { userRegistor, userLogin, adminLogin, addFav, removeFav, userProfile, userFav, userProfileImg, changeDescription, changeUserName }
+
+export { userRegistor, userLogin, adminLogin, addFav, removeFav, userProfile, userFav, userProfileImg, changeDescription, changeUserName, googleLogin }

@@ -1,36 +1,36 @@
 import React from 'react'
 
 const PaginationPage = ({page,totalPage,onChange}) => {
-    // if(totalPage <= 1) return null
+ 
 
   const getPagination = () => {
   const pages = [];
-  const siblingCount = 2; // pages left & right of current
+  const siblingCount = 2; 
 
   const left = Math.max(page - siblingCount, 1);
   const right = Math.min(page + siblingCount, totalPage);
 
-  // Always show first page
+  
   if (left > 1) {
     pages.push(1);
   }
 
-  // Left dots
+  
   if (left > 2) {
     pages.push("...");
   }
 
-  // Middle pages
+  
   for (let i = left; i <= right; i++) {
     pages.push(i);
   }
 
-  // Right dots
+  
   if (right < totalPage - 1) {
     pages.push("...");
   }
 
-  // Always show last page
+ 
   if (right < totalPage) {
     pages.push(totalPage);
   }

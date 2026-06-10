@@ -1,1 +1,3 @@
 VITE_BACKEND_URL= "Your Backend URL"
+VITE_Client_ID="Your Google Login Client ID"
+PROJECT_ID="You Google Login Project Id"

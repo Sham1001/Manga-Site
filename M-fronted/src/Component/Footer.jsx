@@ -8,7 +8,7 @@ const Footer = () => {
     <footer
       className="
         w-full
-        mt-20
+        
         border-t
         border-gray-100
         bg-gradient-to-b
@@ -34,7 +34,7 @@ const Footer = () => {
         "
       >
 
-        {/* Brand */}
+      
         <div
           className="
             flex
@@ -72,7 +72,7 @@ const Footer = () => {
 
         </div>
 
-        {/* Footer Links */}
+      
         <div
           className="
             flex
@@ -175,7 +175,7 @@ const Footer = () => {
 
       </div>
 
-      {/* Bottom Line */}
+      
       <div
         className="
           border-t

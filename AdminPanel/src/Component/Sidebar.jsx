@@ -5,7 +5,6 @@ import { NavLink } from "react-router-dom";
 const SideBar = () => {
   return (
     <div className="h-screen w-20 md:w-56 bg-white border-r border-gray-400 flex flex-col py-6">
-      {/* Title (hidden on mobile) */}
       <h2 className="text-xl font-bold text-center mb-8 hidden md:block">
         Admin Panel
       </h2>

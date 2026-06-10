@@ -3,7 +3,6 @@ import MangaContex from './MangaContex.jsx'
 import { MangaCon } from "../Context/MangaContex.jsx";
 import axios from "axios";
 import PaginationPage from './PaginationPage.jsx'
-// import { useParams } from 'react-router-dom';
 
 const SuggestManga = ({ genres, mangaId }) => {
 
@@ -11,9 +10,6 @@ const SuggestManga = ({ genres, mangaId }) => {
     const [totalPage, setTotalPage] = useState(0)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
-    // const [mangaIds, setMangaIds] = useState("")
-    // const {mangaId} = useParams()
-    
 
     const { backendUrl, isFavorite, setClicked } = useContext(MangaCon)
 
@@ -22,21 +18,20 @@ const SuggestManga = ({ genres, mangaId }) => {
         try {
 
             const response = await axios.get(
-                backendUrl + "/api/manga/recommendation",
+                backendUrl + "/api/manga/mangaInfo",
                 {
                     params: {
                         genres: genres.join(","),
                         page,
-                        limit: 5
+                        limit: 6
                     }
                 }
             )
 
             if (response.data.success) {
-                setRecommendations(response.data.recommendations)
+                setRecommendations(response.data.pageInfo)
                 setTotalPage(response.data.totalPages)
                 setTotal(response.data.total)
-
             }
 
         } catch (error) {
@@ -52,11 +47,11 @@ const SuggestManga = ({ genres, mangaId }) => {
 
     }, [genres, page, mangaId])
 
+ 
     return (
 
         <div className="w-full mt-12 px-3 sm:px-5 lg:px-8">
 
-            {/* Heading */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
 
                 <div>
@@ -88,7 +83,7 @@ const SuggestManga = ({ genres, mangaId }) => {
                 </div>
 
                 {
-                    recommendations.length > 0 && (
+                    recommendations?.length > 0 && (
 
                         <span
                             className="
@@ -114,9 +109,8 @@ const SuggestManga = ({ genres, mangaId }) => {
 
             </div>
 
-            {/* Empty State */}
             {
-                recommendations.length === 0 ? (
+                recommendations?.length === 0 ? (
 
                     <div
                         className="
@@ -161,22 +155,21 @@ const SuggestManga = ({ genres, mangaId }) => {
 
                     <div className="space-y-10">
 
-                        {/* Recommendations Grid */}
                         <div
                             className="
                                 grid
                                 grid-cols-2
                                 sm:grid-cols-2
                                 md:grid-cols-3
-                                lg:grid-cols-4
-                                xl:grid-cols-5
+                                lg:grid-cols-5
+                                xl:grid-cols-6
                                 gap-4
                                 sm:gap-6
                             "
                         >
 
                             {
-                                recommendations.map((recommendation) => (
+                                recommendations?.map((recommendation) => (
 
                                     <div
                                         key={recommendation._id}
@@ -203,13 +196,18 @@ const SuggestManga = ({ genres, mangaId }) => {
                                         >
 
                                             <MangaContex
-                                                name={recommendation?.name}
-                                                chapters={recommendation.chapterNo}
-                                                coverImg={recommendation?.coverImg}
-                                                id={recommendation._id}
+                                                name={recommendation?.manga.name}
+                                                // chapters={recommendation.chapterNo}
+                                                 chapter1={recommendation.latestChapters[0].chapterNo}
+                                                 chapter2={recommendation?.latestChapters[1]?.chapterNo}
+                                                coverImg={recommendation?.manga.coverImg}
+                                                id={recommendation.manga._id}
                                                 isFavorite={isFavorite}
                                                 setClicked={setClicked}
                                                 onclick={mangaId = recommendation._id}
+                                                // createdAt={recommendation.createdAt}
+                                                createdAt1={recommendation.latestChapters[0].createdAt}
+                                                createdAt2={recommendation?.latestChapters[1]?.createdAt}
                                             />
 
                                         </div>
@@ -221,7 +219,6 @@ const SuggestManga = ({ genres, mangaId }) => {
 
                         </div>
 
-                        {/* Pagination */}
                         <div
                             className="
                                 w-full

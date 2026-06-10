@@ -9,6 +9,7 @@ import RealEdit from "./Pages/RealEdit.jsx"
 import Login from "./Pages/Login.jsx" 
 import { useEffect } from "react"
 import { ToastContainer } from "react-toastify"
+import ChapterEdit from "./Pages/ChapterEdit.jsx"
 
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
         <Route path="/edit" element={<Edit backendUrl={backendUrl} token={token} />} />
         <Route path="/view" element={<View backendUrl={backendUrl} token={token} />} />
         <Route path="/:mangaId" element={<RealEdit backendUrl={backendUrl} token={token} />} />
+        <Route path="/manga/:mangaId/:chapterId/:chapterNo/chpEdit/:edit" element={<ChapterEdit backendUrl={backendUrl} token={token} />} />
       </Routes>
     </div>
 

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-// import { getDate } from "../";
 import { formatDistanceToNow, differenceInDays, format } from "date-fns"
 
 function ChapterTime({ releaseDate }) {

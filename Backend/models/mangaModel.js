@@ -6,7 +6,7 @@ const mangaSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        lowercase: true
+        // lowercase: true
     },
     authorName: {
 
@@ -16,7 +16,7 @@ const mangaSchema = new mongoose.Schema({
     },
     artistName:{
         type: String,
-        // required: true
+        required: true
     },
     description: {
         type: String,
@@ -48,11 +48,6 @@ const mangaSchema = new mongoose.Schema({
         type: Boolean,
         required: true
     },
-    // status:{
-    //     type: String,
-    //     required: true
-    // },
-
     Recommended: {
         type: Boolean,
         require: true

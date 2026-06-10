@@ -16,7 +16,6 @@ const Login = ({setToken}) => {
         if(response.data.success){
             const token = response.data.token
             setToken(token)
-            // toast.success("Sahi hai")
         }
         else{
             toast.error(response.data.message)

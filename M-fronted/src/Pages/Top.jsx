@@ -4,7 +4,6 @@ import Slider from "react-slick";
 import React from 'react'
 import { useContext } from 'react'
 import {MangaCon} from '../Context/MangaContex.jsx'
-// import {toast} from 'react-toastify'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import MangaContex from '../Component/MangaContex.jsx'
@@ -15,177 +14,73 @@ const Top = () => {
   const [topManga,setTopManga] = useState([])
   const [totalManga, setTotalManga] = useState(0)
   const [totalPage, setTotalPage] = useState(1)
-  // const [num,setNum] = useState(4)
   const [page, setPage] = useState(1)
   const { backendUrl, isFavorite, setClicked } = useContext(MangaCon)
-  // let totalManga
-  // const [page, setPage] = useState(1)
-  // let moreMange = manga.slice()
-
-  // const handleShow=()=>{
-  //   if(num>=manga.length){
-  //     setNum(4)
-  //   }
-  //   else{
-  //     setNum(num+4)
-  //   }
-  // }
-
-//   const gridSettings = {
-//   dots: true,
-//   arrows: true,
-//   infinite: false,
-//   speed: 500,
-//   slidesToShow: 4,
-//   slidesToScroll: 4,
-//   rows: 2,
-//   slidesPerRow: 1,
-
-//   customPaging: (i) => (
-//     <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-300 text-black font-semibold">
-//       {i + 1}
-//     </div>
-//   ),
-
-//   dotsClass: "slick-dots !bottom-[-40px]",
-
-//   responsive: [
-//     {
-//       breakpoint: 768,
-//       settings: {
-//         slidesToShow: 2,
-//         slidesToScroll: 2,
-//         rows: 2,
-//       },
-//     },
-//   ],
-// };
 
   const getPopularManga = async () => {
     try {
       const response = await axios.get(backendUrl + "/api/manga/mangaInfo",
-        { params: { sort: 'Recommended', limit:8, page } })
+        { params: { sort: 'Recommended', limit:12, page } })
       console.log(response.data.total)
       if (response.data.success) {
         const popularManga = response.data.pageInfo
-
         setTotalPage(response.data.totalPages)
         setTotalManga(response.data.total)
         setTopManga(popularManga)
-        
       }
     }
     catch (error) {
       console.log(error, "Error in top manga")
     }
-
-    // setPopular(popularManga)
   }
 
-
-
-
-
-// const getPagination = () => {
-//   const pages = [];
-//   const siblingCount = 2; // pages left & right of current
-
-//   const left = Math.max(page - siblingCount, 1);
-//   const right = Math.min(page + siblingCount, totalPage);
-
-//   // Always show first page
-//   if (left > 1) {
-//     pages.push(1);
-//   }
-
-//   // Left dots
-//   if (left > 2) {
-//     pages.push("...");
-//   }
-
-//   // Middle pages
-//   for (let i = left; i <= right; i++) {
-//     pages.push(i);
-//   }
-
-//   // Right dots
-//   if (right < totalPage - 1) {
-//     pages.push("...");
-//   }
-
-//   // Always show last page
-//   if (right < totalPage) {
-//     pages.push(totalPage);
-//   }
-
-//   return pages;
-// };
-
-
-
-
-
-
+  useEffect(() => {
+    getPopularManga()
+  }, [page])
 
   useEffect(() => {
-      getPopularManga()
-    }, [page])
+    console.log(topManga,'This is total chapterInfo')
+  }, [topManga])
 
-  // useEffect(()=>{
-  //   console.log(topManga.length)
-  // })
   
 
-
-
-  // const fetchMoreManga = async()=>{
-    
-  //   PaginatApi(page)
-  // }
   return (
-  // <div className="px-15 py-20 bg-gray-50 min-h-screen">
     <div
-  className="bg-cover bg-center px-15 py-20 bg-gray-50 min-h-screen "
-  style={{
-    backgroundImage: "url('https://wallpapers.com/images/hd/jujutsu-kaisen-colored-manga-pfp-1oc4oppcu5emx8t1.jpg')",
-  }}
-> 
-    <div className="flex justify-between mr-6">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">
-    Manga Collection
-  </h2>
-  <h2 className="font-bold">
-    Total Manga :- {totalManga}
-  </h2>
-    </div>
-  
-
-    <div className="space-y-6">
-  <div className="w-full grid  grid-cols-1  md:grid-cols-3 lg:grid-cols-4 gap-6" >
-    {/* <Slider {...gridSettings}> */}
-      {topManga.map((item) => (
-        <MangaContex
-          key={item._id}
-          name={item.name}
-          chapters={item.chapters}
-          coverImg={item.coverImg}
-          id={item._id}
-          isFavorite={isFavorite}
-          setClicked={setClicked}
-        />
-      ))}
+      className="bg-cover bg-center px-5 py-20 min-h-screen"
+    > 
+      <div className="flex justify-between mr-6">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          Top Manga
+        </h2>
+        <h2 className="font-bold mt-1 ">
+          Total Manga :- {totalManga}
+        </h2>
       </div>
-   
 
-  
-  <PaginationPage page={page} totalPage={totalPage} onChange={setPage}/>
+      <div className="space-y-6">
+        <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+          {topManga.map((item) => (
+            <div key={item.manga._id} className="min-w-0 w-full">
+              <MangaContex
+                key={item.manga._id}
+                name={item.manga.name}
+                chapter1={item.latestChapters[0].chapterNo}
+                chapter2={item?.latestChapters[1]?.chapterNo}
+                coverImg={item.manga.coverImg}
+                id={item.manga._id}
+                isFavorite={isFavorite}
+                setClicked={setClicked}
+                createdAt1={item.latestChapters[0].createdAt}
+                createdAt2={item?.latestChapters[1]?.createdAt}
+              />
+            </div>
+          ))}
+        </div>
 
-
+        <PaginationPage page={page} totalPage={totalPage} onChange={setPage}/>
+      </div>
     </div>
-  
-</div>
-);
-
+  );
 }
 
 export default Top

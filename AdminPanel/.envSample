@@ -1,2 +1,5 @@
 VITE_FRONTED_URL = "Your Frontend URL"
 VITE_BACKEND_URL= "Your Backend URL"
+CLOUDINARY_KEY="Your Cloudinary Key"
+CLOUDINARY_SECREAT="Your Cloudinary Secreat"
+CLOUDINARY_NAME="Your Cloudinary Name"

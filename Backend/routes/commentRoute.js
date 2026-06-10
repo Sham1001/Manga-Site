@@ -1,6 +1,5 @@
 import {addComment, getComments ,updateComment, deleteComment} from "../controllers/commentController.js"
 import express, { Router } from 'express'
-// import upload from '../middleware/multer.js'
 import userCheck from '../middleware/userAuth.js'
 
 

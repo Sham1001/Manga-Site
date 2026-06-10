@@ -1,7 +1,6 @@
 import { addManga, getMangaInfo, getManga, editManga, deleteManga, savedCount, getCount, getRecommendation} from "../controllers/mangaController.js";
 import userCheck from '../middleware/userAuth.js'
 import express from "express"
-// import adminCheck from '../middleware/adminAuth.js'
 import upload from '../middleware/multer.js'
 
 

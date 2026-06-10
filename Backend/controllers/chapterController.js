@@ -8,8 +8,6 @@ const addChapter = async (req, res) => {
         const { chpName, chapNo, mangaId } = req.body
         const imageArr = req.files
 
-        console.log(mangaId, "This is Id")
-
         if (!chpName.trim()) {
             return res.status(400).json({ success: false, message: "Chap name is missing " })
         }
@@ -35,50 +33,14 @@ const addChapter = async (req, res) => {
            
         )
 
-        // const imgCompression = async (imageArr) => {
-        //     const compressedImg = []
-
-        //     for (const img of imageArr) {
-        //         const newImg = `compressed-${Date.now()}-${img.originalname}`;
-
-        //         await sharp(img.path)
-        //             .resize({ width: 800 })
-        //             .jpeg({ quality: 60 })
-        //             .toFile(newImg);
-
-        //         compressedImg.push(newImg)
-        //     }
-
-        //     return compressedImg
-        // }
-
-       
-        // const con = imgCompression(imageArr)
-
-        //     const upload = await Promise.all(
-        //         con.map((imgPath) =>{
-        //         const result = cloudinary.uploader.upload(imgPath,{folder:'chapter',resource_type: "image"})
-        //         return result.secure_url
-        //         }
-        //         )
-        //     )
-
-
-            // return await Promise.all(uploads);
         
-
-
-        // const com = imgCompression()
-
-        // const upload = uploadImages(com)
-
+       
 
 
 
         const chapter = new chapterModel({
             name: chpName,
             chapterNo: chapNo,
-            // chapterPage: upload,
             chapterPage: chapUrl,
             managaId: mangaId
 
@@ -109,8 +71,7 @@ const addChapter = async (req, res) => {
 
 const getChapter = async (req, res) => {
 
-    // ${mangaId}/${chpNo}
-    // const {MangaChpId, chpNo} = req.query
+   
 
     const { mangaId, chpNo } = req.params
 
@@ -151,4 +112,95 @@ const totalChapter = async (req, res) => {
     }
 }
 
-export { addChapter, getChapter, totalChapter }
+const updateChapter = async (req, res) => {
+    try {
+        const { chapterId } = req.params
+
+        const existingChapter = await chapterModel.findById(chapterId)
+        if (!existingChapter) {
+            return res.json({ success: false, message: "Chapter not found" })
+        }
+
+        const { chapterName, chapterNo, pageMeta } = req.body
+
+        
+        const parsedMeta = JSON.parse(pageMeta)
+
+    
+        const uploadedFiles = req.files || []
+        let fileIndex = 0
+
+        
+        const finalPages = []
+
+        for (const meta of parsedMeta) {
+            if (meta.isNew) {
+                const file = uploadedFiles[fileIndex]
+                fileIndex++
+
+                if (!file) {
+                    return res.json({ success: false, message: `Missing file for page ${meta.index}` })
+                }
+
+                // Upload buffer to cloudinary
+                const uploaded = await new Promise((resolve, reject) => {
+                    const stream = cloudinary.uploader.upload_stream(
+                        { folder: "manga_pages" },
+                        (error, result) => {
+                            if (error) reject(error)
+                            else resolve(result)
+                        }
+                    )
+                    stream.end(file.buffer)
+                })
+
+                finalPages.push(uploaded.secure_url)
+
+            } else {
+                finalPages.push(meta.existingUrl)
+            }
+        }
+
+        const updateFields = {
+            chapterPage: finalPages
+        }
+
+        if (chapterName !== undefined) updateFields.name = chapterName
+        if (chapterNo !== undefined) updateFields.chapterNo = Number(chapterNo)
+
+        const updatedChapter = await chapterModel.findByIdAndUpdate(
+            chapterId,
+            updateFields,
+            { new: true }
+        )
+
+        return res.json({
+            success: true,
+            message: "Chapter updated successfully",
+            chapter: updatedChapter
+        })
+
+    } catch (error) {
+        console.log(error)
+        return res.json({ success: false, message: error.message })
+    }
+}
+
+const chpDelete = async(req,res)=>{
+    try{
+        console.log(req.params.chpId,"Here the id")
+        const {chpId} = req.params
+    if(!chpId){
+        return res.status(400).json({ success: false, message:"Chp is missing" })
+    }
+
+    await chapterModel.findByIdAndDelete(chpId)
+
+    return res.status(200).json({ success: true, message:"Chp deleted successfully" })
+    }
+    catch(error){
+        return res.status(500).json({ success: false, message:error.message })
+    }
+}
+
+export { addChapter, getChapter, totalChapter, updateChapter, chpDelete }

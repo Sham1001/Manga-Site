@@ -14,69 +14,20 @@ const View = ({backendUrl}) => {
   const [page, setPage] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
 
-
-
-
-
-  // const handleSubmit = async(e) => {
-  //   e.preventDefault();
-
-  //   const formData = new FormData();
-  //   formData.append("chpName", chpName);
-  //   formData.append("chapNo", chapNo);
-  //   formData.append("mangaId",mangaId)
-  //   imageArr && imageArr.forEach((img) => formData.append("imageArr", img));
-
-  //   try{
-  //       const response = await axios.post(backendUrl+"/api/chapter/add",formData)
-  //       if(response.data.success){
-  //         setMangaId('')
-  //         setChapNo('')
-  //         setChpName('')
-  //         setImageArr([])
-  //         toast.success("Chapter added")
-  //       }
-        
-  //   }
-  //   catch(error){
-  //     console.log(error)
-  //     toast.error(error)
-  //   }
-  // };
-
-
-
-
   const searchManga = async() => {
-    // e.preventDefault();
-
-    
-
     try{
         const response = await axios.get(backendUrl+"/api/manga/mangaInfo",{
-          params:{search:search, limit:4, page:page}
+          params:{search:search, limit:5, page:page, admin:"admin"}
         })
         if(response.data.success){
-          
-          
           setMangaInfo(response?.data?.pageInfo)
           setTotalPage(response?.data?.totalPages)
-          // setSearch("")
-          
         }
-        
     }
     catch(error){
       console.log(error)
-   
     }
   };
-
-
-  // const editManga = ()=>{
-  //   setMangaId(item._id)
-  // }
-
 
   useEffect(()=>{
     searchManga()
@@ -85,7 +36,6 @@ const View = ({backendUrl}) => {
  return (
   <div className='flex flex-col items-center w-full px-6 py-8'>
 
-      {/* Search */}
       <div className="flex items-center justify-between w-full max-w-lg bg-white border rounded-xl shadow-sm px-4 py-2 mb-8">
           
           <div className="flex items-center gap-2 flex-1">
@@ -103,8 +53,7 @@ const View = ({backendUrl}) => {
           </button>
       </div>
 
-      {/* Manga Grid */}
-      <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4  gap-6 w-full justify-center max-w-7xl mr-10'>
+      <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 w-full justify-center max-w-7xl mr-10'>
           {
             mangaInfo.map((item,index)=>(
               <Link to={`/${item._id}`} className='' key={index}>
@@ -112,13 +61,14 @@ const View = ({backendUrl}) => {
                     name={item.name} 
                     coverImg={item.coverImg} 
                     id={item.id}
+                    chapters={item.latestChapterNo} 
+                    dates={item.latestChapterDate}
                   />
               </Link>
             ))
           }
       </div>
 
-      {/* Pagination */}
       <div className='mt-10'>
           <PaginationPage page={page} onChange={setPage} totalPage={totalPage}/>
       </div>

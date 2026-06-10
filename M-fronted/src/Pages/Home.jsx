@@ -1,327 +1,247 @@
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import React from 'react'
-import { useState, useEffect } from 'react'
-import { useContext } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import { MangaCon } from '../Context/MangaContex.jsx'
 import MangaContex from '../Component/MangaContex.jsx'
-import Slider from "react-slick";
-import { NavLink, Link } from 'react-router-dom'
-import { assets } from "../assets/fronted/assets.js";
-import { Backend } from "firebase/ai";
-import axios from "axios";
-// import {} from '../assets/fronted/asset.js'
+import { Link } from 'react-router-dom'
+import { assets } from "../assets/fronted/assets.js"
+import axios from "axios"
 
 
+const RowSlider = ({ items, isFavorite, setClicked }) => {
+  const trackRef = useRef(null)
+  const animRef = useRef(null)
+  const posRef = useRef(0)
+  const pausedRef = useRef(false)
+  const [clonedItems, setClonedItems] = useState([])
 
+  useEffect(() => {
+    if (!items.length) return
+    const createClonedItems = () => {
+      const clones = []
+      for (let i = 0; i < 4; i++) {
+        clones.push(...items.map((item, idx) => ({ ...item, cloneId: `${item._id}-${i}-${idx}` })))
+      }
+      setClonedItems(clones)
+    }
+    createClonedItems()
+  }, [items])
+
+  useEffect(() => {
+    if (!clonedItems.length) return
+    const track = trackRef.current
+    if (!track) return
+
+    const getItemWidth = () => {
+      const firstItem = track.querySelector('.slider-item')
+      if (firstItem) return firstItem.offsetWidth + 16
+      return 180
+    }
+
+    let itemWidth = getItemWidth()
+    let originalSetWidth = items.length * itemWidth
+
+    const handleResize = () => {
+      itemWidth = getItemWidth()
+      originalSetWidth = items.length * itemWidth
+    }
+
+    window.addEventListener('resize', handleResize)
+
+    const step = () => {
+      if (!pausedRef.current && originalSetWidth > 0) {
+        posRef.current += 0.8
+        if (posRef.current >= originalSetWidth) {
+          posRef.current -= originalSetWidth
+          track.style.transform = `translateX(-${posRef.current}px)`
+        } else {
+          track.style.transform = `translateX(-${posRef.current}px)`
+        }
+      }
+      animRef.current = requestAnimationFrame(step)
+    }
+
+    animRef.current = requestAnimationFrame(step)
+
+    return () => {
+      cancelAnimationFrame(animRef.current)
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [clonedItems, items.length])
+
+  if (!items.length) return null
+
+  return (
+    <div
+      className="overflow-hidden relative"
+      onMouseEnter={() => { pausedRef.current = true }}
+      onMouseLeave={() => { pausedRef.current = false }}
+    >
+      <div ref={trackRef} className="flex gap-4 w-max" style={{ willChange: 'transform' }}>
+        {clonedItems.map((item, index) => (
+          <div key={item.cloneId || `${item?._id}-${index}`} className="w-44 flex-shrink-0 slider-item">
+            <MangaContex
+              setClicked={setClicked}
+              name={item?.manga?.name}
+              coverImg={item?.manga?.coverImg}
+              id={item?.manga?._id}
+              isFavorite={isFavorite}
+              // ✅ Support both flat and nested chapter structures
+              chapter1={item?.latestChapters?.[0]?.chapterNo ?? item?.chapterNo}
+              chapter2={item?.latestChapters?.[1]?.chapterNo ?? item?.chapterNo2}
+              createdAt1={item?.latestChapters?.[0]?.createdAt ?? item?.createdAt}
+              createdAt2={item?.latestChapters?.[1]?.createdAt ?? item?.createdAt2}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 const Home = () => {
-
-  // const settings = {
-  //   dots: true,
-  //   infinite: true,
-  //   speed: 500,
-  //   slidesToShow: 4,
-  //   slidesToScroll: 4,
-  //   customPaging: (i) => (
-  //     <div className="text-black text-sm font-bold">
-  //       {i + 1}   {/* show 1, 2, 3 instead of dots */}
-  //     </div>
-  //   ),
-  //   dotsClass: "slick-dots custom-dots", // custom class for styling
-
-
-
-  // };
-
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 800,
-
-    slidesToShow: 5,
-    slidesToScroll: 1,
-
-    autoplay: true,
-    autoplaySpeed: 3500,
-
-    pauseOnHover: true,
-
-    arrows: false,
-
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
-  };
-
-  //   const settings2 = {
-  //   dots: true,
-  //   infinite: true,
-  //   speed: 500,
-  //   slidesToShow: 4,
-  //   slidesToScroll: 1
-  // };
-
-  // const gridSettings = {
-  //   dots: true,
-  //   arrows: true,
-  //   infinite: true,
-  //   speed: 500,
-  //   slidesToShow: 3,
-  //   slidesToScroll: 4,
-  //   rows: 3,
-  //   slidesPerRow: 1,
-  //   customPaging: (i) => (
-  //     <div className="text-black text-sm font-bold">
-  //       {i + 1}   {/* show 1, 2, 3 instead of dots */}
-  //     </div>
-  //   ),
-  //   dotsClass: "slick-dots custom-dots", // custom class for styling
-  // };
-
-  const gridSettings = {
-    dots: true,
-    arrows: false,
-
-    infinite: true,
-    speed: 800,
-
-    slidesToShow: 3,
-    slidesToScroll: 1,
-
-    rows: 3,
-    slidesPerRow: 1,
-
-    autoplay: true,
-    autoplaySpeed: 4000,
-
-    pauseOnHover: true,
-
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          rows: 2,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-          rows: 2,
-        },
-      },
-    ],
-  };
-
-
-  // const [mangaInfo,setMangaInfo] = useState([])
   const [popular, setPopular] = useState([])
   const [recommended, setRecommended] = useState([])
-  const [latest, setLatest] = useState([])
+  const [latestGrid, setLatestGrid] = useState([])
   const [page, setPage] = useState(1)
+  const [start, setStart] = useState(0)
+  const [end, setEnd] = useState(12)
+  const [totalPage, setTotalPage] = useState(1)
 
-  const { token, PaginatApi, backendUrl, isFavorite, setClicked } = useContext(MangaCon)
-
-
-
-  // useEffect(()=>{
-  //   const info2 = info.slice()
-  //   setMangaInfo(info2)
-  //   console.log(token)
-  //   console.log(manga)
-  // },[])
-
-  // useEffect(()=>{
-  //   const info3 = info.filter((item)=>item.popular).slice(0,10)
-  //   setTopManga(info3)
-  //   const info4 = info.filter((item)=>item.recommended).slice(0,10)
-  //   setRecommended(info4)
-  // },[])
-
-  //   useEffect(()=>{
-  //     console.log("token is ",token)
-
-  //     const load = async()=>{
-  //          const popularManga = await PaginatApi({sort:"popular",page})
-  //         // const latestManga = await PaginatApi({page})
-  //         // const recommended = await PaginatApi({sort:"Recommended"})
-
-  //         setPopular(popularManga)
-  //         // setLatestInfo(latestManga)
-  //         // setRecommended(recommended)
-  //     }
-  //     load()
-  //     console.log(popular,"This")
-  //     // setRecommended(manga.filter(rec=>rec.Recommended === true))
-  //     // setPopular(manga.filter(pop=>pop.popular===true))
-  //   },[])
-  //   useEffect(() => {
-  //   console.log("Popular updated:", popular);
-  // }, [popular]);
-
-
-  // const handleFav = ()=>{
-
-  // }
+  const { backendUrl, isFavorite, setClicked } = useContext(MangaCon)
 
   const getPopularManga = async () => {
     try {
-      const response = await axios.get(backendUrl + "/api/manga/mangaInfo",
-        { params: { sort: 'popular' } })
-      if (response.data.success) {
-        const popularManga = response.data.popularManga
-        setPopular(popularManga)
-      }
-    }
-    catch (error) {
+      const response = await axios.get(backendUrl + "/api/manga/mangaInfo", { params: { sort: 'popular' } })
+      console.log("POPULAR DATA:", response.data) 
+      if (response.data.success) setPopular(response.data.popularManga)
+    } catch (error) {
       console.log(error, "Error in popular manga")
     }
-
-    // setPopular(popularManga)
   }
-
 
   const getLatestManga = async () => {
     try {
-      const response = await axios.get(backendUrl + "/api/manga/mangaInfo",
-        { params: { limit: 24, sort: 'Latest' } })
+      const response = await axios.get(backendUrl + "/api/manga/mangaInfo", {
+        params: {
+          limit: 30,
+          page: page,
+          sort: 'Latest'
+        }
+      })
+      console.log("LATEST DATA:", response.data) 
       if (response.data.success) {
-        const latestManga = response.data.latestChapters
-        setLatest(latestManga)
+        
+        setLatestGrid(response.data.latestChapters)
+        setTotalPage(Math.ceil(response.data.latestChapters?.length / 12))
       }
+    } catch (error) {
+      console.log(error, "Error in latest manga")
     }
-    catch (error) {
-      console.log(error, "Error in popular manga")
-    }
-
-    // setPopular(popularManga)
   }
-
 
   const getRecommendedManga = async () => {
     try {
-      const response = await axios.get(backendUrl + "/api/manga/mangaInfo",
-        { params: { sort: 'Recommended' } })
-      if (response.data.success) {
-        const recommendedManga = response.data.pageInfo
-        setRecommended(recommendedManga)
-
-      }
+      const response = await axios.get(backendUrl + "/api/manga/mangaInfo", { params: { sort: 'Recommended' } })
+      if (response.data.success) setRecommended(response?.data?.pageInfo)
+    } catch (error) {
+      console.log(error, "Error in recommended manga")
     }
-    catch (error) {
-      console.log(error, "Error in popular manga")
-    }
+  }
 
-    // setPopular(popularManga)
+  const handlePrev = () => {
+    setPage(prev => prev - 1)
+    setStart(prev => prev - 12)
+    setEnd(prev => prev - 12)
+  }
+
+  const handleNext = () => {
+    setPage(prev => prev + 1)
+    setStart(prev => prev + 12)
+    setEnd(prev => prev + 12)
   }
 
   useEffect(() => {
     getPopularManga()
-    console.log(localStorage.getItem(token))
-  }, [])
-
-  useEffect(() => {
     getRecommendedManga()
-  }, [])
-
-  useEffect(() => {
     getLatestManga()
   }, [])
 
-  // useEffect(()=>{
-  //   setInterval(()=>{
-  //       console.log(isFavorite,"This is populated data")
-  //   },3000)
-  // },[])
-
   return (
+    <div className="pb-20">
 
-    <>
-      <div className=''>
-        <div>
-          <div className='flex text-center justify-between items-center mt-15 mx-22 '>
-            <Link to={'/top'} className='text-2xl font-bold'>Popular Manga</Link>
-            <div className="">
-              <Link to={'/top'}>
-                <img className="hover:scale-120 transition ease-in-out w-20 h-10" src={assets.arrow} alt="hello" />
-              </Link>
-            </div>
-          </div>
-          <Slider className='flex mx-20 gap-5' {...settings}>
-
-            {
-              popular.map((items, index) => (
-                <MangaContex setClicked={setClicked} key={items?._id} name={items?.manga?.name} chapters={items.chapterNo} coverImg={items?.manga?.coverImg} id={items?.manga?._id} favorite={items.favorites} isFavorite={isFavorite} />
-              ))
-            }
-
-          </Slider>
+      {/* Popular */}
+      <div className="mt-12">
+        <div className="flex justify-between items-center mx-5 mb-4">
+          <Link to="/top" className="text-2xl font-bold">Popular Manga</Link>
+          <Link to="/top">
+            <img className="hover:scale-110 transition ease-in-out w-20 h-10" src={assets.arrow} alt="" />
+          </Link>
         </div>
-
-
-        <div>
-          <div className='flex text-center justify-between items-center mt-20 mx-22'>
-            <Link className='text-2xl font-bold'>Latest Chapters</Link>
-            <img className="hover:scale-120 transition ease-in-out w-20 h-10" src={assets.arrow} alt="hello" />
-          </div>
-          <Slider className='mx-20' {...gridSettings}>
-            {latest.map((items) => (
-              <div className='px-2' key={items._id}>
-                <MangaContex
-                  key={items?._id}
-                  name={items?.manga?.name}
-                  chapters={items.chapterNo}
-                  coverImg={items?.manga?.coverImg}
-                  id={items.manga?._id}
-                  // favorite={items.favorites}
-                  isFavorite={isFavorite}
-                  setClicked={setClicked}
-                />
-              </div>
-            ))}
-          </Slider>
-
-        </div>
-
-        <div>
-          <div className='flex text-center justify-between items-center mt-20 mx-22'>
-            <Link to={'/recommend'} className='text-2xl font-bold'>Recommended Manga</Link>
-            <Link to={'/top'}>
-              <img className="hover:scale-120 transition ease-in-out w-20 h-10" src={assets.arrow} alt="hello" />
-            </Link>
-          </div>
-          <Slider className='flex mb-25  mx-20 gap-5' {...settings}>
-
-            {
-              recommended.map((items, index) => (
-                <MangaContex setClicked={setClicked} key={index} name={items.name} chapters={items.chapters} coverImg={items.coverImg} id={items._id} favorites={items.favorite} isFavorite={isFavorite} />
-              ))
-            }
-
-          </Slider>
-        </div>
-
+        <RowSlider items={popular} isFavorite={isFavorite} setClicked={setClicked} />
       </div>
-    </>
+
+      {/* Latest */}
+      <div className="mt-16 mx-10">
+        <div className="flex justify-between items-center mx-5 mb-4">
+          <span className="text-2xl font-bold">Latest Chapters</span>
+          <Link to={"/latest"}>
+            <img className="hover:scale-110 transition ease-in-out w-20 h-10" src={assets.arrow} alt="" />
+          </Link>
+        </div>
+
+        <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6 mb-6'>
+          {latestGrid.slice(start, end).map((item) => (
+            <div key={item?.manga?._id}>
+              <MangaContex
+                setClicked={setClicked}
+                name={item?.manga?.name}
+                coverImg={item?.manga?.coverImg}
+                id={item?.manga?._id}
+                isFavorite={isFavorite}
+                // ✅ Nested latestChapters array
+                chapter1={item?.latestChapters?.[0]?.chapterNo}
+                chapter2={item?.latestChapters?.[1]?.chapterNo}
+                createdAt1={item?.latestChapters?.[0]?.createdAt}
+                createdAt2={item?.latestChapters?.[1]?.createdAt}
+              />
+            </div>
+          ))}
+        </div>
+
+        <div className='flex flex-1 justify-center items-center gap-6'>
+          <button
+            onClick={handlePrev}
+            disabled={page === 1}
+            className={`px-4 py-2 rounded-xl font-semibold ${
+              page === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-gray-700 text-white hover:bg-gray-800"
+            }`}
+          >
+            Prev
+          </button>
+          <span className="font-medium text-gray-700">{page} / {totalPage}</span>
+          <button
+            onClick={handleNext}
+            disabled={page === totalPage}
+            className={`px-4 py-2 rounded-xl font-semibold ${
+              page === totalPage ? "bg-gray-300 cursor-not-allowed" : "bg-gray-700 text-white hover:bg-gray-800"
+            }`}
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
+      {/* Recommended */}
+      <div className="mt-16">
+        <div className="flex justify-between items-center mx-5 mb-4">
+          <Link to="/recommend" className="text-2xl font-bold">Recommended Manga</Link>
+          <Link to="/top">
+            <img className="hover:scale-110 transition ease-in-out w-20 h-10" src={assets.arrow} alt="" />
+          </Link>
+        </div>
+        <RowSlider items={recommended} isFavorite={isFavorite} setClicked={setClicked} />
+      </div>
+
+    </div>
   )
 }
 

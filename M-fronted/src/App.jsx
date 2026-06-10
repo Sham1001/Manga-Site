@@ -11,7 +11,6 @@ import Chapter from './Pages/Chapter.jsx'
 import Footer from './Component/Footer.jsx'
 import Login from    './Pages/Login.jsx'
 import { ToastContainer } from 'react-toastify'
-// import Layout from './Component/Layout.jsx'
 
 
 
@@ -20,17 +19,10 @@ function App() {
   return (
     <>
     <div className='h-screen '>
-    {/* <div
-  className="h-screen bg-cover bg-center"
-  style={{
-    backgroundImage: "url('https://wallpapers.com/images/hd/minimalist-drawing-anime-zoro-pfp-yghugxvpljyjd2gv.jpg')",
-  }}
-> */}
       <ToastContainer/>
       <NavBar/>
 
       <Routes>
-       {/* <Route path="/" element={<Layout />}></Route>  */}
         <Route path='/' element={<Home/>}/>
         <Route path='/top' element={<Top/>}/>
         <Route path='/latest' element={<Latest/>}/>

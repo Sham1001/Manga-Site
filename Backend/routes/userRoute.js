@@ -1,5 +1,4 @@
-// import mangaModel from '../models/mangaModel.js'
-import {userRegistor,userLogin,adminLogin,addFav,removeFav,userProfile,userFav, userProfileImg, changeDescription, changeUserName} from '../controllers/userController.js'
+import {userRegistor,userLogin,adminLogin,addFav,removeFav,userProfile,userFav, userProfileImg, changeDescription, changeUserName, googleLogin} from '../controllers/userController.js'
 import userCheck from '../middleware/userAuth.js'
 import express from "express"
 import upload from '../middleware/multer.js'
@@ -16,5 +15,6 @@ userRoute.get('/userFav',userCheck,userFav)
 userRoute.post('/profileImg',userCheck,upload.single('userImg'), userProfileImg)
 userRoute.patch('/changeUsername', userCheck, changeUserName )
 userRoute.patch('/changeDescription', userCheck, changeDescription)
+userRoute.post('/googleLogin', googleLogin)
 
 export default userRoute

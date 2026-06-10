@@ -1,27 +1,47 @@
-import React from 'react';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth } from '../firebase'; // This import will now work!
-// import { Navigate } from 'react-router-dom';
-// import navigate 
+import React, { useContext } from "react";
+import axios from "axios";
 
-const SignInButton = () => {
-  const signInWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
+import { GoogleLogin } from "@react-oauth/google";
+
+import { MangaCon } from "../Context/MangaContex.jsx";
+
+const GoogleLoginComponent = () => {
+
+  const { backendUrl, setToken } = useContext(MangaCon);
+
+  const responseGoogle = async (credentialResponse) => {
+
     try {
-      await signInWithPopup(auth, provider);
-      
 
-      console.log("Signed in with Google!");
-      // Handle successful sign-in (e.g., redirect user)
+      console.log(credentialResponse);
+
+      const response = await axios.post(
+        backendUrl + '/api/user/googleLogin',
+        {
+          token: credentialResponse.credential,
+        }
+      );
+      if(response.data.success){
+        setToken(response.data.token)
+        localStorage.setItem("token", response.data.token)
+        console.log(response)
+      }
+
+      console.log(response.data);
+
     } catch (error) {
-      console.error("Error signing in with Google", error);
-      // Handle errors here
+
+      console.log(error);
+
     }
   };
 
   return (
-    <button onClick={signInWithGoogle}>Sign in with Google</button>
+    <GoogleLogin
+      onSuccess={responseGoogle}
+      onError={() => console.log("Login Failed")}
+    />
   );
 };
 
-export default SignInButton;
+export default GoogleLoginComponent;
