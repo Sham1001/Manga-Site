@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "@splinetool/react-spline": "^4.1.0",
-    "firebase": "^12.3.0"
-  }
-}
