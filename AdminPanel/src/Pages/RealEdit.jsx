@@ -85,7 +85,7 @@ const RealEdit = ({ backendUrl }) => {
         return toast.error("Genres can't be empty")
       }
       if (subGenres.length > 0) {
-        subGenres.forEach(sg => formData.append('subGenres', sg))
+        subGenres.forEach(subGenres => formData.append('subGenres', subGenres))
       }
       if (status) {
         formData.append("ongoing", status)
