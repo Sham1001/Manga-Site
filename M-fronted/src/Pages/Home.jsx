@@ -180,7 +180,7 @@ const Home = () => {
       </div>
 
       {/* Latest */}
-      <div className="mt-16 mx-10">
+      <div className="mt-16 mx-6">
         <div className="flex justify-between items-center mx-5 mb-4">
           <span className="text-2xl font-bold">Latest Chapters</span>
           <Link to={"/latest"}>
