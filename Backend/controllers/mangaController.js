@@ -495,6 +495,7 @@ const editManga = async (req, res) => {
             "authorName",
             "ongoing",
             "genres",
+            "subGenres",
             "type",
             "description",
             "mangaId",
