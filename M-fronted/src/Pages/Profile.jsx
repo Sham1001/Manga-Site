@@ -170,7 +170,7 @@ const Profile = () => {
               />
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <label htmlFor="Username" className="w-28 text-sm font-medium text-gray-700">
+                  <label htmlFor="Username" className="w-18 text-sm font-medium text-gray-700">
                     Username
                   </label>
                   <input
@@ -187,7 +187,7 @@ const Profile = () => {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <label htmlFor="Description" className="w-28 text-sm font-medium text-gray-700">
+                  <label htmlFor="Description" className="w-18 text-sm font-medium text-gray-700">
                     Description
                   </label>
                   <input
