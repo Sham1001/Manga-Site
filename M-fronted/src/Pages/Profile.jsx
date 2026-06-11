@@ -169,39 +169,63 @@ const Profile = () => {
                 onChange={(e) => setUploadImg(e.target.files[0])}
               />
               <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <label htmlFor="Username" className="w-18 text-sm font-medium text-gray-700">
-                    Username
-                  </label>
-                  <input
-                    onChange={(e) => setusername(e.target.value)}
-                    id="Username"
-                    value={username}
-                    type="text"
-                    placeholder="Enter username"
-                    className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                  <button onClick={changeUsername} className={`cursor-not-allowed text-white px-4 py-2 rounded-md ${username === "" ? "bg-gray-400" : "cursor-pointer bg-blue-500 hover:bg-blue-600 transition"}`}>
-                    upload
-                  </button>
-                </div>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+  <label
+    htmlFor="Username"
+    className="sm:w-20 text-sm font-medium text-gray-700"
+  >
+    Username
+  </label>
 
-                <div className="flex items-center gap-3">
-                  <label htmlFor="Description" className="w-18 text-sm font-medium text-gray-700">
-                    Description
-                  </label>
-                  <input
-                    onChange={(e) => setDescription(e.target.value)}
-                    id="Description"
-                    value={deescription}
-                    type="text"
-                    placeholder="Enter description"
-                    className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                  <button onClick={changeDescription} className={`cursor-not-allowed text-white px-4 py-2 rounded-md ${deescription === "" ? "bg-gray-400" : "cursor-pointer bg-blue-500 hover:bg-blue-600 transition"}`}>
-                    upload
-                  </button>
-                </div>
+  <input
+    onChange={(e) => setusername(e.target.value)}
+    id="Username"
+    value={username}
+    type="text"
+    placeholder="Enter username"
+    className="flex-1 w-full border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
+  />
+
+  <button
+    onClick={changeUsername}
+    className={`text-white px-4 py-2 rounded-md ${
+      username === ""
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-blue-500 hover:bg-blue-600"
+    }`}
+  >
+    Upload
+  </button>
+</div>
+
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+  <label
+    htmlFor="Description"
+    className="sm:w-20 text-sm font-medium text-gray-700"
+  >
+    Description
+  </label>
+
+  <input
+    onChange={(e) => setDescription(e.target.value)}
+    id="Description"
+    value={deescription}
+    type="text"
+    placeholder="Enter description"
+    className="flex-1 w-full border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
+  />
+
+  <button
+    onClick={changeDescription}
+    className={`text-white px-4 py-2 rounded-md ${
+      deescription === ""
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-blue-500 hover:bg-blue-600"
+    }`}
+  >
+    Upload
+  </button>
+</div>
               </div>
             </div>
             :
