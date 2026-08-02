@@ -109,7 +109,7 @@ const Chapter = () => {
 }, [chapterNo])
 
   return (
-    <div className="max-w-5xl mt-10 mx-auto p-4">
+    <div className="mt-10">
       {
         chapterType === "Page"
           ?
@@ -293,7 +293,7 @@ const Chapter = () => {
             </div>
           </div>
           :
-          <div className='max-w-5xl mx-auto px-4'>
+          <div className='md:max-w-5xl md:mx-auto md:px-4'>
             <div className="text-center mt-10 mb-6">
               <p onClick={() => navigate(`/manga/${mangaId}`)} className='text-4xl mb-4 font-semibold cursor-pointer'>{chapter?.managaId?.name}</p>
               <h1 className="text-2xl font-bold mb-3">Chapter {currentChapterNo}</h1>

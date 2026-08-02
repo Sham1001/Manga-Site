@@ -21,7 +21,7 @@ const SuggestManga = ({ genres, mangaId }) => {
                 backendUrl + "/api/manga/mangaInfo",
                 {
                     params: {
-                        genres: genres.join(","),
+                        category: genres.join(","),
                         page,
                         limit: 6
                     }

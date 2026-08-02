@@ -180,8 +180,8 @@ const Home = () => {
       </div>
 
       {/* Latest */}
-      <div className="mt-16 mx-10">
-        <div className="flex justify-between items-center mx-5 mb-4">
+      <div className="mt-16 mx-6">
+        <div className="flex justify-between items-center ml-1 mb-4">
           <span className="text-2xl font-bold">Latest Chapters</span>
           <Link to={"/latest"}>
             <img className="hover:scale-110 transition ease-in-out w-20 h-10" src={assets.arrow} alt="" />

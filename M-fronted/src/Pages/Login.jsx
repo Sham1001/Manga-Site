@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { MangaCon } from "../Context/MangaContex.jsx"
 import axios from "axios"
 import { toast } from "react-toastify"
-import GoogleLoginComponent from '../Component/googleLogin.jsx'
+import GoogleLoginComponent from '../Component/GoogleLogin.jsx'
 
 const Login = () => {
 
