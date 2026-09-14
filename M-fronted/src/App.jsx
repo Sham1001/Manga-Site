@@ -22,7 +22,7 @@ function App() {
       <ToastContainer/>
       <NavBar/>
 
-      <Routes>
+      <Routes> 
         <Route path='/' element={<Home/>}/>
         <Route path='/top' element={<Top/>}/>
         <Route path='/latest' element={<Latest/>}/>

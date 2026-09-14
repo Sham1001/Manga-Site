@@ -2,12 +2,17 @@ import { useState, useContext } from "react";
 import { assets } from "../assets/fronted/assets.js";
 import {
   format,
+  differenceInSeconds,
+  differenceInMinutes,
+  differenceInHours,
   differenceInDays,
-  formatDistanceToNow,
+  differenceInWeeks,
 } from "date-fns";
 import axios from "axios";
 import { MangaCon } from "../Context/MangaContex.jsx";
 import { toast } from "react-toastify";
+
+const pluralize = (value, unit) => `${value} ${unit}${value !== 1 ? "s" : ""} ago`;
 
 function Comment({ comment, depth = 0, mangaId, setRefreshComments }) {
   const [showReply, setShowReply] = useState(false);
@@ -20,12 +25,23 @@ function Comment({ comment, depth = 0, mangaId, setRefreshComments }) {
   const { backendUrl, token } = useContext(MangaCon);
 
   const getDate = (releaseDate) => {
+    if (!releaseDate) return "";
     const release = new Date(releaseDate);
-    const inDays = differenceInDays(new Date(), release);
-    const getDateDiff = formatDistanceToNow(release, {
-      addSuffix: true,
-    });
-    return inDays > 7 ? format(release, "d MMM yyyy") : getDateDiff;
+    const now = new Date();
+
+    const seconds = differenceInSeconds(now, release);
+    const minutes = differenceInMinutes(now, release);
+    const hours = differenceInHours(now, release);
+    const days = differenceInDays(now, release);
+    const weeks = differenceInWeeks(now, release);
+
+    if (seconds < 60) return pluralize(seconds, "sec");
+    if (minutes < 60) return pluralize(minutes, "min");
+    if (hours < 24) return pluralize(hours, "hour");
+    if (days < 7) return pluralize(days, "day");
+    if (weeks < 4) return pluralize(weeks, "week");
+
+    return format(release, "d MMM yyyy");
   };
 
   const handleReplyClick = () => {
@@ -131,7 +147,7 @@ function Comment({ comment, depth = 0, mangaId, setRefreshComments }) {
     <div className="mt-4">
       <div className="flex gap-2 sm:gap-3">
         <div className="flex-shrink-0">
-          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gray-400 flex items-center justify-center text-white font-semibold overflow-hidden flex-shrink-0">
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#241834] border border-[#3d2456] flex items-center justify-center text-white font-semibold overflow-hidden flex-shrink-0">
             <img
               className="w-full h-full object-cover"
               src={
@@ -145,13 +161,13 @@ function Comment({ comment, depth = 0, mangaId, setRefreshComments }) {
         </div>
 
         <div className="flex-1 min-w-0">
-          <div className="bg-white border border-gray-300 rounded-xl p-3 sm:p-4 shadow-sm">
+          <div className="bg-[#1a0f26] border border-[#3d2456] rounded-xl p-3 sm:p-4">
             <div className="flex flex-wrap items-center gap-2 mb-2">
-              <h4 className="font-semibold text-sm text-black break-words">
+              <h4 className="font-semibold text-sm text-white break-words">
                 {comment.user.name}
               </h4>
 
-              <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
+              <div className="flex items-center gap-2 text-xs text-[#6b5a80] flex-wrap">
                 <span>{getDate(comment.createdAt)}</span>
                 {comment.isEdited && (
                   <span className="italic">(edited)</span>
@@ -159,19 +175,19 @@ function Comment({ comment, depth = 0, mangaId, setRefreshComments }) {
               </div>
             </div>
 
-            <div className="text-sm text-black leading-relaxed break-words">
+            <div className="text-sm text-[#c9bcdb] leading-relaxed break-words">
               {isEditingCommentId === comment._id ? (
                 <div className="flex flex-col gap-2">
                   <textarea
                     value={updatedText}
                     onChange={(e) => setUpdatedText(e.target.value)}
-                    className="border border-gray-300 rounded-lg p-2 outline-none resize-none w-full"
+                    className="bg-[#0f0a14] border border-[#3d2456] rounded-lg p-2 outline-none focus:ring-1 focus:ring-[#8b3fd6] resize-none w-full text-[#e6d9f7]"
                     rows={3}
                   />
                   <div className="flex flex-wrap gap-2">
                     <button
                       onClick={handleCommentEdit}
-                      className="bg-black text-white px-3 py-1 rounded-lg text-xs"
+                      className="bg-[#8b3fd6] text-white px-3 py-1.5 rounded-lg text-xs font-semibold active:bg-[#7a3fd6] sm:hover:bg-[#7a3fd6] transition-colors"
                     >
                       Save
                     </button>
@@ -180,7 +196,7 @@ function Comment({ comment, depth = 0, mangaId, setRefreshComments }) {
                         setIsEditingCommentId(null);
                         setUpdatedText("");
                       }}
-                      className="border border-gray-300 px-3 py-1 rounded-lg text-xs"
+                      className="border border-[#3d2456] text-[#c9bcdb] px-3 py-1.5 rounded-lg text-xs font-semibold active:bg-[#241834] sm:hover:bg-[#241834] transition-colors"
                     >
                       Cancel
                     </button>
@@ -191,13 +207,13 @@ function Comment({ comment, depth = 0, mangaId, setRefreshComments }) {
               )}
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 mt-3">
-              <button className="text-xs text-gray-500 hover:text-black transition">
+            <div className="flex flex-wrap items-center gap-4 mt-3">
+              <button className="text-xs font-medium text-[#8a7a9c] active:text-white sm:hover:text-white transition-colors">
                 Like
               </button>
               <button
                 onClick={handleReplyClick}
-                className="text-xs text-gray-500 hover:text-black transition"
+                className="text-xs font-medium text-[#8a7a9c] active:text-white sm:hover:text-white transition-colors"
               >
                 Reply
               </button>
@@ -206,13 +222,13 @@ function Comment({ comment, depth = 0, mangaId, setRefreshComments }) {
                   setIsEditingCommentId(comment._id);
                   setUpdatedText(comment.text);
                 }}
-                className="text-xs text-gray-500 hover:text-black transition"
+                className="text-xs font-medium text-[#8a7a9c] active:text-white sm:hover:text-white transition-colors"
               >
                 Edit
               </button>
               <button
                 onClick={handleDeleteComment}
-                className="text-xs text-red-400 hover:text-red-600 transition"
+                className="text-xs font-medium text-[#e0708a] active:text-[#ff8fa8] sm:hover:text-[#ff8fa8] transition-colors"
               >
                 Delete
               </button>
@@ -225,11 +241,11 @@ function Comment({ comment, depth = 0, mangaId, setRefreshComments }) {
                   value={replytText}
                   onChange={(e) => setReplyText(e.target.value)}
                   placeholder="Write a reply..."
-                  className="w-full border border-gray-300 rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-gray-300 resize-none"
+                  className="w-full bg-[#0f0a14] border border-[#3d2456] rounded-lg p-2.5 text-sm text-[#e6d9f7] placeholder-[#6b5a80] outline-none focus:ring-1 focus:ring-[#8b3fd6] resize-none"
                 />
                 <button
                   onClick={handleReply}
-                  className="mt-2 bg-black text-white px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm"
+                  className="mt-2 bg-[#8b3fd6] text-white px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold active:bg-[#7a3fd6] sm:hover:bg-[#7a3fd6] transition-colors"
                 >
                   Post Reply
                 </button>
@@ -238,7 +254,7 @@ function Comment({ comment, depth = 0, mangaId, setRefreshComments }) {
           </div>
 
           {comment.replies.length > 0 && (
-            <div className="mt-3 pl-3 border-l border-gray-300">
+            <div className="mt-3 pl-3 border-l border-[#3d2456]">
               {visibleReplies.map((reply) => (
                 <Comment
                   key={reply._id}
@@ -251,7 +267,7 @@ function Comment({ comment, depth = 0, mangaId, setRefreshComments }) {
               {comment.replies.length > 1 && (
                 <button
                   onClick={() => setShowAllReplies(!showAllReplies)}
-                  className="text-xs sm:text-sm text-gray-500 hover:text-black mt-3"
+                  className="text-xs sm:text-sm font-medium text-[#b98bff] active:text-white sm:hover:text-white transition-colors mt-3"
                 >
                   {showAllReplies
                     ? "Show less replies"
