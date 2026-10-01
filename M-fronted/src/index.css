@@ -120,3 +120,26 @@
 .slick-slide {
   padding: 0 10px;
 }
+
+
+
+/* Add this to src/index.css (or wherever your global styles live).
+   This is the rule that was missing — the spoiler class was being
+   applied correctly in JS, but nothing defined what it should look like. */
+
+.comment-body .spoiler {
+  background: linear-gradient(180deg, #9a9aa5, #7a7a85);
+  color: transparent;
+  border-radius: 3px;
+  padding: 0 4px;
+  cursor: pointer;
+  text-decoration: none;
+  user-select: none;
+}
+
+.comment-body .spoiler.revealed {
+  background: none;
+  color: #e6d9f7;
+  cursor: text;
+  user-select: text;
+}

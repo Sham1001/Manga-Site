@@ -1,346 +1,3 @@
-// import "slick-carousel/slick/slick.css"; 
-// import "slick-carousel/slick/slick-theme.css";
-// import { useContext, useEffect, useState } from "react";
-// import MangaContex from "../Component/MangaContex.jsx";
-// import { MangaCon } from "../Context/MangaContex.jsx";
-// import Slider from "react-slick";
-// import { Link } from "react-router-dom";
-// import SearchBar from "../Component/SearchBar.jsx";
-// import axios from "axios";
-// import PaginationPage from '../Component/PaginationPage.jsx'
-
-// const Search = () => {
-//   const [sort, setSort] = useState("Relavent");
-//   const [category, setCategory] = useState([]);
-//   const [subCategory, setSubCategory] = useState([]);
-//   const [totalManga, setTotalManga] = useState(0)
-//   const [totalPage, setTotalPage] = useState(1)
-//   const [allManga, setAllManga] = useState([])
-//   const [page, setPage] = useState(1)
-
-//   const { backendUrl, isSearch, setClicked, isFavorite } = useContext(MangaCon);
-
-//   const getLatestManga = async () => {
-//     try {
-//       const response = await axios.get(backendUrl + "/api/manga/mangaInfo",
-//         { params: { limit:12, page, search : isSearch, sort, category: category.join(","), subCategory: subCategory.join(",") } })
-//       if (response.data.success) {
-//         const latestManga = response.data.pageInfo
-//         setTotalPage(response.data.totalPages)
-//         setTotalManga(response.data.total)
-//         setAllManga(latestManga)
-//       }
-//     }
-//     catch (error) {
-//       console.log(error, "Error in latest manga")
-//     }
-//   }
-
-//   useEffect(() => {
-//     getLatestManga()
-//   }, [page, isSearch, sort, category, subCategory])
-    
-//   useEffect(()=>{
-//     console.log(category)
-//   },[category])
-
-//   const toggleCategory = (e) => {
-//     if (category.includes(e.target.value)) {
-//       setCategory((prev) => prev.filter((items) => items !== e.target.value));
-//     } else {
-//       setCategory((prev) => [...prev, e.target.value]);
-//     }
-//   };
-
-//   const togglesubCategory = (e) => {
-//     if (subCategory.includes(e.target.value)) {
-//       setSubCategory((prev) => prev.filter((items) => items !== e.target.value));
-//     } else {
-//       setSubCategory((prev) => [...prev, e.target.value]);
-//     }
-//   };
-
-//   return (
-//     <div className="flex flex-col lg:flex-row mt-15 gap-8 px-6 py-8">
-//       <div className="w-full lg:w-1/4 space-y-6">
-//         <SearchBar />
-
-//         <div className="border p-5 rounded-2xl shadow-sm bg-white">
-//           <p className="pb-3 text-base font-semibold text-gray-800">Category</p>
-//           <div className="space-y-2 text-sm">
-//             {["Action", "Sci-Fi", "Romance", "Isekai", "Adventure", "Slice of Life", "Comedy", "Sports", "Tragedy"].map((cat) => (
-//               <label key={cat} className="flex items-center gap-2 text-gray-600">
-//                 <input
-//                   onClick={toggleCategory}
-//                   type="checkbox"
-//                   value={cat}
-//                   className="accent-indigo-500"
-//                 />
-//                 {cat}
-//               </label>
-//             ))}
-//           </div>
-//         </div>
-
-//         <div className="border p-5 rounded-2xl shadow-sm bg-white">
-//           <p className="pb-3 text-base font-semibold text-gray-800">Sub-Category</p>
-//           <div className="space-y-2 text-sm">
-//             {["Alien", "Girl", "Monster"].map((sub) => (
-//               <label key={sub} className="flex items-center gap-2 text-gray-600">
-//                 <input
-//                  onClick={togglesubCategory}
-//                   type="checkbox"
-//                   value={sub}
-//                   className="accent-indigo-500"
-//                 />
-//                 {sub}
-//               </label>
-//             ))}
-//           </div>
-//         </div>
-
-//         <select
-//           onChange={(e) => setSort(e.target.value)}
-//           className="w-full border text-sm text-gray-700 rounded-2xl px-3 py-2 shadow-sm focus:ring-2 focus:ring-indigo-400"
-//         >
-//           <option value="Relevant">Sort by: Latest</option>
-//           <option value="A-Z">Sort by: Title (A → Z)</option>
-//           <option value="Z-A">Sort by: Title (Z → A)</option>
-//           <option value="Oldest">Sort by: Oldest</option>
-//         </select>
-//       </div>
-
-//       <div className="w-full lg:w-3/4">
-//         <div className="flex items-center justify-between mb-6">
-//           <Link className="text-2xl font-bold text-indigo-700">Search Manga</Link>
-//         </div>
-
-//         <div className="space-y-6">
-//           <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-//             {allManga?.length > 0 ? allManga.map((item) => (
-//               <div key={item.manga._id} className="min-w-0 w-full">
-//                 <MangaContex
-//                   key={item.manga._id}
-//                   name={item.manga.name}
-//                   // chapters={item.chapterNo}
-//                   chapter1={item.latestChapters[0].chapterNo}
-//                   chapter2={item?.latestChapters[1]?.chapterNo}
-//                   coverImg={item.manga.coverImg}
-//                   id={item.manga._id}
-//                   // createdAt={item.createdAt}
-//                   createdAt1={item.latestChapters[0].createdAt}
-//                   createdAt2={item?.latestChapters[1]?.createdAt}
-//                   isFavorite={isFavorite}
-//                   setClicked={setClicked}
-//                 />
-//               </div>
-//             )) : (
-//               <div className="col-span-full flex justify-center items-center py-20">
-//                 <div className="bg-zinc-900 border border-zinc-700 px-8 py-6 rounded-2xl shadow-xl text-center">
-//                   <h2 className="text-2xl font-bold text-white mb-2">
-//                     No Manga Found
-//                   </h2>
-//                   <p className="text-zinc-400 text-sm">
-//                     No manga with that genre is available.
-//                   </p>
-//                 </div>
-//               </div>
-//             )}
-//           </div>
-
-//           <PaginationPage page={page} totalPage={totalPage} onChange={setPage}/>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Search;
-
-
-
-
-
-
-//Simple One
-
-// import "slick-carousel/slick/slick.css"; 
-// import "slick-carousel/slick/slick-theme.css";
-// import { useContext, useEffect, useState } from "react";
-// import MangaContex from "../Component/MangaContex.jsx";
-// import { MangaCon } from "../Context/MangaContex.jsx";
-// import { Link } from "react-router-dom";
-// import SearchBar from "../Component/SearchBar.jsx";
-// import axios from "axios";
-// import PaginationPage from '../Component/PaginationPage.jsx'
-
-// const Search = () => {
-//   const [sort, setSort] = useState("Relavent");
-//   const [category, setCategory] = useState([]);
-//   const [subCategory, setSubCategory] = useState([]);
-//   const [totalManga, setTotalManga] = useState(0)
-//   const [totalPage, setTotalPage] = useState(1)
-//   const [allManga, setAllManga] = useState([])
-//   const [page, setPage] = useState(1)
-
-//   const { backendUrl, isSearch, setClicked, isFavorite } = useContext(MangaCon);
-
-//   const getLatestManga = async () => {
-//     try {
-//       const response = await axios.get(backendUrl + "/api/manga/mangaInfo",
-//         { params: { limit:12, page, search : isSearch, sort, category: category.join(","), subCategory: subCategory.join(",") } })
-//       if (response.data.success) {
-//         const latestManga = response.data.pageInfo
-//         setTotalPage(response.data.totalPages)
-//         setTotalManga(response.data.total)
-//         setAllManga(latestManga)
-//       }
-//     }
-//     catch (error) {
-//       console.log(error, "Error in latest manga")
-//     }
-//   }
-
-//   useEffect(() => {
-//     getLatestManga()
-//   }, [page, isSearch, sort, category, subCategory])
-    
-//   useEffect(()=>{
-//     console.log(category)
-//   },[category])
-
-//   const toggleCategory = (e) => {
-//     if (category.includes(e.target.value)) {
-//       setCategory((prev) => prev.filter((items) => items !== e.target.value));
-//     } else {
-//       setCategory((prev) => [...prev, e.target.value]);
-//     }
-//   };
-
-//   const togglesubCategory = (e) => {
-//     if (subCategory.includes(e.target.value)) {
-//       setSubCategory((prev) => prev.filter((items) => items !== e.target.value));
-//     } else {
-//       setSubCategory((prev) => [...prev, e.target.value]);
-//     }
-//   };
-
-//   return (
-//     <div className="bg-black min-h-screen pb-24">
-//       <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 px-4 sm:px-6 pt-8">
-
-//         {/* Sidebar */}
-//         <div className="w-full lg:w-1/4 space-y-4">
-//           <SearchBar />
-
-//           <div className="bg-[#0f0a14] border border-[#241834] p-5 rounded-2xl">
-//             <p className="pb-3 text-[10px] font-bold tracking-[0.2em] text-[#b98bff] uppercase">Category</p>
-//             <div className="space-y-2.5 text-sm">
-//               {["Action", "Sci-Fi", "Romance", "Isekai", "Adventure", "Slice of Life", "Comedy", "Sports", "Tragedy"].map((cat) => (
-//                 <label key={cat} className="flex items-center gap-2.5 text-[#c9bcdb] cursor-pointer">
-//                   <input
-//                     onClick={toggleCategory}
-//                     type="checkbox"
-//                     value={cat}
-//                     className="accent-[#8b3fd6] w-4 h-4"
-//                   />
-//                   {cat}
-//                 </label>
-//               ))}
-//             </div>
-//           </div>
-
-//           <div className="bg-[#0f0a14] border border-[#241834] p-5 rounded-2xl">
-//             <p className="pb-3 text-[10px] font-bold tracking-[0.2em] text-[#b98bff] uppercase">Sub-Category</p>
-//             <div className="space-y-2.5 text-sm">
-//               {["Alien", "Girl", "Monster"].map((sub) => (
-//                 <label key={sub} className="flex items-center gap-2.5 text-[#c9bcdb] cursor-pointer">
-//                   <input
-//                    onClick={togglesubCategory}
-//                     type="checkbox"
-//                     value={sub}
-//                     className="accent-[#8b3fd6] w-4 h-4"
-//                   />
-//                   {sub}
-//                 </label>
-//               ))}
-//             </div>
-//           </div>
-
-//           <select
-//             onChange={(e) => setSort(e.target.value)}
-//             className="w-full bg-[#0f0a14] border border-[#241834] text-sm text-[#e6d9f7] rounded-2xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-[#8b3fd6]"
-//           >
-//             <option value="Relevant">Sort by: Latest</option>
-//             <option value="A-Z">Sort by: Title (A → Z)</option>
-//             <option value="Z-A">Sort by: Title (Z → A)</option>
-//             <option value="Oldest">Sort by: Oldest</option>
-//           </select>
-//         </div>
-
-//         {/* Results */}
-//         <div className="w-full lg:w-3/4">
-//           <div className="flex items-center justify-between mb-5">
-//             <div>
-//               <span className="block text-[10px] font-bold tracking-[0.2em] text-[#b98bff] uppercase mb-0.5">Discover</span>
-//               <h1
-//                 className="text-xl sm:text-2xl font-black text-white"
-//                 style={{ textShadow: '0 0 14px rgba(185,139,255,0.35)' }}
-//               >
-//                 Search Manga
-//               </h1>
-//             </div>
-//             {totalManga > 0 && (
-//               <span className="text-xs font-semibold text-[#c9bcdb] bg-[#1a0f26] border border-[#3d2456] px-3 py-1.5 rounded-full">
-//                 {totalManga} Results
-//               </span>
-//             )}
-//           </div>
-
-//           <div className="space-y-6">
-//             <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
-//               {allManga?.length > 0 ? allManga.map((item) => (
-//                 <MangaContex
-//                   key={item.manga._id}
-//                   name={item.manga.name}
-//                   chapter1={item.latestChapters[0].chapterNo}
-//                   chapter2={item?.latestChapters[1]?.chapterNo}
-//                   coverImg={item.manga.coverImg}
-//                   id={item.manga._id}
-//                   createdAt1={item.latestChapters[0].createdAt}
-//                   createdAt2={item?.latestChapters[1]?.createdAt}
-//                   isFavorite={isFavorite}
-//                   setClicked={setClicked}
-//                 />
-//               )) : (
-//                 <div className="col-span-full flex justify-center items-center py-20">
-//                   <div className="bg-[#0f0a14] border border-dashed border-[#3d2456] px-8 py-8 rounded-2xl text-center">
-//                     <h2 className="text-lg font-bold text-white mb-1.5">
-//                       No Manga Found
-//                     </h2>
-//                     <p className="text-[#8a7a9c] text-sm">
-//                       No manga with that genre is available.
-//                     </p>
-//                   </div>
-//                 </div>
-//               )}
-//             </div>
-
-//             {allManga?.length > 0 && (
-//               <PaginationPage page={page} totalPage={totalPage} onChange={setPage}/>
-//             )}
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Search;
-
-
-
-
 
 
 import "slick-carousel/slick/slick.css"; 
@@ -352,9 +9,10 @@ import SearchBar from "../Component/SearchBar.jsx";
 import axios from "axios";
 import PaginationPage from '../Component/PaginationPage.jsx'
 import { SlidersHorizontal, X } from "lucide-react";
+import { useParams } from "react-router-dom";
 
 const Search = () => {
-  const [sort, setSort] = useState("Relavent");
+  const [sort, setSort] = useState("");
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
   const [totalManga, setTotalManga] = useState(0)
@@ -365,10 +23,15 @@ const Search = () => {
 
   const { backendUrl, isSearch, setClicked, isFavorite } = useContext(MangaCon);
 
-  const getLatestManga = async () => {
+  const {genre, subGenere, author} = useParams()
+  const find = genre
+  const find2 = subGenere
+  const find3 = author
+
+  const getLatestManga = async (signal) => {
     try {
       const response = await axios.get(backendUrl + "/api/manga/mangaInfo",
-        { params: { limit:12, page, search : isSearch, sort, category: category.join(","), subCategory: subCategory.join(",") } })
+        { params: { limit:12, page, search : isSearch, sort, category: category.join(","), subCategory: subCategory.join(",") }, signal, find3 })
       if (response.data.success) {
         const latestManga = response.data.pageInfo
         setTotalPage(response.data.totalPages)
@@ -377,24 +40,30 @@ const Search = () => {
       }
     }
     catch (error) {
+      if (axios.isCancel(error) || error.name === "CanceledError") return
       console.log(error, "Error in latest manga")
     }
   }
 
   useEffect(() => {
-    getLatestManga()
-  }, [page, isSearch, sort, category, subCategory])
     
-  useEffect(()=>{
-    console.log(category)
-  },[category])
+    const controller = new AbortController()
+    getLatestManga(controller.signal)
+    return () => controller.abort()
+  }, [page, isSearch, sort, category, subCategory])
+
+  useEffect(() => {
+    setCategory(find && find !== 'category' ? [find] : [])
+  }, [find])
+
+  useEffect(() => {
+    setSubCategory(find2 && find2 !== 'subcategory' ? [find2] : [])
+  }, [find2])
 
   const toggleCategory = (val) => {
-    if (category.includes(val)) {
-      setCategory((prev) => prev.filter((items) => items !== val));
-    } else {
-      setCategory((prev) => [...prev, val]);
-    }
+    setCategory((prev) =>
+      prev.includes(val) ? prev.filter((item) => item !== val) : [...prev, val]
+    );
   };
 
   const togglesubCategory = (val) => {
@@ -458,10 +127,20 @@ const Search = () => {
           </button>
 
           <select
+            value={sort}
             onChange={(e) => setSort(e.target.value)}
             className="bg-[#0f0a14] border border-[#241834] text-sm text-[#e6d9f7] rounded-full px-4 py-2 focus:outline-none focus:ring-1 focus:ring-[#8b3fd6]"
           >
-            <option value="Relevant">Latest</option>
+            {/*
+              value="" deliberately, not "Latest" — your backend's
+              getMangaInfo has a separate `if (sort === "Latest")` branch
+              that returns { latestChapters } instead of
+              { pageInfo, totalPages, total }, which this page reads.
+              Empty string falls through to the generic path, which
+              already sorts newest-manga-first — same practical result,
+              compatible response shape.
+            */}
+            <option value="">Latest</option>
             <option value="A-Z">Title (A → Z)</option>
             <option value="Z-A">Title (Z → A)</option>
             <option value="Oldest">Oldest</option>

@@ -29,7 +29,10 @@ function App() {
         <Route path='/profile' element={<Profile/>}/>
         <Route path='/manga/:id' element={<Manga/>}/>
         <Route path='/manga/:mangaId/:chapterId/:chapterNo' element={<Chapter/>} />
-        <Route path='/search' element={<Search/>}/>
+        {/* <Route path='/search/:genre/:subGenere' element={<Search/>}/> */}
+        <Route path='/search/:genre' element={<Search/>}/>
+        <Route path='/search/:genre/:subGenere' element={<Search/>}/>
+        <Route path='/search/:genre/:subGenere/:author' element={<Search/>}/>
         <Route path='/login' element={<Login/>}/>
       </Routes>
 
