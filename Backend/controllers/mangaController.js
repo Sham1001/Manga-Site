@@ -94,13 +94,15 @@ const getMangaInfo = async (req, res) => {
         const search = req.query.search || "";
         const category = req?.query?.category
         const subCategory = req?.query?.subCategory
+        const author = req?.query?.author
+        const artist = req?.query?.artist
         const admin = req.query.admin
         const skip = (page - 1) * limit
 
         const query = {}
 
         if (admin) {
-            console.log(search, "This is search in admin")
+            // console.log(search, "This is search in admin")
             if (search) {
                 query.name = {
                     $regex: search, $options: "i"
@@ -173,6 +175,24 @@ const getMangaInfo = async (req, res) => {
 
             return res.status(200).json({ success: true, pageInfo, total, totalPages })
         }
+
+
+        if (author) {
+            const authorManga = await mangaModel.find({ authorName: author })
+
+            if (!authorManga) {
+                return res.status(500).json({ success: False, message: "Please check again later" })
+            }
+            if (authorManga) {
+                console.log("This is auto",authorManga)
+            }
+
+
+
+            return res.status(200).json({ success: true, authorManga})
+
+        }
+
 
 
 
@@ -266,7 +286,7 @@ const getMangaInfo = async (req, res) => {
             const subCategoryArray = subCategory?.split(",");
             query["manga.subGenres"] = { $all: subCategoryArray };
         }
-        
+
 
         if (sort === "Latest") {
 
@@ -330,7 +350,7 @@ const getMangaInfo = async (req, res) => {
 
 
 
-       
+
 
         let sortOption = { "manga.createdAt": -1 };
         if (sort === "A-Z") sortOption = { "manga.name": 1 };
@@ -434,7 +454,7 @@ const getManga = async (req, res) => {
 
     try {
         const id = req.query.mangaId
-        console.log(id, "This is id")
+        // console.log(id, "This is id")
         if (!id) {
             return res.status(500).json({ success: false, message: "Manag id is missing" })
         }
@@ -464,9 +484,9 @@ const getManga = async (req, res) => {
 
         ])
 
-        if (mangaInfo) {
-            console.log(mangaInfo[0])
-        }
+        // if (mangaInfo) {
+        //     console.log(mangaInfo[0])
+        // }
 
 
 
@@ -483,7 +503,7 @@ const getManga = async (req, res) => {
 
 const editManga = async (req, res) => {
 
-    console.log(Object.values(req.body), "This is value")
+    // console.log(Object.values(req.body), "This is value")
     try {
         const coverImg = req?.file?.path
 
@@ -513,7 +533,7 @@ const editManga = async (req, res) => {
             const result = await cloudinary.uploader.upload(coverImg, { folder: "manga", use_filename: true, unique_filename: true })
             updateManga["coverImg"] = result.secure_url
         }
-        console.log(Object.keys(updateManga))
+        // console.log(Object.keys(updateManga))
 
 
         const update = await mangaModel.findByIdAndUpdate(req?.body?.mangaId, {
@@ -692,4 +712,60 @@ const getRecommendation = async (req, res) => {
 
 
 
-export { addManga, getManga, getMangaInfo, editManga, deleteManga, savedCount, getCount, getRecommendation }
+
+
+
+
+
+
+
+
+const reactManga = async (req, res) => {
+    try {
+        const { mangaId } = req.params
+        const { emoji } = req.body
+        const userId = req.userId
+
+        if (!emoji) {
+            return res.status(400).json({ success: false, message: "emoji is missing" })
+        }
+
+        const manga = await mangaModel.findById(mangaId)
+        if (!manga) {
+            return res.status(404).json({ success: false, message: "Manga not found" })
+        }
+
+        const previousEmoji = manga.userReactions.get(userId)
+
+        // remove the user's previous reaction's count, if they had one
+        if (previousEmoji) {
+            const prevCount = manga.reactions.get(previousEmoji) || 0
+            manga.reactions.set(previousEmoji, Math.max(prevCount - 1, 0))
+        }
+
+        if (previousEmoji === emoji) {
+            // clicking the same emoji again removes the reaction entirely
+            manga.userReactions.delete(userId)
+        } else {
+            manga.userReactions.set(userId, emoji)
+            const newCount = manga.reactions.get(emoji) || 0
+            manga.reactions.set(emoji, newCount + 1)
+        }
+
+        await manga.save()
+
+        return res.status(200).json({
+            success: true,
+            reactions: Object.fromEntries(manga.reactions),
+            userReaction: manga.userReactions.get(userId) || null
+        })
+    }
+    catch (error) {
+        console.log(error)
+        return res.status(500).json({ success: false, message: "Something went wrong, Please try again Later" })
+    }
+}
+
+
+
+export { addManga, getManga, getMangaInfo, editManga, deleteManga, savedCount, getCount, getRecommendation, reactManga }

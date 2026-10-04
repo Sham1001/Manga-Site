@@ -1,9 +1,47 @@
+// import mongoose, { Schema } from "mongoose";
+
+// const commentSchema = new Schema({
+//     text: {
+//         type: String,
+//         required: true
+//     },
+//     user: {
+//         type: Schema.Types.ObjectId,
+//         ref: "User"
+//     },
+//     parentComment: {
+//         type: Schema.Types.ObjectId,
+//         ref: "Comment",
+//         default: null
+//     },
+//     contentId: {
+//         type: Schema.Types.ObjectId,
+//         required: true
+//     },
+//     isEdited: {
+//         type: Boolean,
+//         default: false
+//     },
+//     isDeleted: {
+//         type: Boolean,
+//         default: false
+//     },
+// }, { timestamps: true })
+
+// const commentModel = mongoose.models.Comment || mongoose.model("Comment", commentSchema)
+// export default commentModel 
+
+
 import mongoose, { Schema } from "mongoose";
 
 const commentSchema = new Schema({
     text: {
         type: String,
-        required: true
+        // required: true
+    },
+    imageUrl: {
+        type: String,
+        default: null
     },
     user: {
         type: Schema.Types.ObjectId,
@@ -18,6 +56,18 @@ const commentSchema = new Schema({
         type: Schema.Types.ObjectId,
         required: true
     },
+    likes: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "User"
+        }
+    ],
+    dislikes: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "User"
+        }
+    ],
     isEdited: {
         type: Boolean,
         default: false
@@ -29,4 +79,4 @@ const commentSchema = new Schema({
 }, { timestamps: true })
 
 const commentModel = mongoose.models.Comment || mongoose.model("Comment", commentSchema)
-export default commentModel 
+export default commentModel
