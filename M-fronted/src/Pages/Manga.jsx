@@ -292,7 +292,7 @@ const Manga = () => {
 
                   <div>
                     <p className="text-[10px] font-bold tracking-[0.2em] text-[#b98bff] uppercase mb-1.5">Author(s)</p>
-                    <Link to={`http://localhost:5173/search/category/subGenre/${data.authorName}`} className="text-[#e6d9f7]">{data.authorName}</Link>
+                    <Link to={`/search/category/subGenre/${data.authorName}`} className="text-[#e6d9f7]">{data.authorName}</Link>
                   </div>
 
                   <div>
@@ -304,7 +304,7 @@ const Manga = () => {
                     <p className="text-[10px] font-bold tracking-[0.2em] text-[#b98bff] uppercase mb-2">Genre(s)</p>
                     <div className="flex flex-wrap gap-2">
                       {data?.genres?.map((genre, idx) => (
-                        <Link to={`http://localhost:5173/search/${genre}`} key={idx} className="inline-block px-3 py-1 bg-[#1a0f26] border border-[#3d2456] text-[#c9bcdb] rounded-full text-xs font-medium">
+                        <Link to={`/search/${genre}`} key={idx} className="inline-block px-3 py-1 bg-[#1a0f26] border border-[#3d2456] text-[#c9bcdb] rounded-full text-xs font-medium">
                           {genre}
                         </Link>
                       ))}
