@@ -31,11 +31,13 @@ const Search = () => {
   const getLatestManga = async (signal) => {
     try {
       const response = await axios.get(backendUrl + "/api/manga/mangaInfo",
-        { params: { limit:12, page, search : isSearch, sort, category: category.join(","), subCategory: subCategory.join(",") }, signal, find3 })
+        { params: { limit:12, page, author, search : isSearch, sort, category: category.join(","), subCategory: subCategory.join(",") }, signal })
       if (response.data.success) {
         const latestManga = response.data.pageInfo
         setTotalPage(response.data.totalPages)
         setTotalManga(response.data.total)
+        // setTotalManga(response.data?.authorManga)
+        // setAllManga(response.data?.authorManga)
         setAllManga(latestManga)
       }
     }
@@ -48,17 +50,26 @@ const Search = () => {
   useEffect(() => {
     
     const controller = new AbortController()
+    console.log(find3,"This is auth")
+    console.log(setAllManga,"This is author")
     getLatestManga(controller.signal)
     return () => controller.abort()
-  }, [page, isSearch, sort, category, subCategory])
+    
+  }, [page, isSearch, sort, category, subCategory, find3])
 
   useEffect(() => {
     setCategory(find && find !== 'category' ? [find] : [])
   }, [find])
 
   useEffect(() => {
-    setSubCategory(find2 && find2 !== 'subcategory' ? [find2] : [])
+    setSubCategory(find2 && find2 !== 'subGenre' ? [find2] : [])
   }, [find2])
+
+  //  useEffect(() => {
+  //   setSubCategory(find2 && find2 !== 'subcategory' ? [find2] : [])
+  // }, [find2])
+
+  
 
   const toggleCategory = (val) => {
     setCategory((prev) =>

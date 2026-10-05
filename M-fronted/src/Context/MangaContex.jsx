@@ -1,4 +1,3 @@
-
 import { createContext, useEffect, useMemo } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -28,7 +27,7 @@ const MangaConProvider = ({children})=>{
     const [isFavorite, setIsFavorite] = useState([])
     const backendUrl = import.meta.env.VITE_BACKEND_URL
     const navigate = useNavigate()
-    const [bgChanger, setBgChanger] = useState(false)
+    // const [bgChanger, setBgChanger] = useState(false)
 
     // Recomputes only when the token actually changes, not on every render.
     const currentUserId = useMemo(() => decodeUserIdFromToken(token), [token]);
@@ -53,6 +52,24 @@ const MangaConProvider = ({children})=>{
       console.log(error)
     }
   }
+
+  const [bgChanger, setBgChanger] = useState(true);
+
+const [bgOpacity, setBgOpacity] = useState(() => {
+    return Number(localStorage.getItem("bgOpacity")) || 55;
+});
+
+const [bgBlur, setBgBlur] = useState(() => {
+    return Number(localStorage.getItem("bgBlur")) || 20;
+});
+
+useEffect(() => {
+    localStorage.setItem("bgOpacity", bgOpacity);
+}, [bgOpacity]);
+
+useEffect(() => {
+    localStorage.setItem("bgBlur", bgBlur);
+}, [bgBlur]);
 
   useEffect(()=>{
         if(token){
@@ -82,7 +99,18 @@ const MangaConProvider = ({children})=>{
         clicked,
         currentUserId,
         bgChanger,
-        setBgChanger
+        setBgChanger,
+
+
+
+         
+    
+
+        bgOpacity,
+        setBgOpacity,
+
+        bgBlur,
+        setBgBlur,
     }
     return(
         <MangaCon.Provider value={values}>
