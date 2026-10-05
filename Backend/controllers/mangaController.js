@@ -6,6 +6,7 @@ import { group } from "console";
 import { lookup } from "dns";
 import { format } from "path";
 import mongoose from "mongoose";
+import { auth } from "google-auth-library";
 // import { promises } from "dns";
 
 
@@ -53,6 +54,9 @@ const addManga = async (req, res) => {
             return res.status(400).json({ success: false, message: "CoverImg is missing" })
         }
 
+        const authorName = authName?.split(",")
+        const artName = artistName?.split(",")
+
 
         const result = await cloudinary.uploader.upload(image, { folder: "manga", use_filename: true, unique_filename: true })
 
@@ -61,17 +65,17 @@ const addManga = async (req, res) => {
 
         const manga = new mangaModel({
             name,
-            artistName,
-            authorName: authName,
+            artistName:artName,
+            authorName:authorName,
             description,
             date,
             genres,
             subGenres,
             popular,
-            ongoing: complete,
+            ongoing:complete,
             type,
-            Recommended: recommended,
-            coverImg: result.secure_url
+            Recommended:recommended,
+            coverImg:result.secure_url
         })
 
         await manga.save()
@@ -177,21 +181,22 @@ const getMangaInfo = async (req, res) => {
         }
 
 
-        if (author) {
-            const authorManga = await mangaModel.find({ authorName: author })
+        // if (author) {
+        //     console.log("This is auto na",author)
+        //     const pageInfo = await mangaModel.find({ authorName: author })
 
-            if (!authorManga) {
-                return res.status(500).json({ success: False, message: "Please check again later" })
-            }
-            if (authorManga) {
-                console.log("This is auto",authorManga)
-            }
+        //     if (!pageInfo) {
+        //         return res.status(500).json({ success: False, message: "Please check again later" })
+        //     }
+        //     if (pageInfo) {
+        //         console.log("This is auto",pageInfo)
+        //     }
 
 
 
-            return res.status(200).json({ success: true, authorManga})
+        //     return res.status(200).json({ success: true, pageInfo})
 
-        }
+        // }
 
 
 
@@ -203,6 +208,10 @@ const getMangaInfo = async (req, res) => {
                 $regex: search, $options: "i"
             }
         }
+
+       if(author){
+    query["manga.authorName"] = author
+}
 
 
 
@@ -282,7 +291,7 @@ const getMangaInfo = async (req, res) => {
             query["manga.genres"] = { $all: categoryArray };
         }
         if (subCategory) {
-            console.log(subCategory?.split(","), " This is category")
+            console.log(subCategory?.split(","), " This is subCategory")
             const subCategoryArray = subCategory?.split(",");
             query["manga.subGenres"] = { $all: subCategoryArray };
         }
@@ -427,7 +436,14 @@ const getMangaInfo = async (req, res) => {
 
             ])
 
+            // if(getMangas){
+            //     console.log(getMangas, "This is ...")
+            // }
+
         const pageInfo = getMangas[0]?.data;
+         if(pageInfo){
+                console.log(pageInfo, "This is ...")
+            }
 
         const total =
             getMangas[0].totalCount[0]?.count || 0;
@@ -502,11 +518,8 @@ const getManga = async (req, res) => {
 }
 
 const editManga = async (req, res) => {
-
-    // console.log(Object.values(req.body), "This is value")
     try {
         const coverImg = req?.file?.path
-
 
         const mangaValue = [
             "name",
@@ -527,31 +540,55 @@ const editManga = async (req, res) => {
             if (req.body[element] != undefined) {
                 updateManga[element] = req.body[element]
             }
-        });
+        })
+
+        // Convert authorName string into array
+        if (req.body.authorName) {
+            updateManga.authorName = req.body.authorName
+                .split(",")
+                .map(author => author.trim())
+                .filter(author => author.length > 0)
+        }
+
+        // Convert artistName string into array
+        if (req.body.artistName) {
+            updateManga.artistName = req.body.artistName
+                .split(",")
+                
+        }
 
         if (coverImg != undefined) {
-            const result = await cloudinary.uploader.upload(coverImg, { folder: "manga", use_filename: true, unique_filename: true })
-            updateManga["coverImg"] = result.secure_url
+            const result = await cloudinary.uploader.upload(coverImg, {
+                folder: "manga",
+                use_filename: true,
+                unique_filename: true
+            })
+
+            updateManga.coverImg = result.secure_url
         }
-        // console.log(Object.keys(updateManga))
 
+        const update = await mangaModel.findByIdAndUpdate(
+            req?.body?.mangaId,
+            {
+                $set: updateManga
+            },
+            { new: true }
+        )
 
-        const update = await mangaModel.findByIdAndUpdate(req?.body?.mangaId, {
-            $set: updateManga
-        },
-            { new: true })
-
-        return res.status(200).json({ success: true, update })
+        return res.status(200).json({
+            success: true,
+            update
+        })
     }
     catch (error) {
         console.log(error, "Update error")
-        return res.status(500).json({ success: false, message: "Something went wrong , Please try again later" })
 
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong, Please try again later"
+        })
     }
-
-
 }
-
 
 const deleteManga = async (req, res) => {
     const mangaId = req.query.mangaId

@@ -96,12 +96,12 @@ const mangaSchema = new mongoose.Schema({
     },
     authorName: {
 
-        type: String,
+        type: [String],
         required: true,
 
     },
     artistName:{
-        type: String,
+        type: [String],
         required: true
     },
     description: {
